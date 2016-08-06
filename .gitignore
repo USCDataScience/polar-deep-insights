@@ -1,0 +1,9 @@
+insight-visualizer/node_modules
+insight-visualizer/bower_components
+insight-visualizer/dist
+insight-visualizer/.tmp
+insight-visualizer/.sass-cache
+insight-visualizer/.bowerrc
+insight-visualizer/.editorconfig
+insight-visualizer/.jshintrc
+insight-visualizer/.travis.yml

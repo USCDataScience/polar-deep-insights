@@ -1,0 +1,35 @@
+<div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-10">
+      <button class="btn btn-warning btn-block" data-ng-click="loadData()">Query</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+
+       <uib-tabset active="active">
+        <uib-tab index="0" heading="Time Distribution" select="active = 0">
+          <div polar-analytics-time-variance data-filters="filters" data-ng-if="active == 0"></div>
+        </uib-tab>
+
+        <uib-tab index="1" heading="Geographic Distribution" select="active = 1">
+          <div polar-analytics-geo-distribution  data-filters="filters" data-ng-if="active == 1"></div>
+        </uib-tab>
+
+        <uib-tab index="2" heading="Concept Correlation" select="active = 2">
+          <div polar-analytics-concept  data-filters="filters" data-ng-if="active == 2"></div>
+        </uib-tab>
+
+        <uib-tab index="3" heading="Measurement Distribution"  select="active = 3">
+          <div polar-analytics-measurement  data-filters="filters" data-ng-if="active == 3"></div>
+        </uib-tab>
+
+        <uib-tab index="4" heading="Geographic Diversity"  select="active = 4">
+          <div polar-analytics-geo-diversity  data-filters="filters" data-ng-if="active == 4"></div>
+        </uib-tab>
+      </uib-tabset>
+
+    </div>
+  </div>
+</div>

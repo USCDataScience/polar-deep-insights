@@ -1,0 +1,27 @@
+<div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Unit</th>
+            <th>Type</th>
+            <th>Count</th>
+            <th>Average</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr data-ng-repeat="d in data">
+            <td><a data-ng-bind="d.unit" data-ng-click="openHistogram(d.unit)"></a></td>
+            <td data-ng-bind="d.type"></td>
+            <td data-ng-bind="d.count"></td>
+            <td data-ng-bind="d.avg | number:2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

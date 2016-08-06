@@ -1,0 +1,16 @@
+<div>
+  <div class="row">
+    <div class="col-md-10">
+      <tags-input ng-model="sC"
+                  replace-spaces-with-dashes="false"
+                  data-add-from-autocomplete-only="true"
+                  placeholder="Search for a concept ..">
+        <auto-complete source="filterConcepts($query)"></auto-complete>
+      </tags-input>
+    </div>
+
+    <div class="col-md-2">
+      <button class="btn btn-primary btn-block" data-ng-click="helpers.onConceptAdd(sC); sC=[]">Add</button>
+    </div>
+  </div>
+</div>

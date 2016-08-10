@@ -15,3 +15,14 @@ With this tool we wish to build a workflow to answer the following questions.
 
 The Polar Deep Insights project is a tool can be used as generic content extraction and evaluation tool on any dataset. We demonstrate how it can be extended and how researchers can incorporate custom analysis workflows.
 
+***
+
+To get a quick start refer this [tutorial](https://github.com/nithinkrishna/polar-deep-insights/wiki/Getting-Started)
+
+Checkout our [wiki](https://github.com/nithinkrishna/polar-deep-insights/wiki) for more useful information.
+
+***
+
+##Affiliation
+
+[Information retrieval and Data Science](http://irds.usc.edu) Research Group, University of Southern California.

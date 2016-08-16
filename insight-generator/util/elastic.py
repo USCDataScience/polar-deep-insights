@@ -3,7 +3,7 @@
 # }
 
 class ESIndex:
-  def __init__(self, connectionString, index, docType, modules)
+  def __init__(self, connectionString, index, docType, modules):
     self.modules = modules
 
     self.index   = index

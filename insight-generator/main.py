@@ -15,8 +15,9 @@ from extractors.content    import ContentExtractor
 
 from extractors.main import InformationExtractor
 
-from util.doi import DocumentIdentifier
-from util.dtree import DirTreeTraverser
+from util.doi           import DocumentIdentifier
+from util.dtree         import DirTreeTraverser
+from util.elastic       import ESIndex
 
 ROOT_PATH   = sys.argv[1]
 ES_INDEX    = sys.argv[2]

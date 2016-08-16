@@ -2,3 +2,6 @@ tika
 elasticsearch
 redis
 nltk
+chardet
+networkx
+pycorenlp

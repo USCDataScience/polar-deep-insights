@@ -7,3 +7,5 @@ insight-visualizer/.bowerrc
 insight-visualizer/.editorconfig
 insight-visualizer/.jshintrc
 insight-visualizer/.travis.yml
+
+*.pyc

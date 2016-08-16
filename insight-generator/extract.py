@@ -1,8 +1,6 @@
 import sys, re, nltk, os, json, requests, urllib, urllib2
 import redis, hashlib
 
-import elasticsearch
-
 from tika     import parser
 from nltk.tag import StanfordNERTagger
 
@@ -18,10 +16,7 @@ from extractors.main import InformationExtractor
 from util.doi import DocumentIdentifier
 from util.dtree import DirTreeTraverser
 
-ROOT_PATH   = sys.argv[1]
-ES_INDEX    = sys.argv[2]
-INDEX_NAME  = sys.argv[3]
-DOC_TYPE    = sys.argv[4]
+PATH   = sys.argv[1]
 
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 
@@ -50,15 +45,6 @@ idf = DocumentIdentifier({
   "hashlib": hashlib,
 })
 
-es = ESIndex(ES_INDEX, INDEX_NAME, DOC_TYPE, {
-  "elasticsearch": elasticsearch,
-})
-
-def process(path):
-  d = metaExtractor.extract(Extraction(), path).getData()
-  d["id"] = idf.set(path)
-  es.write(d)
-
-DirTreeTraverser(ROOT_PATH).traverse(process)
-
-
+d = metaExtractor.extract(Extraction(), PATH).getData()
+d["id"] = idf.set(PATH)
+print d

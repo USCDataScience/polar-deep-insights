@@ -1,0 +1,4 @@
+tika
+elasticsearch
+redis
+nltk

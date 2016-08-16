@@ -1,16 +1,25 @@
-import requests
-import json
-
 ENDPOINT = "http://localhost:8080/processQuantityText"
 
-class QuantityExtractor:
-  def __init__(self, content):
-    request = requests.post(ENDPOINT, data=dict(text=content))
+from base import Extractor
+
+class QuantityExtractor(Extractor):
+  def extract(self, content):
+
+    request = self.modules["requests"].post(ENDPOINT, data=dict(text=content))
 
     try:
-      self.measurements = json.loads(request.content)['measurements']
+      measurements = self.modules["json"].loads(request.content)['measurements']
     except Exception as e:
-      self.measurements = [ ]
+      measurements = [ ]
+
+    try:
+      extMeasurements = reduce(self.extractMeasurement, measurements, [ ])
+    except Exception as e:
+      extMeasurements = [ ]
+
+    self.extraction.accumulate("measurements", extMeasurements)
+
+    return self.extraction
 
   def extractValue(self, q):
     return q
@@ -33,11 +42,3 @@ class QuantityExtractor:
       return acc + self.extractRange(m)
     else:
       return acc
-
-  def getQuantities(self):
-    try:
-      return reduce(self.extractMeasurement, self.measurements, [ ])
-    except Exception as e:
-      print " QUANTITES ERROR {0}".format(e)
-      return [ ]
-

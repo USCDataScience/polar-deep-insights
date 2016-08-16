@@ -1,15 +1,17 @@
-import redis
-import hashlib
-
-
 PREFIX = "polar-"
-
+# expects modules {
+#   "redis": redis,
+#   "hashlib": hashlib,
+# }
 class DocumentIdentifier:
-  def __init__(self):
-    self.client = redis.StrictRedis(host='localhost', port=6379, db=0)
+  def __init__(self, modules):
+
+    self.modules = modules
+
+    self.client = self.modules["redis"].StrictRedis(host='localhost', port=6379, db=0)
 
   def key(self, path):
-    return hashlib.md5(path.encode("utf")).hexdigest()[ 0 : 15 ]
+    return self.modules["hashlib"].md5(path.encode("utf")).hexdigest()[ 0 : 15 ]
 
   def set(self, path):
     key = self.key(path)

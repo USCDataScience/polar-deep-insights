@@ -47,4 +47,4 @@ idf = DocumentIdentifier({
 
 d = metaExtractor.extract(Extraction(), PATH).getData()
 d["id"] = idf.set(PATH)
-print d
+print json.dumps(d)

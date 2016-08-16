@@ -8,13 +8,18 @@ class GeoTopicExtractor(Extractor):
     self.locationCountHash = self.extraction.countHash("LOCATION")
     locations = self.locationCountHash.keys()
 
-    self.params = "&".join(map(lambda l: "s={0}".format(self.modules['urllib'].quote(l)), locations))
+    if len(locations) > 0:
+      self.params = "&".join(map(lambda l: "s={0}".format(self.modules['urllib'].quote(l)), locations))
+      self.response = self.modules['urllib2'].urlopen(GEO_TOPIC_ENDPOINT + self.params).read()
+      self.info = self.modules['json'].loads(self.response)
+      extractedLocations = self.getLocations()
+      extractedGeoInfo = self.getInfo()
+    else:
+      extractedLocations = [ ]
+      extractedGeoInfo   = [ ]
 
-    self.response = self.modules['urllib2'].urlopen(GEO_TOPIC_ENDPOINT + self.params).read()
-    self.info = self.modules['json'].loads(self.response)
-
-    self.extraction.accumulate("geo", self.getLocations())
-    self.extraction.accumulate("locations", self.getInfo())
+    self.extraction.accumulate("geo", extractedLocations)
+    self.extraction.accumulate("locations", extractedGeoInfo)
 
     return self.extraction
 

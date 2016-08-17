@@ -9,4 +9,4 @@ class ContentExtractor:
   def extract(self):
     # Handle content extraction depending on the mime-type
     parsed = self.__modules["tika-parser"].from_file(self.path)
-    return parsed["content"]
+    return (parsed["content"], parsed["metadata"])

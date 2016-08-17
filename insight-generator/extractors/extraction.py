@@ -25,6 +25,7 @@ class Extraction:
       "locations"    : self.get("locations"),
       "geo"          : self.get("geo"),
       "measurements" : self.get("measurements"),
+      "metadata"     : self.get("metadata"),
     }
 
   def countHash(self, key):

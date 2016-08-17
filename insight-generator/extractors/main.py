@@ -11,11 +11,12 @@ class InformationExtractor:
     self.extractors = extractors
     self.ContentExtractor = ContentExtractor
 
-  def extractContent(self, path):
-    return self.ContentExtractor(path, {
+
+  def extract(self, extraction, path):
+    (content, metadata) = self.ContentExtractor(path, {
       "tika-parser" : self.__modules["tika-parser"]
     }).extract()
 
-  def extract(self, extraction, path):
-    content = self.extractContent(path)
+    extraction.data["metadata"] = metadata
+
     return reduce(lambda extraction, Extractor: Extractor(extraction, self.__modules).extract(content), self.extractors, extraction)

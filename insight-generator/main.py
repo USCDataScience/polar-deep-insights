@@ -6,6 +6,7 @@ from nltk.tag import StanfordNERTagger
 
 from extractors.entity     import EntityExtractor
 from extractors.location   import GeoTopicExtractor
+from extractors.quantity   import GrobidQuantityExtractor
 from extractors.quantity   import QuantityExtractor
 from extractors.ner        import NERExtractor
 from extractors.extraction import Extraction
@@ -39,6 +40,7 @@ dependencies = {
   "json" : json,
   "urllib" : urllib,
   "urllib2" :urllib2,
+  "measurementExtractionFn": measurementExtractionFn,
 }
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)

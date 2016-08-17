@@ -10,6 +10,7 @@ from nltk.tag  import StanfordNERTagger
 
 from extractors.entity     import EntityExtractor
 from extractors.location   import GeoTopicExtractor
+from extractors.quantity   import GrobidQuantityExtractor
 from extractors.quantity   import QuantityExtractor
 from extractors.ner        import NERExtractor
 from extractors.extraction import Extraction
@@ -20,6 +21,7 @@ from extractors.main import InformationExtractor
 from util.doi   import DocumentIdentifier
 from util.dtree import DirTreeTraverser
 from util.xtika import TikaWrapper
+from util.measurements  import extract_measurements as measurementExtractionFn
 
 PATH   = sys.argv[1]
 
@@ -28,7 +30,7 @@ tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 extractors = [
   EntityExtractor,
   NERExtractor,
-  # GrobidQuantityExtractor,
+  GrobidQuantityExtractor,
   QuantityExtractor,
   GeoTopicExtractor,
 ]
@@ -45,8 +47,8 @@ dependencies = {
   "json" : json,
   "urllib" : urllib,
   "urllib2" :urllib2,
+  "measurementExtractionFn": measurementExtractionFn,
 }
-
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)
 

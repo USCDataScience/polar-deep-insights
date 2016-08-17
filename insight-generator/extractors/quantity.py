@@ -2,7 +2,7 @@ ENDPOINT = "http://localhost:8080/processQuantityText"
 
 from base import Extractor
 
-class QuantityExtractor(Extractor):
+class GrobidQuantityExtractor(Extractor):
   def extract(self, content):
 
     request = self.modules["requests"].post(ENDPOINT, data=dict(text=content))
@@ -42,3 +42,27 @@ class QuantityExtractor(Extractor):
       return acc + self.extractRange(m)
     else:
       return acc
+
+# Expects "measurementExtractionFn"
+class QuantityExtractor(Extractor):
+  def extract(self, content):
+    try:
+      extMeasurements = self.modules["measurementExtractionFn"](content)
+    except Exception as e:
+      extMeasurements = [ ]
+
+    self.extraction.accumulate("measurements", self.parse(extMeasurements))
+
+    return self.extraction
+
+  # Considering the first number from the string
+  def parse(self, extMeasurements):
+    m = [ ]
+    for e in extMeasurements:
+      num = e["num"]
+      num.replace(',', '')
+      values = [ int(s) for s in num.split() if s.isdigit() ]
+      m = m + map(lambda v: { 'unit' : e['unit'], 'value': v }, values)
+    return m
+
+

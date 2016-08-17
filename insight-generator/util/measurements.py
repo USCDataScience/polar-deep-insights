@@ -2,7 +2,7 @@
 
 import chardet
 import networkx as nx
-import os
+import os, sys
 import csv
 from pycorenlp import StanfordCoreNLP
 import matplotlib.pyplot as plt
@@ -1101,7 +1101,7 @@ def find_range(sentence, match, annotations, range_words, leading):
     return (match, _range)
 
 
-def extract_measurements(content=None, input_dir=None, output_file="measurements_output", show_graph=False, encoding=None, verbose=False):
+def extract_measurements(content=None, show_graph=False, encoding=None, verbose=False):
 
     def cleanup(content):
         # print str(chardet.detect(content))
@@ -1204,7 +1204,7 @@ def extract_measurements(content=None, input_dir=None, output_file="measurements
 
     def split_and_extract(content, stats, out):
         sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
-        sentences = list(sent_detector.tokenize(cleanup(content)))
+        sentences = list(sent_detector.tokenize(content))
         sentences1= list(map(lambda v : unicodedata.normalize('NFKD', v).encode('ascii','ignore'), sentences))
         measurements = [ ]
         for i in range(0, len(sentences1)):
@@ -1259,7 +1259,7 @@ def extract_measurements(content=None, input_dir=None, output_file="measurements
                                     ranges_found.append(range_found)
 
                                 if sentence_written == False:
-                                    out.write("\n" + str(i) + ": " + sent + "\n")
+                                    # out.write("\n" + str(i) + ": " + sent + "\n")
                                     sentence_written = True
                                 # print match
                                 sentence = Sentence(sent, match["unit"], match["num"], None, i)
@@ -1280,45 +1280,25 @@ def extract_measurements(content=None, input_dir=None, output_file="measurements
                             print(sentence.text)
 
                         for match in results:
-                            out.write("(")
-                            out.write(match["num"].encode("utf-8"))
-                            out.write(", ")
-                            out.write(match["unit"].encode("utf-8"))
-                            out.write(", ")
-                            out.write(match["type"].encode("utf-8"))
-                            out.write(")\n")
+                            # out.write("(")
+                            # out.write(match["num"].encode("utf-8"))
+                            # out.write(", ")
+                            # out.write(match["unit"].encode("utf-8"))
+                            # out.write(", ")
+                            # out.write(match["type"].encode("utf-8"))
+                            # out.write(")\n")
 
-                            if verbose == True:
-                                print("(" + match["num"].encode("utf-8") + ", " + match["unit"].encode("utf-8") + ", " + match["type"].encode("utf-8") + ")\n")
+                            # if verbose == True:
+                            #     print("(" + match["num"].encode("utf-8") + ", " + match["unit"].encode("utf-8") + ", " + match["type"].encode("utf-8") + ")\n")
 
                             measurements = measurements + results
 
             else:
                 print "Core NLP Failed"
 
-        stats.print_summary()
+        #stats.print_summary()
         return measurements
 
-
-
-    with open(os.path.join(output_file), "w") as out:
-
-        if content == None and input_dir != None:
-            for input_file in os.listdir(os.path.join(input_dir)):
-                if input_file != ".DS_Store":
-                    # Content Extraction
-                    content = open(os.path.join(input_dir, input_file)).read()
-                    return split_and_extract(content, stats, out)
-
-        elif content != None and input_dir == None:
-            return split_and_extract(content, stats, out)
-
-
-
-
-
-
-
-print extract_measurements(content=None, input_dir="/Users/nithinkrishna/Desktop/test", output_file="measurements_output")
+    return split_and_extract(content, stats, sys.stdout)
 
 

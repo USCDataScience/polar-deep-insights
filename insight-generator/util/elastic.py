@@ -9,7 +9,7 @@ class ESIndex:
     self.index   = index
     self.docType = docType
 
-    self.connection = self.modules["elasticsearch"].Elasticsearch(connectionString)
+    self.connection = self.modules["elasticsearch"].Elasticsearch([connectionString])
 
   def write(self, data):
     self.connection.index(self.index, self.docType, body=data, id=data["id"])

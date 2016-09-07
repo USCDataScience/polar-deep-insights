@@ -12,8 +12,8 @@ class Extraction:
 
     self.data[entity] = self.data[entity] + d
 
-  def getData(self):
-    return {
+  def getData(self, id):
+    d = {
       "dates"        : self.count("DATE"),
       "entities"     : self.count("entities"),
       "places"       : self.count("LOCATION"),
@@ -27,6 +27,16 @@ class Extraction:
       "measurements" : self.get("measurements"),
       "metadata"     : self.get("metadata"),
     }
+    d["id"] = id
+    d["mime-type"] = d["metadata"]["Content-Type"]
+
+
+    for e in["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"]:
+      (cTotal, eTotal) = self.entityTotals(self.countHash(e))
+      d[e + "-occuranceCount"] = cTotal
+      d[e + "-typeCount"]      = eTotal
+
+    return d
 
   def countHash(self, key):
     d = self.get(key)
@@ -36,6 +46,13 @@ class Extraction:
 
     return reduce(lambda m,e: m.update({ e: ( 1 if e not in m else m[e] + 1 ) }) or m, d, { })
 
+
+  def entityTotals(self, h):
+    cTotal = sum(h.values())
+    eTotal = len(h.keys())
+    return (cTotal, eTotal)
+
   def count(self, key):
     d = self.countHash(key)
-    return map(lambda entity: { 'name': entity, 'count': d[entity] }, d.keys())
+    (cTotal, eTotal) = self.entityTotals(d)
+    return map(lambda entity: { 'name': entity, 'count': d[entity], 'tf': (float(d[entity]) / cTotal), 'tf-alpha': (float(1) / eTotal)  }, d.keys())

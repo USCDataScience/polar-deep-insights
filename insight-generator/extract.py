@@ -23,11 +23,13 @@ tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 extractors = [
   EntityExtractor,
   NERExtractor,
-  QuantityExtractor,
+  GrobidQuantityExtractor,
+  # QuantityExtractor,
   GeoTopicExtractor,
 ]
 
 dependencies = {
+  "os": os,
   "re": re,
   "nltk": nltk,
   "tagger": tagger,
@@ -45,6 +47,5 @@ idf = DocumentIdentifier({
   "hashlib": hashlib,
 })
 
-d = metaExtractor.extract(Extraction(), PATH).getData()
-d["id"] = idf.set(PATH)
+d = metaExtractor.extract(Extraction(), PATH).getData(idf.set(PATH))
 print json.dumps(d)

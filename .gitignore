@@ -9,3 +9,5 @@ insight-visualizer/.jshintrc
 insight-visualizer/.travis.yml
 
 *.pyc
+
+insight-generator/results/*

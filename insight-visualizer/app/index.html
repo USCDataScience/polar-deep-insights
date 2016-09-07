@@ -33,9 +33,8 @@
 
     <!-- Add your site or application content here -->
 
-    <div id="c-notification">
-      <div data-c-global-loader></div>
-      <br /><br />
+    <div id="c-notification" data-ng-class="{ 'full-screen' : heavyLoading }">
+      <div data-c-global-loader data-heavy-loading="heavyLoading" data-delay="500"></div>
       <div data-c-flash></div>
     </div>
 
@@ -43,7 +42,7 @@
 
     <div tg-graph-aside></div>
 
-    <div class="container">
+    <div class="container body-container">
       <div ng-view></div>
     </div>
 
@@ -97,6 +96,7 @@
     <script src="bower_components/topojson/topojson.js"></script>
     <script src="bower_components/datamaps/dist/datamaps.all.js"></script>
     <script src="bower_components/js-quantities/src/quantities.js"></script>
+    <script src="bower_components/angular-ui-sortable/sortable.js"></script>
     <!-- endbower -->
 
     <!-- <script src="bower_components/leaflet/dist/leaflet-src.js"></script> -->
@@ -146,6 +146,8 @@
     <script src="scripts/data/concept_factory.js"></script>
     <script src="scripts/data/document.js"></script>
     <script src="scripts/data/measurement.js"></script>
+    <script src="scripts/data/config.js"></script>
+    <script src="scripts/data/entity_count.js"></script>
 
 
     <!-- CUSTOM COMPONENTS SCRIPTS -->
@@ -159,6 +161,14 @@
 
     <script src="scripts/components/footer/module.js"></script>
     <script src="scripts/components/footer/directive.js"></script>
+
+    <script src="scripts/components/configuration/module.js"></script>
+    <script src="scripts/components/configuration/controller.js"></script>
+    <script src="scripts/components/configuration/directive.js"></script>
+
+    <script src="scripts/components/measurement_editor/module.js"></script>
+    <script src="scripts/components/measurement_editor/controller.js"></script>
+    <script src="scripts/components/measurement_editor/directive.js"></script>
 
 
     <script src="scripts/components/concept_editor/concept/module.js"></script>
@@ -180,6 +190,13 @@
     <script src="scripts/components/add_filter/directive.js"></script>
     <script src="scripts/components/add_filter/type_modal.js"></script>
 
+    <script src="scripts/components/filter/entity/module.js"></script>
+    <script src="scripts/components/filter/entity/controller.js"></script>
+    <script src="scripts/components/filter/entity/directive.js"></script>
+
+    <script src="scripts/components/filter/measurement/module.js"></script>
+    <script src="scripts/components/filter/measurement/controller.js"></script>
+    <script src="scripts/components/filter/measurement/directive.js"></script>
 
     <script src="scripts/components/filter/geo/module.js"></script>
     <script src="scripts/components/filter/geo/controller.js"></script>
@@ -201,6 +218,13 @@
     <script src="scripts/components/filter/controller.js"></script>
     <script src="scripts/components/filter/directive.js"></script>
 
+    <script src="scripts/components/analytics/filter/module.js"></script>
+    <script src="scripts/components/analytics/filter/directive.js"></script>
+
+    <script src="scripts/components/analytics/stats/module.js"></script>
+    <script src="scripts/components/analytics/stats/controller.js"></script>
+    <script src="scripts/components/analytics/stats/directive.js"></script>
+
 
     <script src="scripts/components/analytics/time_variance/module.js"></script>
     <script src="scripts/components/analytics/time_variance/controller.js"></script>
@@ -217,6 +241,10 @@
     <script src="scripts/components/analytics/concept/module.js"></script>
     <script src="scripts/components/analytics/concept/controller.js"></script>
     <script src="scripts/components/analytics/concept/directive.js"></script>
+
+    <script src="scripts/components/analytics/popular_entities/module.js"></script>
+    <script src="scripts/components/analytics/popular_entities/controller.js"></script>
+    <script src="scripts/components/analytics/popular_entities/directive.js"></script>
 
     <script src="scripts/components/analytics/measurement/module.js"></script>
     <script src="scripts/components/analytics/measurement/modal.js"></script>

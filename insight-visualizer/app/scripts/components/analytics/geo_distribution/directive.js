@@ -2,7 +2,7 @@
 
   var app = angular.module("polar.components.analytics.geoDistribution");
 
-  app.directive("polarAnalyticsGeoDistribution", [function(){
+  app.directive("polarAnalyticsGeoDistribution", ["$timeout", function($timeout){
     return{
       scope: {
         filters: "=",
@@ -16,8 +16,8 @@
         var cont = elem.find(".idf-location")[0];
         var bubble_map = new Datamap({
           element: cont,
-          height: 800,
-          width: 1140,
+          height: 600,
+          width: $(".query-result").width(),
           geographyConfig: {
             popupOnHover: false,
             highlightOnHover: false
@@ -37,6 +37,10 @@
         };
 
         $scope.loadMap = loadMap;
+
+        $timeout(function(){
+          $scope.$broadcast('reCalcViewDimensions');
+        }, 100);
       }
     };
   }]);

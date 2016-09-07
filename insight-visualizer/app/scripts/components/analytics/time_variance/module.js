@@ -3,5 +3,6 @@ angular.module("polar.components.analytics.timeVariance", [
   "polar.data",
   "polar.components.filter",
   "nvd3",
-  "rzModule"
+  "rzModule",
+  "polar.components.analytics.filter",
 ]);

@@ -1,5 +1,6 @@
 angular.module("polar.components.analytics.geoDistribution", [
   "polar.util",
   "polar.data",
-  "rzModule"
+  "rzModule",
+  "polar.components.analytics.filter"
 ]);

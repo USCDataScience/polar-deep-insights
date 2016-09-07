@@ -5,7 +5,7 @@ angular.module("tg.graph")
     restrict: 'A',
     scope: {
       behavior: "=?",
-      configration: "&",
+      configration: "=",
       stream: "=",
       metadata: "&",
       nodeMenu: "&",
@@ -17,7 +17,7 @@ angular.module("tg.graph")
       function loadGraph(){
         $scope.graph = Visualizer.Engine.create(
           element[0],
-          $scope.configration(),
+          $scope.configration,
           $scope.metadata(),
           $scope.nodeMenu(),
           $scope.edgeMenu()

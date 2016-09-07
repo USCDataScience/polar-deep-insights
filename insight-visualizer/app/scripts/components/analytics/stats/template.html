@@ -1,0 +1,45 @@
+<div>
+  <div class="row">
+    <div class="col-md-6">
+      <center>
+        <h4>
+          Number of Hits
+        </h4>
+
+        <h3 data-ng-bind="docCount | number" class="muted"></h3>
+      </center>
+
+      <hr />
+      <nvd3 options="options" data="data"></nvd3>
+    </div>
+
+    <div class="col-md-6">
+      <select class="form-control" data-ng-model="sE" data-ng-init="sE = keys[0]" data-ng-options="k for k in keys"></select>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Max</th>
+            <th>Average</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Extracted terms</td>
+            <td data-ng-bind="results[sE + 'OC'].max| number"></td>
+            <td data-ng-bind="results[sE + 'OC'].avg | number:2"></td>
+            <td data-ng-bind="results[sE + 'OC'].sum| number"></td>
+          </tr>
+          <tr>
+            <td>Distinct extracted terms</td>
+            <td data-ng-bind="results[sE + 'TC'].max| number"></td>
+            <td data-ng-bind="results[sE + 'TC'].avg | number:2"></td>
+            <td data-ng-bind="results[sE + 'TC'].sum| number"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,12 @@
 <div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <select class="form-control" data-ng-model="filteredType" data-ng-options="t for t in types">
+        </select>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-12">
@@ -7,16 +15,20 @@
           <tr>
             <th>Unit</th>
             <th>Type</th>
-            <th>Count</th>
+            <th>DocCount</th>
+            <th>Min</th>
+            <th>Max</th>
             <th>Average</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr data-ng-repeat="d in data">
+          <tr data-ng-repeat="d in data | filter:filteredType">
             <td><a data-ng-bind="d.unit" data-ng-click="openHistogram(d.unit)"></a></td>
             <td data-ng-bind="d.type"></td>
             <td data-ng-bind="d.count"></td>
+            <td data-ng-bind="d.min | number:2"></td>
+            <td data-ng-bind="d.max | number:2"></td>
             <td data-ng-bind="d.avg | number:2"></td>
           </tr>
         </tbody>

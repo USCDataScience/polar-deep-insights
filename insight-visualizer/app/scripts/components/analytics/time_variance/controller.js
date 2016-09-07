@@ -2,11 +2,11 @@
 
   var app = angular.module("polar.components.analytics.timeVariance");
   app.controller("polar.components.analytics.timeVariance.Controller",
-  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler",
-  function ($scope, Document, $FilterParser, StateHandler){
+  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler","polar.data.EntityCount",
+  function ($scope, Document, $FilterParser, StateHandler,EntityCount){
 
     function init(){
-      $scope.state = StateHandler.getInstance();
+      $scope.state = StateHandler.getInstance(false, true);
 
       $scope.r = { min: 1950, max: 2020 };
       loadData();
@@ -14,21 +14,29 @@
 
     function loadData(){
       $scope.state.initiate();
-      Document.aggregateByDates($FilterParser($scope.filters)).then(function(d){
+
+      function parseValue(totalMatchedDocs, y){
+        if($scope.field == 'tf-idf'){
+          var idf = Math.log(1 + totalMatchedDocs / (y.doc_count) );
+          var tf = 1 + Math.log( y.entity_stats[$scope.fn] );
+          return tf * idf;
+        } else {
+          return y.entity_stats[$scope.fn];
+        }
+      };
+
+      Document.aggregateByDates($FilterParser($scope.filters), $scope.field).then(function(d){
+        $scope.entitiyCount = EntityCount.data;
+        var totalMatchedDocs    = d.hits.total;
         var r = _.chain(d.aggregations.entities.entity_name.buckets)
                  .filter(function(b){ return b.key >= $scope.r.min && b.key <= $scope.r.max })
                  .sortBy(function(b){ return b.key })
                  .value();
 
         $scope.data = [{
-          key: "Document Count",
+          key: "Computed",
           values: _.map(r, function(y){
-            return { series: "Document Count", x: y.key , y: y.doc_count };
-          })
-        },{
-          key: "Occurrence Count",
-          values: _.map(r, function(y){
-            return { series: "Occurrence Count", x: y.key , y: y.entity_count.value };
+            return { series: "Computed", x: y.key , y: parseValue(totalMatchedDocs, y) };
           })
         }];
 

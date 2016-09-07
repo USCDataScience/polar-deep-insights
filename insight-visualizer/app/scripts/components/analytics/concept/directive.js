@@ -13,49 +13,52 @@
       controller: "polar.components.analytics.concept.Controller",
 
       link: function($scope, element, attrs){
-
-        function container(){
-          return angular.element(element.find('.tag-cloud'))[0];
+        $scope.options = {
+          chart: {
+            type: 'multiBarHorizontalChart',
+            height: 950,
+            width: 1150,
+            margin : {
+              left: 150
+            },
+            x: function(d){return d.label;},
+            y: function(d){return d.value;},
+            showControls: true,
+            showValues: true,
+            duration: 500,
+            xAxis: {
+              showMaxMin: false
+            },
+            yAxis: {
+              axisLabel: 'Value',
+              tickFormat: function(d){
+                return d3.format(',.2f')(d);
+              }
+            }
+          }
         };
 
-        var color = d3.scale.linear()
-            .domain([0,1,2,3,4,5,6,10,15,20,100])
-            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-
-
-        function draw(words) {
-            d3.select(container()).append("svg")
-                    .attr("width", container().clientWidth)
-                    .attr("height", 500)
-                    .attr("class", "wordcloud")
-                    .append("g")
-                    // without the transform, words words would get cutoff to the left and top, they would
-                    // appear outside of the SVG area
-                    .attr("transform", "translate(650,200)")
-                    .selectAll("text")
-                    .data(words)
-                    .enter().append("text")
-                    .style("font-size", function(d) { return d.size + "px"; })
-                    .style("fill", function(d, i) { return color(i); })
-                    .attr("transform", function(d) {
-                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                    })
-                    .text(function(d) { return d.text; });
-        }
-
-        $scope.$watch("tags", function(nv, ov){
-          if(nv && nv.length > 0){
-            // Clean
-            angular.element(container()).find('svg').remove();
-
-            d3.layout.cloud().size([container().clientWidth - 50, 450])
-              .words($scope.tags)
-              .rotate(0)
-              .fontSize(function(d) { return d.size; })
-              .on("end", draw)
-              .start();
-          };
-        });
+        var color = d3.scale.category20();
+        $scope.gOptions = {
+          chart: {
+            type: 'forceDirectedGraph',
+            height: 600,
+            width: 1150,
+            margin:{top: 20, right: 20, bottom: 20, left: 20},
+            color: function(d){
+              return color(d.group)
+            },
+            nodeExtras: function(node) {
+              node && node
+                .append("text")
+                .attr("dx", 8)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.id })
+                .style('font-size', '12px');
+            },
+            tooltip: false
+          }
+        };
       }
     };
   }]);

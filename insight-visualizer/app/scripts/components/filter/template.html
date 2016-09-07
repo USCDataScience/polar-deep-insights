@@ -1,14 +1,17 @@
 <div>
-  <div class="panel" data-ng-class="{
+  <div class="panel bounceInLeft animated" data-ng-class="{
     'panel-success' : (filter.type == 'geo'),
     'panel-info' : (filter.type == 'time'),
     'panel-warning' : (filter.type == 'concept'),
+    'panel-danger' : (filter.type == 'measurement'),
   }">
     <div class="panel-heading">
       <h3 class="panel-title">
         <span data-ng-show="filter.type == 'geo'">Geographic</span>
         <span data-ng-show="filter.type == 'time'">Date Range</span>
         <span data-ng-show="filter.type == 'concept'">Concept</span>
+        <span data-ng-show="filter.type == 'measurement'">Measurement</span>
+        <span data-ng-show="filter.type == 'entity'">Entity</span>
 
         <span class="pull-right">
           <button class="btn btn-xs btn-default" data-ng-click="edit(filter)"><i class="fa fa-pencil"></i></button>
@@ -47,6 +50,27 @@
           {{ filter.factory.concepts.length }} concept(s)
         </span>
       </span>
+
+      <span data-ng-show="filter.type == 'measurement'">
+        <i data-ng-show="!filter.measurements || filter.measurements.length == 0">
+          Add filter specifications
+        </i>
+
+        <span data-ng-show="filter.measurements.length > 0">
+          {{ filter.measurements.length }} measurement(s)
+        </span>
+      </span>
+
+      <span data-ng-show="filter.type == 'entity'">
+        <i data-ng-show="!filter.entities || filter.entities.length == 0">
+          Add filter specifications
+        </i>
+
+        <span data-ng-show="filter.entities.length > 0">
+          {{ filter.entities.length }} entity(s)
+        </span>
+      </span>
+
     </div>
   </div>
 </div>

@@ -6,7 +6,22 @@
   function ($scope, Document, $FilterParser, StateHandler){
 
     function init(){
-      $scope.state = StateHandler.getInstance();
+      $scope.state = StateHandler.getInstance(false, true);
+
+      $scope.options = {
+        maxZoom: 14,
+        minZoom: 2,
+        maxBounds: {
+          northEast: {
+            lat: 90,
+            lng: 180,
+          },
+          southWest: {
+            lat: -90,
+            lng: -180,
+          }
+        },
+      };
 
       $scope.center = {
         lat: 0,

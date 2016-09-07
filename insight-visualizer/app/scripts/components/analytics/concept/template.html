@@ -1,23 +1,31 @@
 <div>
   <div class="row">
-    <div class="col-md-12">
-      <div class="graph-container"
-           tg-graph
-           graph="graph"
-           on-load="onGraphLoad(graph)"
-           edge-menu="edgeMenu"
-           node-menu="nodeMenu"
-           metadata="{}"
-           configration="{}"
-           behavior="{}"
-           stream="stream"
-           helpers="{}"></div>
+    <div class="col-md-6">
+      <div class="btn-group" role="group" data-ng-init="view = 'chart'">
+        <button type="button"
+                class="btn btn-info"
+                data-ng-disabled="view == 'chart'"
+                data-ng-click="view = 'chart'">Chart</button>
+        <button type="button"
+                class="btn btn-info"
+                data-ng-disabled="view == 'graph'"
+                data-ng-click="view = 'graph'">Graph</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div polar-analytics-filter data-field="field" data-fn="fn"></div>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" data-ng-if="view == 'chart'">
     <div class="col-md-12">
-      <div class="tag-cloud"></div>
+      <nvd3 options="options" data="data"></nvd3>
+    </div>
+  </div>
+
+  <div class="row" data-ng-if="view == 'graph'">
+    <div class="col-md-12">
+      <nvd3 options="gOptions" data="gData" class="with-3d-shadow with-transitions"></nvd3>
     </div>
   </div>
 </div>

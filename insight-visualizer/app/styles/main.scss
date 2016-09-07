@@ -9,6 +9,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "./vendor/aside.scss";
 @import "./vendor/graph_viz_engine.scss";
 
+@import "./plugins/animate.scss";
 
 $c-success: #8cc63f;
 $c-success-lighter: #c3da72;
@@ -33,32 +34,62 @@ $c-skyblue: #3399ff;
 $c-red: #ff0000;
 $c-yellow: #ffff00;
 
+.navbar{
+    margin-bottom: 0px;
+  border-radius: 0px;
+}
+
+.body-container{
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+body{
+  background: #e5e5e5;
+}
+
+#c-notification.full-screen{
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  background: rgba(245, 245, 245, 0.77);
+  color: black;
+}
 
 #c-notification{
   text-align: center;
   width: 100%;
   top: 40px;
   z-index: 10001;
-  position: fixed;
-  height: 0px;
+  position: absolute;
   .c-global-loader{
     position: relative;
     padding: 10px;
     background: rgba(0,0,0,0.8);
     color: white;
-    display: inline-block;
+    display: block;
     margin-left: auto;
     margin-right: auto;
-    min-width: 100px;
+    width: 200px;
+  }
+  .c-global-loader-center{
+    font-size: 25px;
+    top: 43%;
+    position: absolute;
+    width: 100%;
   }
   .c-alert{
     width: 650px;
     font-size: 14px;
-    display: inline-block;
+    display: block;
     color: white;
     padding: 10px;
     border-radius: 3px;
-    position: relative;
+    margin: 0 auto;
+    height: 45px;
     text-align: left;
     .close{
       float: right;
@@ -149,4 +180,22 @@ $c-yellow: #ffff00;
 
 a:hover{
   cursor: pointer;
+}
+
+@media(min-width: 1250px){
+  .query-result {
+    min-height: 700px;
+  }
+}
+
+@media (min-width: 1400px){
+  .container {
+    width: 1350px;
+  }
+}
+
+@media (min-width: 1600px){
+  .container {
+    width: 1550px;
+  }
 }

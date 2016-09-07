@@ -3,7 +3,8 @@ angular.module("polar.util.directives")
   function(){
     return {
       scope: {
-        delay: "=?"
+        delay: "=?",
+        heavyLoading: "="
       },
       replace: true,
       templateUrl: "app/scripts/util/templates/global_loader.html",
@@ -20,14 +21,22 @@ angular.module("polar.util.directives")
         $scope.$watch(function(){
           return $scope.queue.length;
         }, function(nv, ov){
+          function set(val, delay){
+            $timeout(function(){
+              $scope.loaderConfig = val;
+              $scope.heavyLoading = _.any($scope.queue, function(q){ return q.heavyLoader });
+            }, delay || 0);
+          };
+
           $timeout(function(){
             if(nv > 0){
-              if($scope.queue.length > 0) { $scope.loaderConfig = loaderConfig; }
-              else { $scope.loaderConfig = null; }
+              if($scope.queue.length > 0) { set(loaderConfig); }
+              else { set(null, $scope.delay); };
             } else {
-              $scope.loaderConfig = null;
+              set(null, $scope.delay);
             };
           }, 0);
+
         });
       }]
     };

@@ -1,10 +1,7 @@
 angular.module("polar.data")
 
-.factory("polar.data.ConceptFactory", ["$resource", "$q", "polar.data.Concept", "polar.data.Relation", "localStorageService", "polar.util.services.$ElasticSearch",
-  function($resource, $q, Concept, Relation, localStorageService, $ES){
-
-    var es = new $ES();
-
+.factory("polar.data.ConceptFactory", ["$resource", "$q", "polar.data.Concept", "polar.data.Relation", "localStorageService", "polar.util.services.$ElasticSearch", "polar.data.Config",
+  function($resource, $q, Concept, Relation, localStorageService, $ES, Config){
     function ConceptFactory(c, r){
       this.concepts  = Concept.load(c)  || [ ];
       this.relations = Relation.load(r) || [ ];
@@ -76,9 +73,10 @@ angular.module("polar.data")
     ConceptFactory.prototype.$upload = function(){
       var deferred = $q.defer();
 
-      es.instance.create({
-        index: 'polar-ontology',
-        type: 'graph',
+      var c = Config.getData();
+      new $ES(c.endpoint).instance.create({
+        index: c.ontologyIndex,
+        type: c.ontologyDocType,
         id: parseInt(Date.now() / 1000),
         body: this
       }).then(function(){
@@ -95,9 +93,10 @@ angular.module("polar.data")
       var deferred = $q.defer(),
           self = this;
 
-      es.instance.search({
-        index: 'polar-ontology',
-        type: 'graph',
+      var c = Config.getData();
+      new $ES(c.endpoint).instance.search({
+        index: c.ontologyIndex,
+        type: c.ontologyDocType,
         size: 1
       }).then(function(r){
         self.concepts = r.hits.hits[0]._source.concepts;
@@ -111,6 +110,10 @@ angular.module("polar.data")
 
     };
 
+    ConceptFactory.prototype.metaConcepts = function(){
+      return _.filter(this.concepts, function(c){ return c.type == "meta" });
+    };
+
     ConceptFactory.getInstance = function(){
       var d = localStorageService.get('data');
       if(d){
@@ -118,6 +121,10 @@ angular.module("polar.data")
       } else {
         return new ConceptFactory();
       };
+    };
+
+    ConceptFactory.isSet = function(){
+      return !_.isEmpty( localStorageService.get('data') );
     };
 
     return ConceptFactory;

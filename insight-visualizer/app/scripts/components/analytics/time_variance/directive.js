@@ -2,7 +2,7 @@
 
   var app = angular.module("polar.components.analytics.timeVariance");
 
-  app.directive("polarAnalyticsTimeVariance", [function(){
+  app.directive("polarAnalyticsTimeVariance", ["$timeout", function($timeout){
     return{
       scope: {
         filters: "="
@@ -13,16 +13,19 @@
       controller: "polar.components.analytics.timeVariance.Controller",
 
       link: function($scope, $element, $attributes){
+        $timeout(function(){
+          $scope.$broadcast('reCalcViewDimensions');
+        }, 100);
         // your DOM manipulation logic for this component goes here
         $scope.options = {
           "chart": {
             "type": "multiBarChart",
-            "height": 450,
+            "height": 600,
             "margin": {
               "top": 20,
               "right": 20,
               "bottom": 45,
-              "left": 45
+              "left": 80
             },
             "clipEdge": true,
             "duration": 500,

@@ -2,72 +2,11 @@
 
   var app = angular.module("polar.components.analytics.concept");
   app.controller("polar.components.analytics.concept.Controller",
-  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler", "polar.data.ConceptFactory",
-  function ($scope, Document, $FilterParser, StateHandler, ConceptFactory){
-
-    $scope.onGraphLoad = function(graph){
-      $scope.graph = graph;
-
-      $scope.graph.on('node/click', function (v){
-        Aside.refresh(v);
-      });
-
-      $scope.graph.on('edge/click', function (e){
-        Aside.refresh(e);
-      });
-
-      $scope.graph.on('node/dblclick', function(v){
-        console.log("node/dblclick")
-      });
-
-      $scope.graph.on('node/load', function (v, callback){
-        console.log("node/load")
-      });
-
-      init();
-    };
-
-    $scope.edgeMenu = [
-      {
-        name: '\uf06e',
-        placeholder: "Inspect",
-        onClick: function (e) {
-          Aside.open(e);
-        }
-      }
-    ];
-
-    $scope.nodeMenu = [
-      {
-        name: "\uf077",
-        placeholder: "Load Parent",
-        onClick: function(v){
-          $scope.loadParentEdges(v.id);
-        }
-      },{
-        name: "\uf06e",
-        placeholder: "Inspect",
-        onClick: function(v){
-          // INSPECT VERTEX
-          Aside.open(v);
-        }
-      },{
-        name: "\uf078",
-        placeholder: "Load Children",
-        onClick: function(v){
-          $scope.loadChildrenEdges(v.id);
-        }
-      }
-    ];
-
-    function redraw(){
-      $scope.stream = $scope.factory.getStream();
-      $scope.graph.clear();
-      $scope.graph.data($scope.stream).redraw();
-    };
+  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler", "polar.data.ConceptFactory","polar.data.EntityCount",
+  function ($scope, Document, $FilterParser, StateHandler, ConceptFactory, EntityCount){
 
     function init(){
-      $scope.state = StateHandler.getInstance();
+      $scope.state = StateHandler.getInstance(false, true);
       $scope.store = ConceptFactory.getInstance();
       loadData();
     };
@@ -87,7 +26,9 @@
     function loadData(){
       $scope.state.initiate();
       var fS = $FilterParser($scope.filters);
-      Document.aggregateByConcepts(fS).then(function(d){
+      Document.aggregateByConcepts(fS, $scope.field).then(function(d){
+        $scope.entitiyCount     = EntityCount.parsedEntityList();
+        var totalMatchedDocs    = d.hits.total;
         var selectedIds = _.chain(fS)
                            .filter(function(f){ return f.type == "concept" })
                            .pluck("data")
@@ -98,56 +39,82 @@
                            .pluck("id")
                            .uniq()
                            .value();
-
-        var r = _.chain(d.aggregations.entities.entity_name.buckets)
-                 .map(function(d){
-                    var c = $scope.store.matchConcept(d.key)
-                    return {
-                      text: c.id,
-                      dCount: d.doc_count,
-                      oCount: d.entity_count.value,
-                    }
-                 })
-                 .groupBy(function(d){
-                  return d.text;
-                 })
-                 .reduce(function(m, d){
-
-                  var comb = _.reduce(d, function(m, x){
-                    m.dCount = m.dCount + x.dCount;
-                    m.oCount = m.oCount + x.oCount;
-                    m.text = x.text;
-                    return m;
-                  }, { dCount: 0, oCount: 0 });
-
-                  m.push(comb);
-
-                  return m;
-
-                 }, [ ])
-                 .filter(function(d){
-                  return !_.contains(selectedIds, d.text)
-                 })
-                 .value();
-
         var p = _.chain(d.aggregations.entities.entity_name.buckets)
                  .map(function(d){
                     var c = $scope.store.matchConcept(d.key);
-                    c.dCount = d.doc_count
-                    c.oCount = d.entity_count.value
+                    if($scope.field == 'tf-idf'){
+                      var idf = Math.log(1 + totalMatchedDocs / (d.doc_count) );
+                      var tf = 1 + Math.log( d.entity_stats[$scope.fn] );
+                      c.value = tf * idf;
+                    } else{
+                      c.value = d.entity_stats[$scope.fn];
+                    };
                     return c;
                  })
-                 .filter(function(d){
-                    return !_.contains(selectedIds, d.id)
+                 .map(function(c){
+                    return {
+                      "id": c.id,
+                      "label": c.id,
+                      "value": c.value,
+                    }
+                 })
+                 .sortBy(function(c){
+                  return -c.value;
                  })
                  .value();
 
-        $scope.factory = new ConceptFactory(p, $scope.store.getRelations(p));
+        var filtered = _.filter(p, function(d){
+          return _.contains(selectedIds, d.label)
+        });
+
+        var extracted = _.filter(p, function(d){
+          return !_.contains(selectedIds, d.label)
+        });
+
+        // p = p.concat($scope.store.metaConcepts());
+
+        p = _.unique(p, function(c){
+          return c.id;
+        });
+
+        var nodeIndex = _.reduce(p, function(m,n,i){ m[n.id] = i; return m }, { });
+
+        var edges = _.chain($scope.store.getRelations(p)).map(function(r){
+          r.target = nodeIndex[r.in];
+          r.source = nodeIndex[r.out];
+          r.value = 1;
+          return r;
+        }).filter(function(e){
+          return e.source && e.target;
+        })
+        .value();
+
+        var nodes = _.map(p, function(n){
+          return {
+            id: n.id,
+            group: 1
+          };
+        });
+
+        $scope.gData = {
+          nodes: nodes,
+          links: edges,
+        };
+
         $scope.state.success();
 
-        redraw();
-
-        $scope.tags = normalizeSizes(r);
+        $scope.data = [
+          {
+            "key": "Filtered",
+            "color": "#d62728",
+            "values": filtered
+          },
+          {
+            "key": "Extracted",
+            "color": "#1f77b4",
+            "values": extracted
+          }
+        ];
 
       }, function(){
         $scope.state.fatal();
@@ -157,6 +124,8 @@
     $scope.$on('polar.components.analytics.reloadData.Concept', function(e){
       loadData();
     });
+
+    init();
 
   }]);
 

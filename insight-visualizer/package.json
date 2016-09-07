@@ -1,7 +1,8 @@
 {
-  "name": "polar-insight",
-  "version": "0.0.0",
+  "name": "polar-deep-insight-visualizer",
+  "version": "0.0.1",
   "dependencies": {
+    "grunt-connect-proxy": "^0.2.0",
     "string": "^3.0.0"
   },
   "devDependencies": {
@@ -41,5 +42,9 @@
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/USCDataScience/polar-deep-insights"
   }
 }

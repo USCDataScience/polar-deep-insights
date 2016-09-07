@@ -13,8 +13,7 @@ gViz.Engine = (function(defaultConfig, behavior, merger, Vertex, Edge, VertexMen
       self.originElement = elem;
       self.svg;
       self.config = merge(config);
-
-      self.config.width = $(elem).width();
+      // self.config.width = $(elem).width();
       self.metadata = merger().extend({}, metadata);
       self.menuActions = menuActions;
       self.edgeActions = edgeActions;

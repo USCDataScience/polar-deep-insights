@@ -15,44 +15,46 @@
 
       link: function($scope, $element, $attributes){
         // your DOM manipulation logic for this component goes here
-
         $scope.options = {
-          chart: {
-              type: 'scatterChart',
-              height: 600,
-              color: d3.scale.category10().range(),
-              scatter: {
-                  onlyCircles: false
+            chart: {
+              type: 'discreteBarChart',
+              height: 450,
+              margin : {
+                top: 20,
+                right: 20,
+                bottom: 50,
+                left: 55
               },
-              showDistX: true,
-              showDistY: true,
-              duration: 350,
+              x: function(d){ return d.label; },
+              y: function(d){ return d.value; },
+              showValues: true,
+              duration: 500,
               xAxis: {
-                  axisLabel: 'X Axis',
-                  tickFormat: function(d){
-                      return d3.format('.02f')(d);
-                  }
+                axisLabel: 'Buckets'
               },
               yAxis: {
-                  axisLabel: 'Y Axis',
-                  tickFormat: function(d){
-                      return d3.format('.02f')(d);
-                  },
-                  axisLabelDistance: -5
+                axisLabel: 'Frequency',
+                axisLabelDistance: -10
               },
-              zoom: {
-                  //NOTE: All attributes below are optional
-                  enabled: true,
-                  scaleExtent: [1, 10],
-                  useFixedDomain: false,
-                  useNiceScale: false,
-                  horizontalOff: false,
-                  verticalOff: false,
-                  unzoomEventType: 'dblclick.zoom'
+              callback: function(chart){
+                attachEvents(chart.discretebar.dispatch);
+                console.log()
               }
-          }
+            }
         };
 
+        function attachEvents(dispatch){
+          dispatch.on('elementMouseover.tooltip', function(event){
+            $scope.$emit('polar-measurement-histogram-mouseover', event.data);
+          });
+          dispatch.on('elementMouseout.tooltip', function(event){
+            $scope.$emit('polar-measurement-histogram-mouseout', event.data);
+          });
+
+          dispatch.on('elementClick.tooltip', function(event){
+            $scope.$emit('polar-measurement-histogram-redraw', event.data);
+          });
+        };
       }
     };
   }]);

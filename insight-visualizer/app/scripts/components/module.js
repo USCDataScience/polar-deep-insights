@@ -6,4 +6,6 @@ angular.module("polar.components", [
   "polar.components.addFilter",
   "polar.components.filter",
   "polar.components.analytics",
+  "polar.components.configuration",
+  "polar.components.measurementEditor",
 ]);

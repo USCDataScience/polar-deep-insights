@@ -1,6 +1,6 @@
 angular.module("polar.util.services")
 .factory("polar.util.services.StateHandler", [ "$window", "$rootScope", function( $window, $rootScope ){
-  function Handler(shouldNotRegister){
+  function Handler(shouldNotRegister, heavyLoader){
     var instance = { },
         states = [
           { message : ""         }, //idle
@@ -32,6 +32,7 @@ angular.module("polar.util.services")
     };
 
     instance.shouldNotRegister = shouldNotRegister;
+    instance.heavyLoader = ( heavyLoader || false );
     /*
      * Public state
      */
@@ -106,8 +107,8 @@ angular.module("polar.util.services")
 
   Handler.queue = [ ];
 
-  Handler.getInstance = function(shouldNotRegister){
-    var ins = new Handler(shouldNotRegister);
+  Handler.getInstance = function(shouldNotRegister, heavyLoader){
+    var ins = new Handler(shouldNotRegister, heavyLoader);
     ins.idle();
     return ins;
   };

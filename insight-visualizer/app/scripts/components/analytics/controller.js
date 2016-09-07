@@ -27,6 +27,13 @@
         case 4:
           msg = 'polar.components.analytics.reloadData.GeoDiversity';
           break;
+        case 5:
+          msg = 'polar.components.analytics.reloadData.PopularEntities';
+          break;
+        case 6:
+          msg = 'polar.components.analytics.reloadData.Stats';
+          break;
+
       };
       $scope.$broadcast(msg);
     };

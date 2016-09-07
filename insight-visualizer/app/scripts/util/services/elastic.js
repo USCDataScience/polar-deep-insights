@@ -4,15 +4,20 @@
 
   .service("polar.util.services.$ElasticSearch", ["$q", function($q){
 
-    function ES(){
+    function ES(host, index, docType){
+      this.index = index;
+      this.docType = docType;
+      this.host = host;
+
       this.instance = new elasticsearch.Client({
-        host: '104.236.190.155:9200',
+        host: host,
       });
     };
 
     ES.prototype.search = function(q, agg, args){
       var deferred = $q.defer(),
-          body = { };
+          body = { }
+          self = this;
 
       args = args || { };
 
@@ -27,8 +32,8 @@
       body.fields = [ ] || args.fields;
 
       this.instance.search({
-        index : ( args.index || 'polar-deep-cpy'),
-        type:   ( args.docType || 'docs'),
+        index : ( args.index   || self.index),
+        type:   ( args.docType || self.docType),
         body: body,
         size: ( 0 || args.size ),
         from: ( 0 || args.from ),

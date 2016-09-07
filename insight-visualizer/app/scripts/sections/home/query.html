@@ -1,21 +1,17 @@
 <div>
   <div class="row" data-ng-init="filters = []" style="min-height: 105px;">
-    <div class="col-md-11">
+    <div class="col-md-12">
       <div class="row">
-        <div class="col-md-3" data-ng-repeat="f in filters">
+        <div class="col-md-2" data-ng-repeat="f in filters">
           <div polar-filter data-filter="f" data-on-delete="filters.splice($index, 1)"></div>
         </div>
       </div>
-    </div>
-
-    <div class="col-md-1 text-center">
-      <div polar-add-filter data-filters="filters"></div>
     </div>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <div polar-analytics data-filters="filters"></div>
+      <div polar-analytics data-filters="filters" data-start-tab="{{params.type}}"></div>
     </div>
   </div>
 </div>

@@ -6,8 +6,7 @@
     "polar.components.conceptEditor.concept.$Modal", "polar.data.ConceptFactory",
     "polar.util.services.$Alert", "polar.util.services.$Dialog",
     "polar.components.conceptEditor.export.$Modal",
-    "polar.util.services.StateHandler",
-    function ($scope, $timeout, Aside, $ConceptModal, ConceptFactory, $Alert, $Dialog, $ExportModal, StateHandler) {
+    "polar.util.services.StateHandler", function ($scope, $timeout, Aside, $ConceptModal, ConceptFactory, $Alert, $Dialog, $ExportModal, StateHandler) {
 
     $scope.onGraphLoad = function(graph) {
       $scope.graph = graph;
@@ -82,8 +81,11 @@
     ];
 
     $scope.metadata = {};
-    $scope.configration = {};
     $scope.behavior = {};
+    $scope.configration = {
+      height: 780,
+      width: $(".body-container").width(),
+    };
 
     $scope.factory = ConceptFactory.getInstance();
 

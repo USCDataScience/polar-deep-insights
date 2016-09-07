@@ -1,15 +1,23 @@
 <div>
   <div class="row">
     <div class="col-md-2 col-md-offset-10">
-      <button class="btn btn-warning btn-block" data-ng-click="loadData()">Query</button>
+      <div class="pull-right">
+        <div polar-add-filter data-filters="filters"></div>
+        <button class="btn btn-info" data-ng-click="filters = [ ]; loadData()"><i class="fa fa-refresh"></i></button>
+        <button class="btn btn-warning" data-ng-click="loadData()"><i class="fa fa-search"></i></button>
+      </div>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 query-result">
 
        <uib-tabset active="active">
-        <uib-tab index="0" heading="Time Distribution" select="active = 0">
+        <uib-tab index="6" heading="Stats"  select="active = 6">
+          <div polar-analytics-stats  data-filters="filters" data-ng-if="active == 6"></div>
+        </uib-tab>
+
+        <uib-tab index="0" heading="Date Distribution" select="active = 0">
           <div polar-analytics-time-variance data-filters="filters" data-ng-if="active == 0"></div>
         </uib-tab>
 
@@ -21,11 +29,15 @@
           <div polar-analytics-concept  data-filters="filters" data-ng-if="active == 2"></div>
         </uib-tab>
 
+        <uib-tab index="5" heading="Popular Entities"  select="active = 5">
+          <div polar-analytics-popular-entities  data-filters="filters" data-ng-if="active == 5"></div>
+        </uib-tab>
+
         <uib-tab index="3" heading="Measurement Distribution"  select="active = 3">
           <div polar-analytics-measurement  data-filters="filters" data-ng-if="active == 3"></div>
         </uib-tab>
 
-        <uib-tab index="4" heading="Geographic Diversity"  select="active = 4">
+        <uib-tab index="4" heading="Regions of interest"  select="active = 4">
           <div polar-analytics-geo-diversity  data-filters="filters" data-ng-if="active == 4"></div>
         </uib-tab>
       </uib-tabset>

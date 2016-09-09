@@ -143,6 +143,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <span class=\"badge\" data-ng-show=\"!(isConfigSet() && isOntologySet())\">Incomplete</span>\n" +
     "        <span class=\"badge\" data-ng-show=\"isConfigSet() && isOntologySet()\">Complete</span>\n" +
     "      </h3>\n" +
+    "      <button class=\"btn btn-primary\" data-ng-click=\"loadDefault()\">Load Default</button>\n" +
     "      <hr />\n" +
     "    </div>\n" +
     "  </div>\n" +

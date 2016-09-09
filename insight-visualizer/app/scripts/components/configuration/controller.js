@@ -15,11 +15,25 @@
       $scope.isOntologySet = isOntologySet;
       $scope.downloadOntology = downloadOntology;
       $scope.downloadEntityCount = downloadEntityCount;
+      $scope.loadDefault = loadDefault;
 
       $scope.entityCountSet = EntityCount.isSet();
       $timeout(function(){
         $scope.entityCountSet = EntityCount.isSet();
       }, 500);
+    };
+
+    function loadDefault(){
+      $scope.config = {
+        endpoint: "http://polar.usc.edu/elasticsearch",
+        index: "polar-deep-insights-pdf",
+        docType: "docs",
+        ontologyIndex: "polar-ontology",
+        ontologyDocType: "graph",
+        measurementIndex: "polar-measurements",
+        measurementDocType: "raw-measurements",
+        entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count.json",
+      }
     };
 
     function saveConfig(d){

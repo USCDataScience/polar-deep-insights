@@ -19,14 +19,18 @@ angular.module("polar.data")
 
       // Validate config fields
       var dataSet = function(){
-        return (
-          ! _.isEmpty(self.data.endpoint)       &&
-          ! _.isEmpty(self.data.index)          &&
-          ! _.isEmpty(self.data.docType)        &&
-          ! _.isEmpty(self.data.ontologyIndex)  &&
-          ! _.isEmpty(self.data.ontologyDocType)&&
-          ! _.isEmpty(self.data.entityCountPath)
-        );
+        var fields = [
+          self.data.endpoint,
+          self.data.index,
+          self.data.docType,
+          self.data.ontologyIndex,
+          self.data.ontologyDocType,
+          self.data.entityCountPath,
+          self.data.measurementIndex,
+          self.data.measurementDocType,
+        ]
+
+        return ! _.any(fields, _.isEmpty);
       };
 
       return ! _.isEmpty(this.data) && dataSet();

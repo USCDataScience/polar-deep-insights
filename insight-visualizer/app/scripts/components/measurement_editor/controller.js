@@ -7,6 +7,8 @@
   function ($scope, StateHandler, Measurement, $HistModal, $Alert){
     function init(){
       $scope.save = save;
+      $scope.upload = upload;
+      $scope.download = download;
       $scope.showDistribution = showDistribution;
 
       $scope.groups = [ ];
@@ -30,20 +32,21 @@
       };
     };
 
+    function load(d){
+      $scope.allMeasurements = _.groupBy(d, function(m){ return m.group; });
+      delete $scope.allMeasurements["undefined"];
+      $scope.measurements = _.filter(d, function(m){ return !m.group; });
+      $scope.groups = _.chain(d)
+        .map(function(m){ return m.group })
+        .filter(function(m){ return !_.isEmpty(m) })
+        .unique().value();
+    };
+
     function loadMeasurements(){
       var state = StateHandler.getInstance();
       state.initiate();
       Measurement.fetchRawMeasurements().then(function(d){
-        $scope.allMeasurements = _.groupBy(d, function(m){ return m.group; });
-        delete $scope.allMeasurements["undefined"];
-        $scope.measurements = _.filter(d, function(m){ return !m.group; });
-        $scope.groups = _.chain(d)
-          .map(function(m){ return m.group })
-          .filter(function(m){ return !_.isEmpty(m) })
-          .unique().value();
-
-
-
+        load(d);
         state.success();
       }, function(){
         state.fatal();
@@ -54,6 +57,30 @@
       var measurements = _.flatten( [ _.values($scope.allMeasurements), $scope.measurements ] );
       Measurement.persistRawMeasurements(measurements);
       $Alert.open({ message: "Curated measurements persisted"})
+    };
+
+    function upload(){
+      var state = StateHandler.getInstance();
+      state.initiate();
+      var measurements = _.flatten( [ _.values($scope.allMeasurements), $scope.measurements ] );
+      Measurement.uploadCuratedMeasurements(measurements).then(function(){
+        $Alert.open({ message: "Curated measurements successfully uploaded"});
+        state.success();
+      }, function(){
+        state.fatal();
+      });
+    };
+
+    function download(){
+      var state = StateHandler.getInstance();
+      state.initiate();
+      Measurement.downloadCuratedMeasurements().then(function(r){
+        load(r);
+        $Alert.open({ message: "Curated measurements successfully download"});
+        state.success();
+      }, function(){
+        state.fatal();
+      });
     };
 
     function showDistribution(u){

@@ -55,17 +55,23 @@ angular.module("polar.data")
 
     EntityCount.fetch = function(d){
       var deferred = $q.defer();
-      if(!EntityCount.isSet()){
-        $http.get(Config.data.entityCountPath).then(function(d){
-          EntityCount.data = d.data;
-          deferred.resolve( new EntityCount(EntityCount.data) );
-        },function(){
-          deferred.reject();
-        });
+      if(!Config.data.entityCountPath){
+        deferred.reject();
       } else {
-        var eC = EntityCount.data;
-        deferred.resolve( new EntityCount(eC) );
+        if(!EntityCount.isSet()){
+          $http.get(Config.data.entityCountPath).then(function(d){
+            EntityCount.data = d.data;
+            deferred.resolve( new EntityCount(EntityCount.data) );
+          },function(){
+            deferred.reject();
+          });
+        } else {
+          var eC = EntityCount.data;
+          deferred.resolve( new EntityCount(eC) );
+        };
       };
+
+
       return deferred.promise;
     };
 

@@ -186,6 +186,16 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "          </tr>\n" +
     "\n" +
     "          <tr>\n" +
+    "            <td>Elastic search measurements index</td>\n" +
+    "            <td><input class=\"form-control\" data-ng-model=\"config.measurementIndex\" placeholder=\"polar-measurements\" /></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <td>Elastic search measurements doc-type</td>\n" +
+    "            <td><input class=\"form-control\" data-ng-model=\"config.measurementDocType\" placeholder=\"raw-measurements\" /></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
     "            <td>Entity Count JSON path</td>\n" +
     "            <td><input class=\"form-control\" data-ng-model=\"config.entityCountPath\" placeholder=\"http://mydomain/entitiy-count.json\" /></td>\n" +
     "          </tr>\n" +
@@ -379,7 +389,8 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "      <h3>Extracted Measurements</h3>\n" +
     "\n" +
     "      <button class=\"btn btn-success\" data-ng-click=\"save()\">Save</button>&nbsp;\n" +
-    "      <button class=\"btn btn-info\" data-ng-click=\"reload()\">Reload</button>\n" +
+    "      <button class=\"btn btn-info\" data-ng-click=\"download()\">Download</button>\n" +
+    "      <button class=\"btn btn-warning\" data-ng-click=\"upload()\" data-ng-disabled=\"true\">Upload</button>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +

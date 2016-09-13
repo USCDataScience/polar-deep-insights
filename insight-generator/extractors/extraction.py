@@ -1,6 +1,7 @@
 class Extraction:
   def __init__(self):
-    self.data = { }
+    self.data  = { }
+    self.stats = { }
 
   def get(self, k):
     if k in self.data:
@@ -14,19 +15,22 @@ class Extraction:
 
   def getData(self, id):
     d = {
-      "dates"        : self.count("DATE"),
-      "entities"     : self.count("entities"),
-      "places"       : self.count("LOCATION"),
-      "people"       : self.count("PERSON"),
-      "organizations": self.count("ORGANIZATION"),
-      "money"        : self.count("MONEY"),
-      "percentages"  : self.count("PERCENT"),
-      "time"         : self.count("TIME"),
-      "locations"    : self.get("locations"),
-      "geo"          : self.get("geo"),
-      "measurements" : self.get("measurements"),
-      "metadata"     : self.get("metadata"),
+      "dates"                   : self.count("DATE"),
+      "entities"                : self.count("entities"),
+      "places"                  : self.count("LOCATION"),
+      "people"                  : self.count("PERSON"),
+      "organizations"           : self.count("ORGANIZATION"),
+      "money"                   : self.count("MONEY"),
+      "percentages"             : self.count("PERCENT"),
+      "time"                    : self.count("TIME"),
+      "locations"               : self.get("locations"),
+      "geo"                     : self.get("geo"),
+      "grobid-measurements"     : self.get("grobid-measurements"),
+      "parse-tree-measurements" : self.get("parse-tree-measurements"),
+      "metadata"                : self.get("metadata"),
+      "stats"                   : self.stats,
     }
+
     d["id"] = id
     d["mime-type"] = d["metadata"]["Content-Type"]
 

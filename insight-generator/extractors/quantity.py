@@ -17,7 +17,7 @@ class GrobidQuantityExtractor(Extractor):
     except Exception as e:
       extMeasurements = [ ]
 
-    self.extraction.accumulate("measurements", extMeasurements)
+    self.extraction.accumulate("grobid-measurements", extMeasurements)
 
     return self.extraction
 
@@ -47,11 +47,11 @@ class GrobidQuantityExtractor(Extractor):
 class QuantityExtractor(Extractor):
   def extract(self, content):
     try:
-      extMeasurements = self.modules["measurementExtractionFn"](content)
+      extMeasurements = self.modules["measurementExtractionFn"](content=content, input_dir=None, show_graph=False, verbose=False)
     except Exception as e:
       extMeasurements = [ ]
 
-    self.extraction.accumulate("measurements", self.parse(extMeasurements))
+    self.extraction.accumulate("parse-tree-measurements", self.parse(extMeasurements))
 
     return self.extraction
 

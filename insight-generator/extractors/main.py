@@ -17,4 +17,4 @@ class InformationExtractor:
 
     extraction.data["metadata"] = metadata
 
-    return reduce(lambda extraction, Extractor: Extractor(extraction, self.__modules).extract(content), self.extractors, extraction)
+    return reduce(lambda extraction, Extractor: Extractor(extraction, self.__modules).extractionStats(content), self.extractors, extraction)

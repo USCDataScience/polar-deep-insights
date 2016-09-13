@@ -2,7 +2,8 @@
 
 import chardet
 import networkx as nx
-import os, sys
+import os
+import codecs
 import csv
 from pycorenlp import StanfordCoreNLP
 import matplotlib.pyplot as plt
@@ -15,7 +16,8 @@ from tika import parser
 from tika import detector
 import nltk.data
 import unicodedata
-
+import json
+from collections import OrderedDict
 tika.initVM()
 
 """
@@ -51,12 +53,10 @@ Add cousin for compounds -> "HyPlant has an ultra-high spectral resolution in th
 """
 WORKFLOW NOTES
 ----------------
-Better sentence splitter
-Automatic sentence extraction
-Try core nlp without backup (maybe filter non-sentences)
 Ignore any sentence with more than 3 "CD" tokens in a row
 
 """
+
 
 nlp = StanfordCoreNLP('http://localhost:9000')
 # nlp2 = StanfordCoreNLP('http://localhost:9001')
@@ -69,8 +69,8 @@ nlp = StanfordCoreNLP('http://localhost:9000')
 # Start CoreNLP server
 ###################################
 # cd /users/hundman/src/stanford-corenlp-full-2015-12-09
-# java -mx6g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer 9000
-# java -mx6g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer --port 9001 -annotators "tokenize,ssplit,parse,lemma,ner,mention,dcoref"
+# java -mx6g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer 9000 -props sampleProps.properties
+# java -mx6g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer --port 9000 -annotators "tokenize,ssplit,pos,depparse,lemma,ner"
 
 class Stats:
     def __init__(self):
@@ -81,6 +81,9 @@ class Stats:
         self.total_measurements = 0
         self.types_found = []
         self.encoding_errors = []
+        # self.unit_regex = "[a-zA-Z/]+[a-zA-Z/0-9]*"
+        self.unit_regex = "[^0-9\s\>\<\=]+[^\s]*"
+        # self.num = "[+|-]*(\d{1,3}(,\d{3})*)(\.\d+)*(-(\d{1,3}(,\d{3})*)(\.\d+)*)*(\s+(trillion|billion|million|thousand|hundred))*"
 
 
     def evaluate(self, sentence, pattern="Unknown", prediction="None", prediction_type=None):
@@ -93,11 +96,11 @@ class Stats:
 
     def print_summary(self):
         # All results (make function)
-        print "Total Sentences Parsed: " + str(stats.total_sentences)
-        print "Total Measurements Parsed: " + str(stats.total_measurements)
-        print "Total types: "
-        for key, value in stats.pattern_cnts["type"].iteritems():
-            print "   " + key + ": " + str(value)
+        print ("Total Sentences Parsed: " + str(stats.total_sentences))
+        print ("Total Measurements Parsed: " + str(stats.total_measurements))
+        # print ("Total Measurement Types Found: " )
+        # for key, value in stats.pattern_cnts["type"].iteritems():
+        #     print "   " + key + ": " + str(value)
 
 stats = Stats()
 
@@ -172,47 +175,53 @@ class Annotations:
         idx : string
         """
 
-        prior_token_num, match, match_end, match_begin = None, None, None, None
-
+        match, last_index = None, None
+        num_NERS = 0
 
         for f in self.tokens:
-            if f["ner"] == "NUMBER" and str(f["index"]) == idx and prior_token_num != None:
+            # print f["word"] + ": " + f["ner"]
 
-                # if a range has already been identified, skip
-                if prior_token_num + f["word"] in self.combined_nums:
-                    return "skip"
-                if f["characterOffsetEnd"] == match_begin:
-                    self.combined_nums.append(prior_token_num + f["word"])
-                    return prior_token_num + f["word"]
-            elif f["ner"] == "NUMBER" and match != None:
-                if match + f["word"] in self.combined_nums:
-                    return "skip"
+            # Find start of "NUMBER" NER
+            if match == None:
+                if f["ner"] == "NUMBER" and str(f["index"]) == idx:
+                    match = f["word"]
+                    last_index = str(f["index"])
+                    num_NERS = 1
+                else:
+                    match = None
 
-                if f["characterOffsetBegin"] == match_end:
-                    self.combined_nums.append(match + f["word"])
-                    return match + f["word"]
+            # Look for subsequent "NUMBERS"
+            if match != None and int(f["index"]) > int(idx):
+                # for x in range(1,4):
 
-            if f["ner"] == "NUMBER" and str(f["index"]) != idx:
-                prior_token_num = f["word"]
-            else:
-                prior_token_num = None
+                    # print "NUMBER: " + str(f["ner"] == "NUMBER")
+                    # print int(f["index"]) == int(idx) + x
+                if f["ner"] == "NUMBER":
+                    match = match + f["word"]
+                    last_index = str(f["index"])
+                    num_NERS += 1
+                else:
+                    break
 
-            if f["ner"] == "NUMBER" and str(f["index"]) == idx and prior_token_num == None:
-                match = f["word"]
-                match_end = f["characterOffsetEnd"]
-                match_begin = f["characterOffsetBegin"]
-            else:
-                match = None
-        return None
+        if num_NERS > 1:
+            return match, last_index
+        if num_NERS == 1:
+            return None
+
+
+
 
     def non_range_conj_check(self, node_idx):
         """
         If two numbers have an "and" between them but are not a range (indicated by the word "between"),
         split them into two separate measurements with the same unit and type
         """
-        if self.lookup[int(node_idx)+1]["word"] == "and" and self.lookup[int(node_idx)+2]["pos"] == "CD":
-            return True
-        else:
+        try:
+            if self.lookup[int(node_idx)+1]["word"] == "and" and self.lookup[int(node_idx)+2]["pos"] == "CD":
+                return True
+            else:
+                return False
+        except:
             return False
 
     def add_match(self, format, final_unit_idx, final_unit, final_num_idx, final_num):
@@ -235,7 +244,14 @@ class Annotations:
         determine what format the quantity takes and parse appropriately.
 
         """
-        if re.match("[a-zA-Z]+", node.word) == None and re.match("\d-[a-zA-Z]", node.word) == None:
+        ###########################
+        # "90m"
+        ###########################
+
+        if re.match("[\+-]*\d+" + stats.unit_regex, node.word) != None and not "-" in node.word:
+            first_letter_idx = re.search(stats.unit_regex, node.word).start()
+            self.add_match("attached", unit_idx, node.word[first_letter_idx:], node.idx, node.word[:first_letter_idx])
+        elif re.match(stats.unit_regex, node.word) == None and re.match("\d-" + stats.unit_regex, node.word) == None:
             if not self.lookup[int(unit_idx)]["word"] in self.forbidden_units:
                 self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
 
@@ -247,8 +263,8 @@ class Annotations:
         it is likely a "=" sign and indicates a value assigned to a param.
 
         """
-        if re.match("[a-zA-Z]+", node.word) == None and re.match("\d-[a-zA-Z]", node.word) == None:
-            if self.lookup[int(unit_idx)]["word"] == "=":
+        if re.match(stats.unit_regex, node.word) == None and re.match("\d-" + stats.unit_regex, node.word) == None:
+            if self.lookup[int(unit_idx)]["word"] == "=" or self.lookup[int(unit_idx)]["word"] == "~":
                 unit_idx = str(int(unit_idx) - 1)
                 self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
 
@@ -259,7 +275,7 @@ class Annotations:
         process appropriately
 
         """
-        if re.match("[a-zA-Z]+", node.word) == None and re.match("\d-[a-zA-Z]", node.word) == None:
+        if re.match(stats.unit_regex, node.word) == None and re.match("\d-" + stats.unit_regex, node.word) == None:
             if "NN" in self.lookup[int(unit_idx)]["pos"]:
                 self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
 
@@ -270,7 +286,7 @@ class Annotations:
         process appropriately
 
         """
-        if re.match("[a-zA-Z]+", node.word) == None and re.match("\d-[a-zA-Z]", node.word) == None:
+        if re.match(stats.unit_regex, node.word) == None and re.match("\d-" + stats.unit_regex, node.word) == None:
             if "NN" in self.lookup[int(unit_idx)]["pos"]:
                 self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
 
@@ -281,14 +297,17 @@ class Annotations:
         determine what format the quantity takes and parse appropriately.
 
         """
-        if re.match("[a-zA-Z]+", node.word) == None and re.match("\d-[a-zA-Z]", node.word) == None:
+        if re.match("[^0-9\s\>\<\=]+[^\s]*", node.word) == None and re.match("\d-" + stats.unit_regex, node.word) == None:
             if self.lookup[int(unit_idx)]["word"] == "=":
                 unit_idx = str(int(unit_idx) - 1)
                 self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
             elif not self.lookup[int(unit_idx)]["word"] in self.forbidden_units:
-                self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
                 if self.non_range_conj_check(node.idx) == True:
                     self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], str(int(node.idx) + 2), self.lookup[int(node.idx) + 2]["word"])
+                elif int(unit_idx) > int(node.idx):
+                    self.add_match("space_between", unit_idx, self.lookup[int(unit_idx)]["word"], node.idx, node.word)
+
+
 
 
 
@@ -334,25 +353,31 @@ class Annotations:
                         compounds.append(e[0]) if unit_idx == e[1] else compounds.append(e[1])
             return compounds
 
+
         ###########################
         # "90m"
         ###########################
-        if re.match("([\+-]*\d+[a-zA-Z]\d*)", node.word) != None and not "-" in node.word:
+        if re.search("[\+-]*\d+" + stats.unit_regex, node.word) != None:
             check_for_decimal_issue(unit_idx, G, edge)
-            first_letter_idx = re.search("[a-zA-Z]+", node.word).start()
-            self.add_match("attached", node.idx, node.word[first_letter_idx:], node.idx, node.word[:first_letter_idx-1])
+            first_letter_idx = re.search(stats.unit_regex, node.word).start()
+            self.add_match("attached", node.idx, node.word[first_letter_idx:], node.idx, node.word[:first_letter_idx])
 
 
         ###########################
         # "20 m"
         ###########################
         # ensure no letters or hyphens in the token
-        elif re.search("[\+-]*[a-zA-Z]+", node.word) == None and re.search("\d-[a-zA-Z]", node.word) == None:
+
+
+        elif re.search("[^0-9\.\-]", node.word[-1:]) == None and re.search("\d-" + stats.unit_regex + "\s+", node.word) == None:
             check_for_decimal_issue(unit_idx, G, edge)
             other_num_idx = check_for_additional_nummod(unit_idx, G, edge)
             compounds = check_for_compounds(unit_idx, G, other_num_idx, num_idx)
+
             if len(compounds) > 0:
-                if not self.lookup[int(min(compounds))]["word"].lower() in self.forbidden_units and int(min(compounds)) - 1 == int(node.idx):
+                # This if is something that needs to be revisited - if compo
+                if not self.lookup[int(min(compounds))]["word"].lower() in self.forbidden_units and int(min(compounds)) - 1 == int(node.idx)\
+                    and "NN" in self.lookup[int(min(compounds))]["pos"]:
                     self.add_match("space_between", min(compounds), self.lookup[int(min(compounds))]["word"], node.idx, node.word)
                 else:
                     if not self.lookup[int(unit_idx)]["word"].lower() in self.forbidden_units:
@@ -392,7 +417,9 @@ class Annotations:
         for node in G.nodes(data=True):
             node = Node(node[0], node[1]["word"], node[1]["pos"])
 
-            if node.pos == "CD" and self.lookup[int(node.idx)]["ner"] != "DATE" and node.word.count(".") < 2 and not "rd" in node.word and not "st" in node.word and not "th" in node.word: #not currently handling dates, check for too many periods
+            if node.pos == "CD" and self.lookup[int(node.idx)]["ner"] != "DATE" and node.word.count(".") < 2 and not "rd" in node.word and not "st" in node.word and not "th" in node.word \
+                and re.search("[^0-9,\.\-/\+]+", node.word) == None: #not currently handling dates, check for too many periods
+
                 # See if NER can help out
                 NER_num_check = self.check_for_NER_number(node.idx)
                 if NER_num_check == None:
@@ -400,12 +427,14 @@ class Annotations:
                 elif NER_num_check == "skip":
                     continue
                 else:
-                    node.word = NER_num_check
+                    node.word = NER_num_check[0]
+                    node.idx = NER_num_check[1]
+
 
                 for edge in G.edges(data=True):
                     unit_idx = edge[0] if node.idx == edge[1] else edge[1]
                     if node.idx in edge and (edge[2]['dep'] == "nummod") and (int(node.idx) < int(unit_idx) or \
-                    re.search("(=|>|<)",self.lookup[int(node.idx) - 1]["word"]) != None): # make sure unit is after number unless it is a comparison or assignment (=,<,>)
+                    re.search("(=|>|<)",self.lookup[int(node.idx) - 1]["word"]) != None) and not node.idx in [d["num_idx"] for d in self.matches]: # make sure unit is after number unless it is a comparison or assignment (=,<,>)
                         self.check_nummod_tokens(node, G, unit_idx, edge, node.idx)
 
                 for edge in G.edges(data=True):
@@ -429,33 +458,43 @@ class Annotations:
                         self.check_dep_tokens(node, unit_idx)
 
 
-            elif (node.pos == "JJ" or node.pos == "NN") and self.lookup[int(node.idx)]["ner"] != "DATE" and node.word.count(".") < 2:
-
+            elif (node.pos == "JJ" or node.pos == "NN" or node.pos == "VB") and self.lookup[int(node.idx)]["ner"] != "DATE" and node.word.count(".") < 2 and re.search("[0-9]+", node.word) != None:
                 ###########################
                 # 10-m-resolution
                 ###########################
-                if re.search("\d-[a-zA-Z]+-[a-zA-Z]+", node.word) != None:
+                if re.search("\d-" + stats.unit_regex + "-" + "[a-zA-Z]+", node.word) != None:
                     hyphen_idx = re.search("\d-[a-zA-Z]", node.word).start() + 2
                     self.add_match("double_hyphenated", node.idx, node.word[hyphen_idx:node.word.find("-", hyphen_idx)], node.idx, node.word[:hyphen_idx])
 
                 ###########################
+                # 10m
+                ###########################
+                elif re.search("\d" + stats.unit_regex, node.word) != None:
+                    unit_idx = re.search("\d" + stats.unit_regex, node.word).start()
+                    self.add_match("attached", node.idx, node.word[unit_idx+1:], node.idx, node.word[:unit_idx+1])
+
+                ###########################
                 # 10-m
                 ###########################
-                elif re.search("\d-[a-zA-Z]+", node.word) != None:
-                    hyphen_idx = re.search("-[a-zA-Z]", node.word).start() + 1
+                elif re.search("\d-" + stats.unit_regex, node.word) != None:
+                    hyphen_idx = re.search("-[a-zA-Z/]", node.word).start() + 1
                     self.add_match("hyphenated", node.idx, node.word[hyphen_idx:], node.idx, node.word[:hyphen_idx])
 
                 ###########################
                 # 1km-resolution
                 ###########################
-                elif re.search("\d[a-zA-Z]+-[a-zA-Z]+", node.word) != None:
-                    first_letter_idx = re.search("\d[a-zA-Z]+-[a-zA-Z]+", node.word).start() + 1
+                elif re.search("\d" + stats.unit_regex + "-[a-zA-Z]+", node.word) != None:
+                    first_letter_idx = re.search("\d" + stats.unit_regex + "-[a-zA-Z]+", node.word).start() + 1
                     hyphen_idx = re.search("-[a-zA-Z]", node.word).start()
                     self.add_match("attached_and_hyphenated", node.idx, node.word[first_letter_idx:hyphen_idx], node.idx, node.word[:first_letter_idx])
 
                 ###########################
                 # 10-20 days
                 ###########################
+
+                ##### TODO - 2009-2011 is breaking this and shouldnt be considered
+                ##### j.2004-2009
+
                 elif self.lookup[int(node.idx)]["ner"] == "DURATION" and "-" in node.word:
                     hyphen_idx = re.search("-[a-zA-Z]", node.word).start() + 1
                     self.add_match("hyphenated", node.idx, node.word[hyphen_idx:], node.idx, node.word[:hyphen_idx])
@@ -559,6 +598,17 @@ def evaluate_target_dep(dep_idx, edges, annotations, sentence):
                         return annotations.lookup[int(edge[0])]["word"]
 
 
+def proper_modifier_check(G, sentence, annotated, sibling_idx):
+    """
+    If there is a modifier of a proper noun, return that modifer and not the propoer noun
+    Example: "The spatial resolution of Landsat 8 (30 m) does not support..."
+    """
+    for edge in G.edges(data=True):
+        cousin_idx = get_connected(edge, sibling_idx, annotated, sentence)
+        if "mod" in edge[2]['dep'] and cousin_idx:
+            return G.node[cousin_idx]['word']
+    return None
+
 
 def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
     """
@@ -622,7 +672,7 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                         p_type = G.node[idx]['word']
                         return p_type
                     else:
-                        raise ValueError("NEED TO HANDLE A CASE WITH MULTIPLE CONJUNCTIONS WITHOUT A NUMMOD")
+                        # raise ValueError("NEED TO HANDLE A CASE WITH MULTIPLE CONJUNCTIONS WITHOUT A NUMMOD")
                         return None
         else:
             return None
@@ -647,19 +697,6 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
         return None
 
 
-    def proper_modifier_check(G, sentence, annotated, sibling_idx):
-        """
-        If there is a modifier of a proper noun, return that modifer and not the propoer noun
-        Example: "The spatial resolution of Landsat 8 (30 m) does not support..."
-        """
-        for edge in G.edges(data=True):
-            cousin_idx = get_connected(edge, sibling_idx, annotated, sentence)
-            if "mod" in edge[2]['dep'] and cousin_idx:
-                return G.node[cousin_idx]['word']
-        return None
-
-
-
     def get_cousin(G, annotated, sentence, sibling_idx, dep_type_list, unit_idx=None, before_constraint=False):
         """
         Example: "...changes over nations and continents at spatial resolutions as fine as 10 m"
@@ -674,6 +711,7 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                         return G.node[cousin_idx]['word']
         return None
 
+    potentials = []
 
     ##############################################
     # Top-level cases for various dependency types
@@ -682,10 +720,13 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
         sibling_idx = get_connected(edge, unit_idx, annotated, sentence)
         num_sibling_idx = get_connected(edge, num_idx, annotated, sentence)
         if sibling_idx:
-            if G.node[sibling_idx]["word"] == "=":
+            if G.node[sibling_idx]["word"] == "=" or G.node[sibling_idx]["word"] == "<" or G.node[sibling_idx]["word"] == ">":
                 p_type = get_cousin(G, annotated, sentence, sibling_idx, ["nsubj"])
-                stats.evaluate(sentence, "1.1.3", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.1.3", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
 
     for edge in G.edges(data=True):
@@ -698,49 +739,72 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                 #check an "nsubj" coming from the "nsubj"
                 _check = nsubj_check(G, sentence, annotated, sibling_idx)
                 if _check != None:
-                    stats.evaluate(sentence, "1.1.1", _check, "type")
-                    return _check
+                    doc = {}
+                    doc["p_type"] = _check
+                    doc["stats"] = [sentence, "1.1.1", _check, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
                 if "NN" in G.node[sibling_idx]['pos']:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.1.2", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.1.2", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
+
                 elif "VB" in G.node[sibling_idx]['pos']:
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["dobj"])
                     if p_type != None:
-                        stats.evaluate(sentence, "1.1.3", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.1.3", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
+
 
     for edge in G.edges(data=True):
         sibling_idx = get_connected(edge, unit_idx, annotated, sentence)
         num_sibling_idx = get_connected(edge, num_idx, annotated, sentence)
         if sibling_idx:
-            if edge[2]['dep'] == "nmod:of" and not "VB" in G.node[sibling_idx]["pos"]: #Might need to be more specific than != "VB"
+            if edge[2]['dep'] == "nmod:of" and "NN" in G.node[sibling_idx]["pos"]: #Might need to be more specific than != "VB"
                 #check for "conj" phrases like in sentence 80
                 conj_check = conjunction_check(G, sentence, annotated, sibling_idx)
                 if conj_check != None:
-                    stats.evaluate(sentence, "1.2.1", conj_check, "type")
-                    return conj_check
+                    doc = {}
+                    doc["p_type"] = conj_check
+                    doc["stats"] = [sentence, "1.2.1", conj_check, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
                 p_type = G.node[sibling_idx]['word']
-                stats.evaluate(sentence, "1.2.2", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.2.2", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
     for edge in G.edges(data=True):
         sibling_idx = get_connected(edge, unit_idx, annotated, sentence)
         num_sibling_idx = get_connected(edge, num_idx, annotated, sentence)
         if sibling_idx:
 
-            if edge[2]['dep'] == "nmod:within" and not "VB" in G.node[sibling_idx]["pos"]: #Might need to be more specific than != "VB"
+            if edge[2]['dep'] == "nmod:within" and "NN" in G.node[sibling_idx]["pos"]: #Might need to be more specific than != "VB"
                 #check for "conj" phrases like in sentence 80
                 conj_check = conjunction_check(G, sentence, annotated, sibling_idx)
                 if conj_check != None:
-                    stats.evaluate(sentence, "1.2.1", conj_check, "type")
-                    return conj_check
+                    doc = {}
+                    doc["p_type"] = conj_check
+                    doc["stats"] = [sentence, "1.2.3", conj_check, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
                 p_type = G.node[sibling_idx]['word']
-                stats.evaluate(sentence, "1.2.2", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.2.4", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
 
     for edge in G.edges(data=True):
@@ -749,10 +813,13 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
         if sibling_idx:
 
             # eventually will be an indication of inexact value (about)
-            if edge[2]['dep'] == "nmod:about":
+            if edge[2]['dep'] == "nmod:about" and "NN" in G.node[sibling_idx]["pos"]:
                 p_type = G.node[sibling_idx]['word']
-                stats.evaluate(sentence, "1.3", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.3", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
             # inspired by sentence on line 9
             elif edge[2]['dep'] == "compound" and "NN" in G.node[sibling_idx]["pos"]:
@@ -760,72 +827,105 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                 # print num_idx
                 if int(sibling_idx) + 1 == int(num_idx) or (int(sibling_idx) > int(num_idx) and int(sibling_idx) > int(unit_idx)): #guards against multiple compounds (want the last one)
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.4", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.4", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             # inspired by sentence on line 26
-            elif edge[2]['dep'] == "nmod:npmod":
+            elif edge[2]['dep'] == "nmod:npmod" and "NN" in G.node[sibling_idx]["pos"]:
                 p_type = evaluate_target_dep(sibling_idx, G.edges(data=True), annotated, stats)
-                stats.evaluate(sentence, "1.6", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.6", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
 
             # inspired by sentence on line 31
-            elif edge[2]['dep'] == "nmod:as":
+            elif edge[2]['dep'] == "nmod:as" and "NN" in G.node[sibling_idx]["pos"]:
                 #check for "conj" phrases like in sentence 80
                 p_type = G.node[sibling_idx]['word']
-                stats.evaluate(sentence, "1.7", p_type, "type")
-                return p_type
+                doc = {}
+                doc["p_type"] = p_type
+                doc["stats"] = [sentence, "1.7", p_type, "type"]
+                doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                potentials.append(doc)
 
-            elif edge[2]['dep'] == "appos":
+            elif edge[2]['dep'] == "appos" and "NN" in G.node[sibling_idx]["pos"]:
                 if G.node[sibling_idx]['word'][0].islower() and still_inside_parens(G ,sentence, annotated, sibling_idx) == None:
                     p_type = G.node[sibling_idx]['word']
                     if p_type != sentence.unit:
-                        stats.evaluate(sentence, "1.7.1", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.7.1", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
                 # if appos is still inside parenthesis, need to go to cousin idx (sentence 14)
                 elif still_inside_parens(G ,sentence, annotated, sibling_idx) != None:
                     outside_parens = still_inside_parens(G ,sentence, annotated, sibling_idx)
-                    stats.evaluate(sentence, "1.7.2", outside_parens, "type")
-                    return outside_parens
+                    doc = {}
+                    doc["p_type"] = outside_parens
+                    doc["stats"] = [sentence, "1.7.2", outside_parens, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
                 elif proper_modifier_check(G, sentence, annotated, sibling_idx) != None:
                     prop_mod = proper_modifier_check(G, sentence, annotated, sibling_idx)
-                    stats.evaluate(sentence, "1.7.3", prop_mod, "type")
-                    return prop_mod
+                    doc = {}
+                    doc["p_type"] = prop_mod
+                    doc["stats"] = [sentence, "1.7.3", prop_mod, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             # inspired by sentence on line 32
             elif edge[2]['dep'] == "amod":
                 # TO-DO: Need to check if number is connected via compound
                 if not "JJ" in G.node[sibling_idx]['pos'] and not "RRB" in G.node[sibling_idx]['pos'] and not "LRB" in G.node[sibling_idx]['pos']:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.8", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.8", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             # temporal modifier - sentence 31
             elif edge[2]['dep'] == "nmod:tmod":
                 if G.node[sibling_idx]['pos'] == "JJ":
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, "acl")
                     if p_type != None:
-                        stats.evaluate(sentence, "1.9.1", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.9.1", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
                 else:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.9.2", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.9.2", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             elif edge[2]['dep'] == "nmod:for":
                 if  "NN" in G.node[sibling_idx]['pos']:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.9.2", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.9.3", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             elif edge[2]['dep'] == "dobj":
                 if "VB" in G.node[sibling_idx]['pos']:
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["acl", "nsubj"])
                     if p_type != None:
-                        stats.evaluate(sentence, "1.10.1", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.10.1", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
 
             # elif edge[2]['dep'] == "nmod:to":
             #     if "VB" in G.node[sibling_idx]['pos']:
@@ -838,23 +938,35 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                 if "VB" in G.node[sibling_idx]['pos']:
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["acl", "dep"])
                     if p_type != None:
-                        stats.evaluate(sentence, "1.11.1", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.11.1", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
                 else:
                     p_type = evaluate_target_dep(sibling_idx, G.edges(data=True), annotated, stats)
-                    stats.evaluate(sentence, "1.11.2", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.11.2", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             elif edge[2]['dep'] == "nmod:in":
                 if "VB" in G.node[sibling_idx]['pos']:
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["dobj"], unit_idx, before_constraint=True)
                     if p_type != None:
-                        stats.evaluate(sentence, "1.11.1", p_type, "type")
-                        return p_type
-                # else:
-                #     p_type = evaluate_target_dep(sibling_idx, G.edges(data=True), annotated, stats)
-                #     stats.evaluate(sentence, "1.11.2", p_type, "type")
-                #     return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.11.3", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
+                elif "NN" in G.node[sibling_idx]['pos']:
+                    p_type = evaluate_target_dep(sibling_idx, G.edges(data=True), annotated, stats)
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.11.4", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
             # elif edge[2]['dep'] == "nmod:per":
             #     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["nmod:of"])
@@ -865,19 +977,28 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
             elif edge[2]['dep'] == "nmod:between":
                 if "NN" in G.node[sibling_idx]["pos"]:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.13.1", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.12.1", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
                 elif "VB" in G.node[sibling_idx]["pos"]:
                     p_type = get_cousin(G, annotated, sentence, sibling_idx, ["dobj"])
                     if p_type != None:
-                        stats.evaluate(sentence, "1.13.2", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.12.2", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
 
             elif edge[2]['dep'] == "nummod" and G.node[sibling_idx]["word"] != G.node[unit_idx]["word"]:
                 if "NN" in G.node[sibling_idx]["pos"]:
                     p_type = G.node[sibling_idx]['word']
-                    stats.evaluate(sentence, "1.14", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.14", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
 
 
 
@@ -886,16 +1007,36 @@ def space_between_patterns(G, sentence, annotated, unit_idx, num_idx):
                 # 'FLORIS will measure the radiance between 500 and 780 nm with a bandwidth between 0.3 nm and 2 nm (depending on wavelength).'
                 if "NN" in G.node[num_sibling_idx]["pos"]:
                     p_type = G.node[num_sibling_idx]['word']
-                    stats.evaluate(sentence, "1.15.1", p_type, "type")
-                    return p_type
+                    doc = {}
+                    doc["p_type"] = p_type
+                    doc["stats"] = [sentence, "1.15.1", p_type, "type"]
+                    doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                    potentials.append(doc)
                 elif "VB" in G.node[num_sibling_idx]["pos"]:
                     p_type = get_cousin(G, annotated, sentence, num_sibling_idx, ["dobj"])
                     if p_type != None:
-                        stats.evaluate(sentence, "1.15.2", p_type, "type")
-                        return p_type
+                        doc = {}
+                        doc["p_type"] = p_type
+                        doc["stats"] = [sentence, "1.15.2", p_type, "type"]
+                        doc["distance"] = abs(int(unit_idx) - int(sibling_idx)) if (unit_idx and sibling_idx) else 100
+                        potentials.append(doc)
 
 
-    return None
+
+    if len(potentials) == 0:
+        return None
+    elif len(potentials) == 1:
+        return potentials[0]['p_type']
+    elif len(potentials) > 1:
+        min_dist = 1000
+        winning_type = None
+        for type in potentials:
+            if type["distance"] < min_dist:
+                min_dist = type["distance"]
+                winning_type = type["p_type"]
+        return winning_type
+
+
 
 
 
@@ -1000,7 +1141,15 @@ def attached_patterns(G, sentence, annotated, unit_idx):
         if sibling_idx:
             if edge[2]['dep'] == "nummod":
                 p_type = G.node[sibling_idx]['word']
-                stats.evaluate(sentence, "2.1", p_type, "type")
+                stats.evaluate(sentence, "3.1", p_type, "type")
+                return p_type
+            elif edge[2]['dep'] == "amod":
+                p_type = G.node[sibling_idx]['word']
+                stats.evaluate(sentence, "3.2", p_type, "type")
+                return p_type
+            elif edge[2]['dep'] == "compound":
+                p_type = G.node[sibling_idx]['word']
+                stats.evaluate(sentence, "3.3", p_type, "type")
                 return p_type
 
     stats.evaluate(sentence, "Attached", "None", "type")
@@ -1012,15 +1161,14 @@ def find_range(sentence, match, annotations, range_words, leading):
     _range = None
     # num = "(\+|-)*\d+\.*\d*"
     num = "[+|-]*(\d{1,3}(,\d{3})*)(\.\d+)*(-(\d{1,3}(,\d{3})*)(\.\d+)*)*(\s+(trillion|billion|million|thousand|hundred))*"
-    attached_first_num_unit = "([a-zA-Z]+)*\d*"
-    detached_first_num_unit = "(\s[a-zA-Z]+)*\d*"
+    attached_first_num_unit =  "(" + stats.unit_regex + ")*\d*"
+    detached_first_num_unit = "(\s" + stats.unit_regex + ")*\d*"
 
-    # compounds connected by "to"
-    attached = re.compile(leading + num + attached_first_num_unit + "\s+" + range_words + "\s+" + num + "[a-zA-Z]+\d*(\\[a-zA-Z]+\d*)*")
+    attached = re.compile(leading + num + attached_first_num_unit + "\s+" + range_words + "\s+" + num + stats.unit_regex)
     attached_match_beg = re.compile(leading + num + attached_first_num_unit)
     attached_add_beg = re.compile(num + attached_first_num_unit + "\s+" + range_words + "\s+")
-    attached_match_end = re.compile(range_words + "\s+" + num + "[a-zA-Z]+\d*")
-    attached_add_end = re.compile("\s+" + range_words + "\s+" + num + "[a-zA-Z]+\d*")
+    attached_match_end = re.compile(range_words + "\s+" + num + stats.unit_regex)
+    attached_add_end = re.compile("\s+" + range_words + "\s+" + num + stats.unit_regex)
 
     detached = re.compile(leading + num + detached_first_num_unit + "\s+" + range_words + "\s+" + num)
     detached_match_beg = re.compile(leading + num + detached_first_num_unit + "\s+" + range_words + "\s+")
@@ -1067,100 +1215,42 @@ def find_range(sentence, match, annotations, range_words, leading):
     #               "num" : final_num
     #             })
 
-    if len(attached.findall(sentence)) > 0:
+    match_start, match_end = None, None
+    if "start" in annotations.lookup[0]:
+        match_start = annotations.lookup[int(match["num_idx"])]["start"] - annotations.lookup[0]["start"]
+        match_end = annotations.lookup[int(match["num_idx"])]["end"] - annotations.lookup[0]["start"]
+    else:
+        match_start = annotations.lookup[int(match["num_idx"])]["start"] - annotations.lookup[1]["start"]
+        match_end = annotations.lookup[int(match["num_idx"])]["end"] - annotations.lookup[1]["start"]
+
+    if attached.findall(sentence):
         for range_match in attached.finditer(sentence):
-            if match["num"] in attached_match_end.search(range_match.group(0)).group(0) and annotations.lookup[int(match["num_idx"])]["start"] >= range_match.start() and annotations.lookup[int(match["num_idx"])]["end"] <= range_match.end():
+            if match["num"] in attached_match_end.search(range_match.group(0)).group(0) and match_start >= range_match.start() and match_end <= range_match.end():
                 # match["num"] = str(re.search("(\+|-)*\d+\.*\d*(\s[a-zA-Z]+)*\s+(to)\s+", range_match.group(0)).group(0)) + match["num"]
                 match["unit"] = get_attached_unit(range_match)
+                # print match["num"]
+                # print match["unit"]
+                # print range_match.group(0)
+                # print "====="
                 match["num"] = range_match.group(0)[:-len(match["unit"])].strip()
+                # print match["num"]
                 if match["num"][0] == "(":
                     match["num"] = match["num"][1:]
                 _range = range_match.group(0)
 
-            # elif match["num"] in attached_match_beg.search(range_match.group(0)).group(0) and annotations.lookup[int(match["num_idx"])]["start"] >= range_match.start() and annotations.lookup[int(match["num_idx"])]["end"] <= range_match.end():
-            #     match["num"] = match["num"] + str(attached_add_beg.search(range_match.group(0)).group(0))
-            #     last_digit_idx = 0
-            #     for i,c in enumerate(range_match.group(0)):
-            #         if c.isdigit() and i != len(range_match.group(0)) - 1: # handle km2 (dont want 2 to be cutoff to find unit)
-            #             last_digit_idx = i
-            #     match["unit"] = range_match.group(0)[last_digit_idx+1:]
-            #     _range = range_match.group(0)
-
     elif len(detached.findall(sentence)) > 0:
         for range_match in detached.finditer(sentence):
-            if match["num"] in detached_match_end.search(range_match.group(0)).group(0) and annotations.lookup[int(match["num_idx"])]["start"] >= range_match.start() and annotations.lookup[int(match["num_idx"])]["end"] <= range_match.end():
+            if match["num"] in detached_match_end.search(range_match.group(0)).group(0) and match_start >= range_match.start() and match_end <= range_match.end():
                 match["num"] = str(detached_add_beg.search(range_match.group(0)).group(0)) + match["num"]
                 if match["num"][0] == "(":
                     match["num"] = match["num"][1:]
                 _range = range_match.group(0)
-            # elif match["num"] in detached_match_beg.search(range_match.group(0)).group(0) and annotations.lookup[int(match["num_idx"])]["start"] >= range_match.start() and annotations.lookup[int(match["num_idx"])]["end"] <= range_match.end():
-            #     match["num"] = match["num"] + str(detached_add_end.search(range_match.group(0)).group(0))
-            #     _range = range_match.group(0)
 
     match = check_double_unit(match)
     return (match, _range)
 
 
-def extract_measurements(content=None, show_graph=False, encoding=None, verbose=False):
-
-    def cleanup(content):
-        # print str(chardet.detect(content))
-        # if chardet.detect(content)['confidence'] > .9:
-        if encoding != None:
-            content = content.decode(encoding)
-        else:
-            test = content.decode(chardet.detect(content)["encoding"])
-            try:
-                nlp.annotate(test, properties={'outputFormat':'json', 'timeout':'5000'})
-                content = test
-            except:
-                try:
-                    content = content.decode("utf-8")
-                except:
-                    pass
-
-        replacements = {
-            8764 : "approximately ",
-            181 : " MU",
-            967 : " CHI",
-            8221 : '"',
-            8220 : '"',
-            8771 : "=",
-            8733 : " proportional to ",
-            8801 : "=",
-            8710 : " DELTA",
-            8217 : "'",
-            9702 : " degrees",
-            947 : " GAMMA",
-            945 : " APLHA",
-            968 : " PSI",
-            8730 : "square root of ",
-            956 : " MU",
-            2013 : "-",
-            8722 : "-",
-            226 : "-",
-            8211 : "-",
-            8727 : "",
-            215 : " by ",
-            963 : " SIGMA",
-            961 : " RHO",
-            175 : "REPEATING",
-            233 : "e",
-            177 : "+-",
-            772 : "REPEATING",
-            964 :"TAU"
-        }
-
-        cleaned = ""
-        for x in content:
-            # print x + " " + str(ord(x))
-            if ord(x) in replacements:
-                cleaned += replacements[ord(x)]
-            else:
-                cleaned += x
-        return re.sub("\[\d+(\,\s*\d+)*(-\d+)*\]","",cleaned.replace("-\n","").replace("\n"," ").replace("Fig.", "Fig")\
-        .replace("Eq.", "Eq").replace("Ref.", "Ref").replace("MUm", "micron").replace(" ' ", " ").replace("  "," ")\
-            .replace("| ", " ").replace(" |", " ABS").replace("(|", "(ABS"))
+def extract_measurements(content=None, input_dir=None, output_file="measurements_output", show_graph=False, encoding=None, verbose=False):
 
 
     def remove_trailing_punct(match):
@@ -1185,7 +1275,7 @@ def extract_measurements(content=None, show_graph=False, encoding=None, verbose=
         elif match["format"] == "hyphenated":
             p_type = hyphenated_patterns(G, sentence, annotations, stats, match["unit_idx"])
         elif match["format"] == "attached":
-            p_type = attached_patterns(G, sentence, annotations, match["unit_idx"])
+            p_type = space_between_patterns(G, sentence, annotations, match["unit_idx"], match["num_idx"])
         elif match["format"] == "attached_and_hyphenated":
             full = annotations.lookup[int(match["unit_idx"])]["word"]
             num_hyphens = full.count("-")
@@ -1201,32 +1291,46 @@ def extract_measurements(content=None, show_graph=False, encoding=None, verbose=
         return p_type
 
 
+    def reconstruct_sent(parsed_sentence):
+        sent = ""
+        for x in range(0, len(parsed_sentence["tokens"])):
+            sent += parsed_sentence["tokens"][x]['word']
+            if x+1 != len(parsed_sentence["tokens"]):
+                num_spaces = parsed_sentence["tokens"][x+1]["characterOffsetBegin"] - parsed_sentence["tokens"][x]["characterOffsetEnd"]
+                for y in range(0, num_spaces):
+                    sent += " "
+        return sent
 
-    def split_and_extract(content, stats, out):
-        sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
-        sentences = list(sent_detector.tokenize(content))
-        sentences1= list(map(lambda v : unicodedata.normalize('NFKD', v).encode('ascii','ignore'), sentences))
-        measurements = [ ]
-        for i in range(0, len(sentences1)):
-            sent = sentences1[i]
 
-            try:
-                output = nlp.annotate(sent, properties={'outputFormat':'json', 'timeout':'5000'})
-            except:
-                print "ENCODING ERROR: " + sent
-                return []
-            if "sentences" in output and type(output["sentences"]) is list:
+    def split_and_extract(content, stats, out=[]):
+        if len(content) < 2:
+            return None
+
+
+        output = nlp.annotate(content, properties={'outputFormat':'json', 'timeout':'50000'})
+        if isinstance(output, basestring):
+            output = output.encode("latin-1")
+            output = json.loads(output, strict=False)
+
+        # except:
+        #     print ("couldn't determine dependencies")
+        #     return None
+
+        if "sentences" in output and type(output["sentences"]) is list:
+            for i in range(0, len(output["sentences"])):
+                sent = reconstruct_sent(output["sentences"][i])
+
                 dep_key = "collapsed-ccprocessed-dependencies"
-                if not "collapsed-ccprocessed-dependencies" in output["sentences"][0]:
+                if not "collapsed-ccprocessed-dependencies" in output["sentences"][i]:
                     dep_key = "enhanced-plus-plus-dependencies"
 
-                annotations = Annotations(output["sentences"][0]["tokens"], output["sentences"][0][dep_key])
+                annotations = Annotations(output["sentences"][i]["tokens"], output["sentences"][i][dep_key])
                 # Check for legitimate output from coreNLP
-                if annotations.check_output(output["sentences"][0], stats) != True and nlp2:
-                    output = nlp2.annotate(sent, properties={'outputFormat':'json', 'timeout':'50000'})
-                    annotations = Annotations(output["sentences"][0]["tokens"], output["sentences"][0][dep_key])
+                if annotations.check_output(output["sentences"][i], stats) != True and nlp2:
+                    output = nlp2.annotate(sent, properties={'outputFormat':'json', 'timeout':'5000'})
+                    annotations = Annotations(output["sentences"][i]["tokens"], output["sentences"][i][dep_key])
 
-                if annotations.check_output(output["sentences"][0], stats) == True:
+                if annotations.check_output(output["sentences"][i], stats) == True:
                     stats.total_sentences += 1
                     annotations.build_lookup()
 
@@ -1240,19 +1344,22 @@ def extract_measurements(content=None, show_graph=False, encoding=None, verbose=
                         ranges_found = []
                         results = []
                         for match in matches:
-                            stats.total_measurements += 1
-
-                            range_check = find_range(sent, match, annotations, "(to|by|-)", "(\s|\()")
+                            range_check = find_range(sent, match, annotations, "(to|by|-|–)", "(\s|\()")
                             if range_check[1] == None:
                                 range_check = find_range(sent, match, annotations, "(and|&)", "between\s")
 
                             match = remove_trailing_punct(range_check[0])
                             range_found = range_check[1]
+
                             # final checks
-                            # print re.search("[a-zA-Z]|\%", match["unit"])
+                            # print re.search(stats.unit_regex + "|\%", match["unit"]) != None
+                            # print (range_found == None or (range_found != None and not range_found in ranges_found))
+                            # print re.search(match["unit"] + " (by|to|-) ", sent) == None
+                            # print re.search("[A-Z]", match["num"][1:]) == None
+
                             if (range_found == None or (range_found != None and not range_found in ranges_found)) and \
-                            re.search("[a-zA-Z]|\%", match["unit"]) != None and re.search(match["unit"] + " (by|to|-) ", sent) == None and \
-                            re.search("[A-Z]", match["num"][1:]) == None:
+                            re.search(stats.unit_regex + "|\%", match["unit"]) != None and re.search(match["unit"] + " (by|to|-) \d" , sent) == None and \
+                            re.search("[A-Z]", match["num"]) == None:
                             # annotations lookup used to make sure that a match isn't part of a range to be found later
                             #add verb check back in for actual implementation (used for quality control when sentence splitting) -> "and annotations.check_for_verb() == True"
                                 if range_found != None:
@@ -1267,38 +1374,76 @@ def extract_measurements(content=None, show_graph=False, encoding=None, verbose=
                                 match["type"] = parse_type(G, sentence, annotations, stats, match)
                                 match["type"] = "" if match["type"] == None else match["type"]
 
+                                # print match
                                 results.append(match)
 
                         for idx, x in enumerate(results):
                             for y in results:
-                                if x["unit_idx"] == y["unit_idx"] and x["num"] in y["num"] and len(x["num"]) < len(y["num"]):
+                                if (x["num"] in y["num"] and sentence.text.count(x["num"]) == 1 or x["unit_idx"] == y["unit_idx"] and x["num"] in y["num"]) and len(x["num"]) < len(y["num"]):
                                     del results[idx] #quality control -> make sure a measurement is not part of a range that was found after
-                                if x["num"] in y["num"] and sentence.text.count(x["num"]) == 1 and len(x["num"]) < len(y["num"]):
-                                    del results[idx] # more quality control, added to ensure even if unit was different, still could catch duplicates
+                                                    # more quality control, added to ensure even if unit was different, still could catch duplicates
+                            if re.match("[a-zA-Z]", x["num"]) != None and re.match("(to|and|by)", x["num"]) == None:
+                                if len(results) > 0:
+                                    del results[idx]
 
-                        if verbose == True:
-                            print(sentence.text)
+                            if x["type"] != "":
+                                for m in re.finditer(x["type"], sentence.text):
+                                    for n in re.finditer(x["unit"], sentence.text):
+                                        if n.end() == m.start():
+                                            x["unit"] = x["unit"] + x["type"]
+                                            x["type"] = ""
 
+
+                            if x["unit"] == x["type"] or re.search("[^0-9]", x["type"]) == None:
+                                results[idx]["type"] = ""
+
+
+
+                        stats.total_measurements += len(results)
+
+                        # if verbose == True:
+                            # print(sent)
                         for match in results:
-                            # out.write("(")
-                            # out.write(match["num"].encode("utf-8"))
-                            # out.write(", ")
-                            # out.write(match["unit"].encode("utf-8"))
-                            # out.write(", ")
-                            # out.write(match["type"].encode("utf-8"))
-                            # out.write(")\n")
+                            match.pop('format')
+                            # match.pop('num_idx')
+                            # match.pop('unit_idx')
+                            match["sentence"] = i+1
+                            sort_order = ['num', 'unit', 'type', 'sentence', 'num_idx', 'unit_idx']
+                            match_ordered = OrderedDict(sorted(match.iteritems(), key=lambda (k, v): sort_order.index(k)))
+                            out.append(json.loads(json.dumps(match_ordered, ensure_ascii=False)))
 
-                            # if verbose == True:
-                            #     print("(" + match["num"].encode("utf-8") + ", " + match["unit"].encode("utf-8") + ", " + match["type"].encode("utf-8") + ")\n")
+                            if verbose == True:
+                                print("(" + match["num"].encode("utf-8") + ", " + match["unit"].encode("utf-8") + ", " + match["type"].encode("utf-8") + ")")
+                                # if match == results[len(results)-1]:
+                                    # print "\n"
 
-                            measurements = measurements + results
+                        # if len(results) == 0:
+                        #     print "\n"
 
-            else:
-                print "Core NLP Failed"
 
-        #stats.print_summary()
-        return measurements
+                        # return results
+            return out
+        else:
+            print ("Core NLP Failed")
 
-    return split_and_extract(content, stats, sys.stdout)
+
+
+    if content == None and input_dir != None:
+        for input_file in os.listdir(os.path.join(input_dir)):
+            if input_file != ".DS_Store":
+                parse = parser.from_file(os.path.join(input_dir,input_file))
+                # content = cleanup(parse["content"])
+                # content = unicodedata.normalize('NFKD', content).encode('ascii','ignore')
+                return split_and_extract(parse["content"], stats)
+    elif content != None and input_dir == None:
+        return split_and_extract(content, stats)
+
+    stats.print_summary()
+
+
+
+
+
+# extract_measurements(content=None, input_dir="docs_test", output_file="measurements_output")
 
 

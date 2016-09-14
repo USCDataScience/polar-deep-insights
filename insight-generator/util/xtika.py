@@ -31,6 +31,6 @@ class TikaWrapper:
   def getTRR(self):
     return self.__call({ 'Content-Type': 'application/tag-ratio' })['metadata']['trr-extracted']
 
-  def __exit__(self):
+  def __del__(self):
     if self.modules["os"].path.exists(self.buffer):
       self.modules["os"].remove(self.buffer)

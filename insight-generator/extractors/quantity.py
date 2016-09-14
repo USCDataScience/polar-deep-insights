@@ -47,7 +47,7 @@ class GrobidQuantityExtractor(Extractor):
 class QuantityExtractor(Extractor):
   def extract(self, content):
     try:
-      extMeasurements = self.modules["measurementExtractionFn"](content=content, input_dir=None, show_graph=False, verbose=False)
+      extMeasurements = self.modules["measurementExtractionFn"](content=str(content), input_dir=None, show_graph=False, verbose=False)
     except Exception as e:
       extMeasurements = [ ]
 

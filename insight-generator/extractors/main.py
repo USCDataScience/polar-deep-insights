@@ -12,8 +12,8 @@ class InformationExtractor:
     self.ContentExtractor = ContentExtractor
 
 
-  def extract(self, extraction, path):
-    (content, metadata) = self.ContentExtractor(path, self.__modules).extract()
+  def extract(self, extraction, path, include_metadata=False):
+    (content, metadata) = self.ContentExtractor(path, self.__modules).extract(include_metadata)
 
     extraction.data["metadata"] = metadata
 

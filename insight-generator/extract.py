@@ -55,5 +55,5 @@ idf = DocumentIdentifier({
   "hashlib": hashlib,
 })
 
-d = metaExtractor.extract(Extraction(), PATH).getData(idf.set(PATH))
+d = metaExtractor.extract(Extraction(), PATH, include_metadata=True).getData(idf.set(PATH))
 print json.dumps(d)

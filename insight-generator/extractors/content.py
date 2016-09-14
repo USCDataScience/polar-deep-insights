@@ -6,9 +6,14 @@ class ContentExtractor:
     self.__modules = modules
     self.path = path
 
-  def extract(self):
+  def extract(self, include_metadata=False):
     parsed = self.__modules["tika-parser"].from_file(self.path)
     metadata = parsed["metadata"]
-    md_string = "\n".join( map(str, metadata.values()) )
+
     content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules).getTRR()
-    return (md_string + "\n" + content, metadata)
+
+    if include_metadata:
+      md_string = "\n".join( map(str, metadata.values()) )
+      content = md_string + "\n" + content
+
+    return (content, metadata)

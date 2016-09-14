@@ -1,7 +1,8 @@
 class Extraction:
   def __init__(self):
-    self.data  = { }
-    self.stats = { }
+    self.data    = { }
+    self.stats   = { }
+    self.content = None
 
   def get(self, k):
     if k in self.data:
@@ -29,6 +30,7 @@ class Extraction:
       "parse-tree-measurements" : self.get("parse-tree-measurements"),
       "metadata"                : self.get("metadata"),
       "stats"                   : self.stats,
+      "content"                 : self.content,
     }
 
     d["id"] = id

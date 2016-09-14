@@ -11,10 +11,12 @@ class InformationExtractor:
     self.extractors = extractors
     self.ContentExtractor = ContentExtractor
 
-
-  def extract(self, extraction, path):
+  def extract(self, extraction, path, persist_content=False):
     (content, metadata) = self.ContentExtractor(path, self.__modules).extract()
 
     extraction.data["metadata"] = metadata
+
+    if persist_content:
+      extraction.content        = content
 
     return reduce(lambda extraction, Extractor: Extractor(extraction, self.__modules).extractionStats(content), self.extractors, extraction)

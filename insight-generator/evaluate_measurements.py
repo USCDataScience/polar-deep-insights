@@ -37,6 +37,5 @@ extractors = [
 ]
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)
-d = metaExtractor.extract(Extraction(), PATH).getData(PATH)
-
+d = metaExtractor.extract(Extraction(), PATH, persist_content=True).getData(PATH)
 print json.dumps(d)

@@ -1,8 +1,12 @@
 import sys, re, nltk, os, json, requests, urllib, urllib2
 import redis, hashlib
 
-from tika     import parser
-from nltk.tag import StanfordNERTagger
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from tika      import parser
+from tika.tika import callServer
+from nltk.tag  import StanfordNERTagger
 
 from extractors.entity     import EntityExtractor
 from extractors.location   import GeoTopicExtractor
@@ -13,8 +17,9 @@ from extractors.content    import ContentExtractor
 
 from extractors.main import InformationExtractor
 
-from util.doi import DocumentIdentifier
+from util.doi   import DocumentIdentifier
 from util.dtree import DirTreeTraverser
+from util.xtika import TikaWrapper
 
 PATH   = sys.argv[1]
 
@@ -23,8 +28,8 @@ tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 extractors = [
   EntityExtractor,
   NERExtractor,
-  GrobidQuantityExtractor,
-  # QuantityExtractor,
+  # GrobidQuantityExtractor,
+  QuantityExtractor,
   GeoTopicExtractor,
 ]
 
@@ -34,11 +39,14 @@ dependencies = {
   "nltk": nltk,
   "tagger": tagger,
   "tika-parser": parser,
+  "tika-server-request-fn": callServer,
+  "TikaWrapper": TikaWrapper,
   "requests" : requests,
   "json" : json,
   "urllib" : urllib,
   "urllib2" :urllib2,
 }
+
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)
 

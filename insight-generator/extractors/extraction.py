@@ -30,11 +30,9 @@ class Extraction:
     d["id"] = id
     d["mime-type"] = d["metadata"]["Content-Type"]
 
-
     for e in["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"]:
-      (cTotal, eTotal) = self.entityTotals(self.countHash(e))
-      d[e + "-occuranceCount"] = cTotal
-      d[e + "-typeCount"]      = eTotal
+      d[e + "-occuranceCount"] = sum(map(lambda x: x["count"], d[e]))
+      d[e + "-typeCount"]      = len(d[e])
 
     return d
 

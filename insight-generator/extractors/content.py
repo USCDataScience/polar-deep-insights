@@ -7,6 +7,8 @@ class ContentExtractor:
     self.path = path
 
   def extract(self):
-    # Handle content extraction depending on the mime-type
     parsed = self.__modules["tika-parser"].from_file(self.path)
-    return (parsed["content"], parsed["metadata"])
+    metadata = parsed["metadata"]
+    md_string = "\n".join( map(str, metadata.values()) )
+    content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules).getTRR()
+    return (md_string + "\n" + content, metadata)

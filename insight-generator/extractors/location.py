@@ -5,7 +5,8 @@ from base import Extractor
 class GeoTopicExtractor(Extractor):
 
   def extract(self, content):
-    self.locationCountHash = self.extraction.countHash("LOCATION")
+    self.locationCount = self.extraction.count("LOCATION")
+    self.locationCountHash = reduce(lambda m, l: m.update({ l['name'] : l }) or m, self.locationCount, { })
     locations = self.locationCountHash.keys()
 
     if len(locations) > 0:
@@ -27,7 +28,9 @@ class GeoTopicExtractor(Extractor):
     return {
      'name': l[0]['name'],
      'rawText': rawText,
-     'count': self.locationCountHash[ rawText ],
+     'count': self.locationCountHash[ rawText ]["count"],
+     'tf' : self.locationCountHash[ rawText ]["tf"],
+     'tf-alpha': self.locationCountHash[ rawText ]["tf-alpha"],
      'countryCode': l[0]['countryCode'],
      'location': {
         'lat': l[0]['latitude'],

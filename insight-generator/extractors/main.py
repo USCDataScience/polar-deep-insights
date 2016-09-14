@@ -13,9 +13,7 @@ class InformationExtractor:
 
 
   def extract(self, extraction, path):
-    (content, metadata) = self.ContentExtractor(path, {
-      "tika-parser" : self.__modules["tika-parser"]
-    }).extract()
+    (content, metadata) = self.ContentExtractor(path, self.__modules).extract()
 
     extraction.data["metadata"] = metadata
 

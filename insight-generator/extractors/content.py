@@ -38,7 +38,7 @@ class ContentExtractor:
 
     if include_metadata:
       md_string = "\n".join( map(safeStringify, parsed["metadata"].values() ) )
-      content = md_string + "\n" + content
+      content = md_string.decode('UTF-8') + "\n" + content
 
     return (content, parsed["metadata"])
 

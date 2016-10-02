@@ -20,6 +20,7 @@ from util.util          import TmpFile
 
 PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
+ERROR_PATH    = sys.argv[3]
 
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 
@@ -59,5 +60,10 @@ def persistExtraction(d):
   f.write("\n")
   f.close()
 
-d = metaExtractor.extract(Extraction(), PATH, include_metadata=True).getData(idf.set(PATH))
-persistExtraction(d)
+try:
+  d = metaExtractor.extract(Extraction(), PATH, include_metadata=True).getData(idf.set(PATH))
+  persistExtraction(d)
+except:
+  e = open(ERROR_PATH, "a")
+  e.write(PATH + "\n")
+  e.close()

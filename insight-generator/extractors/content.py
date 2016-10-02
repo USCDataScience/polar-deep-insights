@@ -12,18 +12,32 @@ class ContentExtractor:
 
   def extract(self, include_metadata=False):
     parsed   = self.__modules["TikaWrapper"](self.path, self.__modules).get()
-    content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules, raw=True).getTRR()
+    content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules, raw=True).getTRR().encode('UTF-8')
 
     self.content_type = parsed["metadata"]["Content-Type"]
 
     if self.isExtractableImage():
-      content = self.imageObjectExtractor() + content
+      c = self.imageObjectExtractor()
+      content = c + content
+      parsed["metadata"]["mm-text"] = c
 
     if self.isExtractableAudio():
-      content = self.audioSpeechExtractor() + content
+      c = self.audioSpeechExtractor()
+      content = c + content
+      parsed["metadata"]["mm-text"] = c
+
+    def safeStringify(d):
+      if(type(d) ==  type([ ])):
+        return "\n".join( map(safeStringify, d) )
+
+      if isinstance(d, unicode):
+        return d.encode('UTF-8')
+
+      return str(d)
+
 
     if include_metadata:
-      md_string = "\n".join( map(str, parsed["metadata"].values()) )
+      md_string = "\n".join( map(safeStringify, parsed["metadata"].values() ) )
       content = md_string + "\n" + content
 
     return (content, parsed["metadata"])
@@ -37,7 +51,6 @@ class ContentExtractor:
   def audioSpeechExtractor(self):
     try:
       tmp = self.__modules["TmpFile"](extension=".flac")
-      # Convert file to .flac
       call(shlex.split("ffmpeg -i {0} -c:a flac {1}".format(self.path, tmp.path)))
       r = sr.Recognizer()
       with sr.AudioFile(tmp.path) as source:
@@ -45,14 +58,12 @@ class ContentExtractor:
       HOUNDIFY_CLIENT_ID = "r0m3MxqkxG_r5fKQOt6qaw=="
       HOUNDIFY_CLIENT_KEY = "u2s0qH3kHm8jAntPSf46ISe87JUvUwaAi03iJYcsXTyiXISDom825P1sEVW-6gU8q3td8Coe5dWFQXN3TGdf0Q=="
       d = r.recognize_houndify(audio, client_id=HOUNDIFY_CLIENT_ID, client_key=HOUNDIFY_CLIENT_KEY)
-      # Delete tmp file
       tmp.destroy()
-
-      print "EXTRACTED TEXT {0}".format(d)
-      return d
     except Exception as e:
       print "Speech conversion error {0}".format(e)
-      return ""
+      d = ""
+
+    return d
 
   def imageObjectExtractor(self):
     try:
@@ -62,5 +73,7 @@ class ContentExtractor:
       d = [ ]
 
     return "\n".join( d )
+
+
 
 

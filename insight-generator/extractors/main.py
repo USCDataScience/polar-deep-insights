@@ -16,5 +16,7 @@ class InformationExtractor:
     (content, metadata) = self.ContentExtractor(path, self.__modules).extract(include_metadata)
 
     extraction.data["metadata"] = metadata
+    extraction.data["content"]  = content
+    extraction.data["path"]     = path
 
     return reduce(lambda extraction, Extractor: Extractor(extraction, self.__modules).extract(content), self.extractors, extraction)

@@ -1,6 +1,7 @@
 class Extraction:
   def __init__(self):
     self.data = { }
+    self.extracted_features = ["DATE","entities","LOCATION","PERSON","ORGANIZATION","MONEY","PERCENT","TIME","locations"]
 
   def get(self, k):
     if k in self.data:
@@ -26,11 +27,12 @@ class Extraction:
       "geo"          : self.get("geo"),
       "measurements" : self.get("measurements"),
       "metadata"     : self.get("metadata"),
+      "stat"         : self.get("stat"),
     }
     d["id"] = id
     d["mime-type"] = d["metadata"]["Content-Type"]
 
-    for e in["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"]:
+    for e in ["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"]:
       d[e + "-occuranceCount"] = sum(map(lambda x: x["count"], d[e]))
       d[e + "-typeCount"]      = len(d[e])
 

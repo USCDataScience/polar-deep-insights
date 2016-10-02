@@ -11,9 +11,10 @@ class NERExtractor(Extractor):
       except Exception as e:
         return 0
 
-    self.extraction.data['DATE'] = reduce(lambda m,d: m + self.modules["re"].compile(r'\d{4}').findall(d) if len(d) > 4 else m + [ d ], self.extraction.data['DATE'], [ ])
-    self.extraction.data['DATE'] = map(toF, self.extraction.data['DATE'])
-    self.extraction.data['DATE'] = filter(lambda d: d!=0, self.extraction.data['DATE'])
+    if 'DATE' in self.extraction.data:
+      self.extraction.data['DATE'] = reduce(lambda m,d: m + self.modules["re"].compile(r'\d{4}').findall(d) if len(d) > 4 else m + [ d ], self.extraction.data['DATE'], [ ])
+      self.extraction.data['DATE'] = map(toF, self.extraction.data['DATE'])
+      self.extraction.data['DATE'] = filter(lambda d: d!=0, self.extraction.data['DATE'])
 
   def extract(self, content):
 

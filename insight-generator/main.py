@@ -24,8 +24,7 @@ tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 extractors = [
   EntityExtractor,
   NERExtractor,
-  GrobidQuantityExtractor,
-  # QuantityExtractor,
+  QuantityExtractor,
   GeoTopicExtractor,
 ]
 

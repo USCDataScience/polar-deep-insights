@@ -20,12 +20,13 @@ class GeoTopicExtractor(Extractor):
       else:
         extractedLocations = [ ]
         extractedGeoInfo   = [ ]
-
-      self.extraction.accumulate("geo", extractedLocations)
-      self.extraction.accumulate("locations", extractedGeoInfo)
     except:
       print "Geo topic extraction error"
-      pass
+      extractedLocations = [ ]
+      extractedGeoInfo   = [ ]
+
+    self.extraction.accumulate("geo", extractedLocations)
+    self.extraction.accumulate("locations", extractedGeoInfo)
 
     return self.extraction
 

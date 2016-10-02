@@ -16,6 +16,7 @@ from extractors.main import InformationExtractor
 
 from util.doi           import DocumentIdentifier
 from util.xtika         import TikaWrapper
+from util.util          import TmpFile
 
 PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
@@ -42,6 +43,7 @@ dependencies = {
   "json" : json,
   "urllib" : urllib,
   "urllib2" :urllib2,
+  "TmpFile": TmpFile,
 }
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)

@@ -1,141 +1,3296 @@
-health and society
-bird wintering range
-bird wintering ranges
-leaf and bloom date
-leaf and bloom dates
-climate change indicator
-climate change indicators
-ocean surface temprature
-sea surface temprature
-tropical storm activity
-tropical cyclone activity
-heat stroke
-lyme disease
-growing season
-natural gas
-carbon dioxide
-nitrous oxide
-sulfur hexafluoride
-climate change
-fossil fuel
-fossil fuels
-sea level
-tropical storm
-tropical cyclone
-storm activity
-cyclonic activity
-ocean level
-fluorinated gas
-fluorinated gases
-water level
-water levels
-leaf dates
-bloom dates
-leaf date
-bloom date
-sea ice
-arctic sea ice
-antarctic sea ice
+behavior
+census
+civil disturbance
+human activity
+human capital
+human need
+profession
+psychological parameter
+recreation
+service
+social activity
+social behavior
+work
+manned
+unmanned
+colonization
+consumptive use
+mapping
+energy end use
+space cooling
+space heating
+water heating
+agriculture
+crop production
+cultivation
+drip irrigation
+logging
+harvesting
+horticulture
+irrigation
+plant production
+soil cultivation
+animal production
+apiculture
+aquaculture
+beekeeping
+breeding
+fish production
+fishing
+overfishing
+sericulture
+shellfish production
+assembly
+construction
+development
+grading
+industrialization
+land use
+manafacturing
+management
+management system
+processing
+production
+packaging
+engineering activity
+productivity
+capacity buiiding
+consumptive use
+demand
+sustainable development
+urbanization
+forestry
+in situ
+on site
+fossil fuel burning
+clear cutting
+dig
+drill
+exploration
+extraction
+resource extraction
+mining
+prospecting
+strip mining
+allocation
+attribute
+belief network
+choice
+control strategy
+consumer behavior
+criteria
+decision
+decision activity
+decision maker
+decision support system
+dss
+decision tree
+environmental control objective
+evaluation
+group consensus
+location allocation
+multiple decision maker
+multiattribute
+multiobjective
+objective
+optimize
+optimization
+preference
+ranking
+resource allocation
+scenario
+screening
+solution strategy
+valuation
+weighting
+abatement
+air treatment process
+best availabl control technology
+bact
+biosequestration
+cap and trade
+carbon sequestration
+carbon offset
+cloud seeding
+compliance
+distillation
+dry scrubbing
+environmental control strategy
+flocculation
+maximum achievable control technology
+mact
+pretreatment
+primary treatment
+remediation
+scrubbing
+secondary treatment
+sequester
+state implementation plan
+tertiary treatment
+treatment
+water management
+wastewater treatment
+water treatment process
+wet scrubbing
+controlled burn
+afforestation
+reforestation
+restoration
+revegetation
+reclamation
+well injection
+land preservation
+protection
+conservation
+land management
+land tenure
+habitat management
+stewardship
+sustainable
+sustainability
+acceptable daily intake
+adi
+acceptable level
+airborne toxic control measure
+atcm
+air quality standard
+ambient air quality standard
+aaqs
+environmental law
+environmental standard
+environmental standards body
+non attainment area
+reference dose
+rf d
+reference exposure concentration
+rec
+reference exposure level
+rel
+water quality standard
+national ambient air quality standard
+new source performance standard
+nsps
+continous emission monitoring system
+cems
+cost benefit analysis
+emission inventory
+environmental impact statement
+environmental monitoring
+health risk assessment
+hra
+national toxics inventory
+natural capital
+new source review
+nsr
+no observed adverse effect level
+noael
+no observed effect level
+noel
+unit risk factor
+urf
+environmental assessment
+impact assessment
+status assessment
+suitability assessment
+carbon neutral
+carbon neutrality
+administrative region
+city
+civil
+civilian
+combined statistical area
+csa
+continent
+country
+county
+government
+governing body
+federal governing body
+federal
+jurisdiction
+metropolitan area
+metropolitan statistical area
+msa
+military
+province
+standards body
+state
+special administration region
+sar
+standard metropolitan statistical area
+smsa
+urban area
+penalty
+permit
+policy
+regulation
+standard
+treaty
+human law
+enforcement
+govt activity
+governing body product
+analysis
+applied research
+assessment
+campaign
+correction
+difference
+evidence
+experiment
+experiment activity
+hypothesis test
+investigation
+investigate
+monitor
+monitoring
+observation
+observe
+project
+proof
+publication
+realization
+research
+residual
+result
+sample
+validation
+variable
+weight of evidence
+research setting
+proof of concept
+end to end environment
+laboratory environment
+mission tested environment
+operational environment
+representative environment
+verified validated environment
+technology
+technology readiness
+technology readiness level
+trl
+trl1
+trl2
+trl3
+trl4
+trl5
+trl6
+trl7
+trl8
+trl9
+evacuation
+transit
+transport
+transportation
+ground transportation
+air transportation
+arrival
+departure
+aviation
+civil aviation
+military aviation
+air traffic
+air traffic control
+flight
+landing
+takeoff
+liftoff
+ascent
+descent
+space program
+space travel
+substance
+chemical
+chemical substance
+inorganic
+inorganic substance
+medium
+mixture
+mixed chemical substance
+solution
+solid substance
+trace substance
+trace gas
+suspended substance
+neutral gas
+suspended gas
+suspended solid
+dissolved solid
+air
 greenhouse gas
-greenhouse gases
-snow cover
-ice cover
-ocean acidity
-sea acidity
-ragweed pollen season
-pollen season
-crude oil
-chlorinated hydrocarbon
-chlorinated hydrocarbons
-heat-related death
-heat-related deaths
-heat related death
-heat related deaths
-ozone hole
-system state change
-coal
-co2
-methane
-ch4
-n2o
-perfluorocarbon
-perfluorocarbonss
-fluorocarbon
-sf6
-climate
-weather
-temperature
-precipitation
-drought
-ocean
-oceans
-ocean heat
-land loss
-snow
-ice
-lake ice
-snowfall
-snowpack
-society
-health
-ecosystem
-ecosystems
-wildfire
-wildfires
-streamflow
+biodegradable dissolved organic carbon
+bdoc
+dissolved gas
+dissolved substance
+dissolved oxygen
+do
+dissolved organic carbon
+doc
+organic loading
+acorn worm
+amphibian
+anemone
+animal
+arachnid
+arthropod
+bee
+bird
+centipede
+coral
+cow
+crustacean
+dairy
+echinoderm
+exotic species
+fauna
+fish
+flatworm
+human
+indigenous species
+invertebrate
+insect
+jellyfish
+mammal
+marine animal
+marine bird
+marine invertebrate
+marine mammal
+millipede
+mollusk
+poultry
+reptile
+roundworm
+segmented worm
+silkworm
+sponge
+vertebrate
+zooplankton
+mesozooplankton
+microzooplankton
+livestock
+aquatic organism
+biomass
+honey
+food
+feed
+fertilizer
+litter
+humus
+detritus
+organism
+living entity
+species
+indicator species
+bioindicator
+manure
+animal waste
+gelbstoff
+wood
+wood debris
+organic substance
+organic compound
+hcfc
+hydrochlorofluorocarbon
 cfc
-cfcs
 chlorofluorocarbon
-chlorofluorocarbons
-cfc11
-cfc113
-cfc113a
-cfc114
-cfc115
-cfc12
-petroleum
-petrol
-cyclone
-storm
-hurricane
-hurricanes
-thunderstorm
-thunderstorms
+chlorinated hydrocarbon
+organochloride
+volatile organic compound
+voc
+non methane volatile organic compound
+nmvoc
+halon
+alkane
+alkene
+hydrocarbon
+hc
+chlorophyll
+clathrate hydrate
+gas hydrate
+methane clathrate
+methane hydrate
+methane ice
+battery
+biodiesel
+biofuel
+biomass
+compund parabolic concentrator
+energy collector
+energy conversion device
+energy distribution system
+energy storage
+ethanol
+flat plate collector
+fuel
+fuel cell
+geothermal power plant
+heater
+heat exchanger
+heat pump
+hydrogen energy
+parabolic trough
+photovoltaic cell
+power grid
+power plant
+power transmission facility
+refrigerator
+smart grid
+tubular collector
+aircraft
+airplane
+helicopter
+jet
+navigation equipment
+navigation
+transportation equipment
+rocket
+satellite
+spacecraft
+space shuttle
+car
+rover
+trailer
+train
+truck
+emergency vehicle
+vehicle
+ship
+pipeline
+antenna
+communication
+communications
+communications equipment
+communication method
+internet
+land line
+phone
+mobile phone
+radio
+receive
+reception
+signal
+transmit
+transmission
+transmitter
+receiver
+wireless
+material thing
+computer hardware
+equipment
+sink
+infrastructure
+artesian well
+borehole
+confined well
+disposal well
+drainage well
+injection well
+monitoring well
+pumping well
+recharge well
+unconfined well
+well
+base
+building
+cultural feature
+dome
+facility
+habitat
+platform
+station
+structure
+meteorological facility
+meteostation
+communication facility
+transportation facility
+agricultural production facility
+farm
+fishery
+plantation
+airport
+airport facility
+air traffic control center
+air traffic control en route center
+air traffic control radar room
+air traffic control tower
+air transitway
+runway
+mine
+mining facility
+element
+chemical element
+heavy metal
+metal
+chalcophile
+lithophile
+siderophile
+atmophile
+actinoid
+alkaline earth metal
+chalcogen
+rare earth element
+alkali metal
+noble gas
+metalloid
+nonmetal
+post transition metal
+halogen
+ha
+prictogen
+transition metal
+trace metal
+allotrope
+alloy
+colloid
+cement
+industrial product
+product
+slurry
+supply
+yield
+forest product
+buoy
+instrument
+device
+sensor
+piezometer
+tensiometer
+anemometer
+manometer
+tide gauge
+radar
+doppler radar
+lidar
+magnetogram
+microscope
+optical instrument
+telescope
+telethermometer
+thermometer
+gps
+global positioning system
+anion
+cation
+heavy ion
+ion
+salt ion
+radiocarbon
+radioisotope
+radionuclide
+nuclide
+radioactive substance
+radiation
+alpha particle
+beta particle
+isotope
+radioelement
+algae
+algal
+amoebae
+bacteria
+blue green algae
+ciliate
+coccolithophore
+diatom
+diazotroph
+flagellate
+foraminifer
+marine microbiota
+microbiota
+microalgae
+microbiota taxonomy
+microphyte
+phytoplankton
+picophytoplankton
+plankton
+protist
+radiolarian
+mold
+slime mold
+sporozoan
+yeast
+clostridium perfringen
+coliform
+enterococci
+escherichia coli
+fecal coliform
+fecal streptococci
+calcite
+evaporite
+feldspar
+glass
+hematite
+magnetite
+malic
+mineral
+mineraloid
+nonmetallic mineral
+olvine
+quartz
+pyrolite
+pyroxine
+anthracite
+bituminous
+coal
+coral deposit
+deposit
+finite resource
+fossil fuel
+lignite
+natural gas
+natural resource
 oil
+oil shale
+ore
+petroleum
+crude oil
+sub bituminous
+land resource
+water resource
+renewable resource
+atom
+cosmic ray
+electron
+energetic particle
+gamma ray
+heavy nuclei
+molecule
+neutrino
+nucleon
+neutron
+particle
+photon
+proton
+subatomic particle
+anomalous energetic particle
+solar energetic particle
+broadleaf
+canopy
+conifer
+crown
+dominant species
+evergreen
+exotic
+fern
+flora
+flowering plant
+fruit
+grass
+indigenous
+lichen
+liverwort
+macroalgae
+macrophyte
+mangrove
+marine plant
+moss
+mushroom
+native
+needleleaf
+old growth
+paleovegetation
+pollen
+plant part
+branch
+twig
+trunk
+leaf
+root
+sclerophyll
+scrub
+second growth
+thorn
+tree
+ponderosa pine
+douglas fir
+tree ring
+vegetation
+vegetation cover
+vegetation species
+plant
+fungi
+fungi taxonomy
+crop
+vegetable
+breccia
+chondrite
+heterogenous rock
+metamorphic rock
+melange
+meteor
+meteorite
+molasse
+regolith
+rock
+rock body
+sedimentary rock
+serpentinite
+serpentinization
+fossil
+macrofossil
+microfossil
+aa
+anorogenic igneous rock
+andesite
+anorthosite
+aphanite
+basalt
+dacite
+felsic
+hypabyssal
+igneous rock
+intrusive rock
+kimberlite
+mafic
+extrusive rock
+lava
+magma
+obsidian
+pahoehoe
+pillow lava
+peridotite
+pluton
+plutonic rock
+pumice
+pyroclastic
+rhyolite
+tephra
+trachyte
+trachyandesite
+trachybasalt
+tuff
+tuff cone
+cinder cone
+composite cone
+spatter cone
+tuff ring
+ultramaphic
+volcanic cone
+volcanic neck
+volcanic rock
+xenolith
+xenocryst
+alluvium
+bentonite
+boulder
+clast
+clay
+cobble
+colluvium
+debris
+gibber
+granule
+gravel
+loam
+loess
+mud
+drilling mud
+peat
+pebble
+sand
+sediment
+silt
+soil
+varve
+hydrogenous sediment
+marine sediment
+terrigenous sediment
+ashfall
+ash flow
+block
+bomb
+debris avalanche
+debris flow
+ejecta
+hypoclastite
+lahar
+mudflow
+volcanic deposit
+cold front
+damming
+dryline
+front
+front region
+mediterranean front
+meiyu front
+frontal lifting
+kata front
+katabatic front
+occluded front
+outflow boundary
+seclusion
+warm front
+warm sector
+sea breeze front
+false warm sector
+triple point
+moist tongue
+transition zone
+microfront
+ball lightning
+beaded lightning
+blue jet
+junction streamer
+lightning
+return stroke
+thunder
+biological activity
+biological phenomena
+birth
+chemosynthesis
+consumption
+death
+decomposition
+denitrification
+excretion
+exposure
+feeding
+grazing
+inhalation
+maintenance
+photosynthesis
+pollination
+respiration
+survival
+transpiration
+vital activity
+waste
+hearing
+sense
+vision
+breathing
+foraging
+spawning
+birth defect
+broncitis
+cancer
+cardiovascular disease
+disease
+epidemic
+plant stress
+ocular melanoma
+fertilization
+health
+assimilation
+nursing
+uptake
+metabolic pathway
+adaptation
+community structure
+climax
+competition
+diurnal movement
+diversity
+dominance
+ecological dynamics
+ecological phenomena
+evolution
+food chain
+food web dynamics
+herbivory
+migration
+mutation
+mutualism
+natural selection
+parasitism
+population dynamics
+postbreeding
+predation
+primary production
+scavenging
+secondary production
+selection
+speciation
+species interaction
+species recruitment
+succession
+symbiosis
+trophic dynamics
+bioaccumulation
+bioconcentration
+endangered species
+ecosystem health
+ecosystem service
+biodiversity
+overpopulation
+active solar energy
+binary cycle
+biopower
+concentrating solar power
+direct use
+dry steam
+electricity
+power source
+energy form
+energy source
+flash steam
+electricity production
+energy collection
+energy conservation
+energy conversion process
+gasification
+geothermal
+geothermal power process
+passive solar energy
+photovoltaics
+renewable energy source
+solar energy
+solar power
+solar thermal power
+thermal collection
+wind energy
+accumulation
+calving
+ice calving
+glaciation
+glacial
+glacial process
+periglaciation
+glacier retreat
+proglacial
+englacial
+periglacial
+subglacial
+supraglacial
+earth oscillation
+antarctic oscillation
+arctic oscillation
+chandler wobble
+madden julian oscillation
+milankovitch cycle
+north atlantic oscillation
+nao
+pacific decadal oscillation
+pdo
+pacific north american pattern
+quasi biennial oscillation
+qbo
+southern oscillation
+planetary oscillation
+global cycle
+polar wander
+body tide
+pole tide
+tide
+ice age cycle
+el nino southern oscillation
+enso
+solar cycle
+diurnal cycle
+annual cycle
+material cycle
+biogeochemical cycle
+carbon cycle
+nitrogen cycle
+oxygen cycle
+phosphorus cycle
+sulfur cycle
+hydrologic cycle
+hydrological cycle
+water cycle
+nutrient cycling
+electric dipole
+magnetic dipole
+geomagnetic field
+current sheet
+magnetic field
+electric field
+magnetic field phenomena
+magnetic mirror
+gyroresonance
+overturning
+recirculation
+circulation
+flow
+jet
+fluid phenomena
+eddy
+laminar flow
+viscous flow
+stationary eddy
+vortex
+point vortex
+boundary layer
+laminar boundary layer
+laminar sublayer
+capillary action
+capillary
+anticyclone
+depression
+high pressure
+ridge
+low pressure
+trough
+cyclone
+cell
+cell cluster
+gyre
+coning
+convective plume
+fanning
+hemispheric transport of air pollutants
+htap
+lofting
+long range transport
+plume
+puff
+stack effect
+uptake
+west east transport
+buoyancy
+convection
+deposition
+slant wise convection
+transport
+advection
+bolus advection
+vorticity advection
+counter gradient flux
+surge
+dip separation sense
+dip slip
+extraction
+heave
+horizontal
+mixed extraction
+oblique slip
+pure extraction
+scissor
+sense
+slip
+strike separation sense
+strike slip
+throw
+transcurrent
+transform
+transpressional
+transtensional
+wrench
+detachment
+dextral
+generic decollement
+no movement sense
+normal
+sinistral
+reverse
+thrust
+thrust decollement
+aftershock
+earthquake
+foreshock
+seismic phenomena
+deep focus earthquake
+shallow focus earthquake
+tremor
+megathrust earthquake
+seismic wave
+seismic body wave
+seismic surface wave
+love wave
+lwave
+p wave
+primary wave
+s wave
+secondary wave
+composite process
+continental breakup
+continental collision
+plate convergence
+plate divergence
+tectonic uplift
+tectonic assemblage
+terrane
+asymmetric heat flow
+continenetal drift
+extension event
+isostatic rebound
+isostatic adjustment
+spreading
+subduction
+tectonic force
+tectonic process
+tectonic phenomena
+transform faulting
+creep
+geomagnetic storm
+heliospheric phenomena
+interplanetary phenomena
+interplanetary shock
+magnetic storm
+magnetopause crossing
+proton precipitation
+schumann resonance
+solar particle event
+solar wind extreme
+solar wind
+space weather
+substorm
+sun earth interaction
+geomagnetism
+telluric current
+bow shock
+heliosheath
+bow shock crossing
+magnetosheath
+magnetotail
+airglow
+atmospheric light emission
+aurora
+auroral substorm
+magnetic substorm
+mixing
+mix
+separation
+settling
+cryoturbation
+aeration
+bioturbation
+entrainment
+diffusion
+diffuse
+eddy diffusion
+fickian diffusion
+turbulent diffusion
+ocean phenomena
+ocean tide
+swell
+littoral drift
+longshore drift
+storm surge
+surf beat
+breaking wave
+attrition
+backwash
+beach depletion
+coastal phenomena
+breaker
+plunging breaker
+spilling breaker
+surging breaker
+explosion
+fire
+flare
+flaring
+fluid leak
+gas flare
+gas leak
+emission
+eruption
+activation
+industrial emission
+leak
+leach
+release
+biochemical release
+radioactivity release
+wildfire
+solid phenomena
+ablation
+accretion
+coalescence
+clump
+clumping
+congelation
+erode
+erosion
+harden
+solidify
+strain
+subside
+subsidence
+wasting
+pore
+pore space
+comminution
+cleavage
+crack
+fracture
+cataclasis
+microfracture
+fault
+fault line
+fissure
+joint
+disintegrate
+disintegration
+failure
+shatter
+conchoidal
+earthy
+jagged
+rupture
+spintery
+subconchoidal
+diagenesis
+metamorphism
+cementation
+consolidation
+solidification
+bend
+break
+buckle
+compaction
+deformation
+deform
+dislocation
+fold
+rip
+shear
+slip
+stretch
+elongation
+elongate
+bergeron findeisen process
+grain size sorting
+extension
+distortion
+thinning
+ridging
+system
+change
+displacement
+disruption
+disturbance
+exchange
+flow
+interaction
+interruption
+system state change
+demand
+system phenomena
+drift
+shift
+trend
+lag
+stress
+conversion
+return
+comeback
+accumulation
+deposit
+extension
+inundation
+growth
 increase
 rise
-decrease
-fall
-drop
-reduction
-decline
+replenishment
+collection
+removal
 loss
+destruction
+decrease
+drop
+fall
+decline
+reduction
+halting
+retreat
+oscillation
+perturbation
+vacillation
+variability
+variation
+recycling
+feedback
+negative feedback
+positive feedback
+self regulation
+resilience
+emergent
+emergence
+emergent phenomenon
+shock
 transformation
 transforming
-destruction
-removal
-glacier
-glaciers
-halting
-decay
-retreat
-loss
-extension
-replenishment
-evolution
-conversion
-exchange
-displacement
-growth
-disruption
-innundation
+cascade
+synergy
+development
+system dynamics
+pattern
+signature
+error propagation
 maturation
-disspiate
-interruption
+recharge
+decouple
+dissipate
+decay
+evolution
+fluctuation
 collapse
+noise
+beat
+distortion
+hiss
+interference
+ambient noise
+flicker
+white noise
+side lobe
+scintillation
+pulse spreading
+resonance
+resonant
+vibration
+chorus
+process
+interaction
+force
 chemical process
-burning
+reaction
+chemical reaction
+absorption
 acidification
-dilution
-hydration
+adsorption
+bioluminescence
+bond
+burning
+calcification
+calcination
+charge exchange
+combustion
+corrosion
+crystallization
 dehydration
+desalinization
+dilution
+dissolution
+solvation
+electrolysis
+enrichment
+fixation
+fluorescence
+hydration
+hydrolysis
+leaching
+luminescence
+neutralization
+nitrification
+nucleation
+nuclear fusion
+outgas
+oxidation
+photolysis
+photodissociation
+photodecomposition
+phosphorescence
+recrystalization
+reduction
+sorption
+thermoluminescence
+titration
+triboluminescence
+transmutation
+physical process
+pressure
+tension
+abrasion
+agitation
+clogging
+congealing
+consolidation
+falling
+flocculation
+flushing
+orientation
+quenching
+sheltering
+smashing
+washing
+insulation
+conduction
+radiation
+ionizing radiation
+non ionizing radiation
+radiative transfer
+contracting
+compression
+decompression
+rareification
+shorten
+shrink
+expansion
+expanding
+nucleosynthesis
+heating
+burning
+thermal process
+cooling
+gravity
+gravity force
+gravitational force
+motion
+deflection
+translation
+meandering
+friction
+viscous force
+collision
+trapping
+bombardment
+funnelling
+migration
+sinking
+sputtering
+rotation
+differential rotation
+coriolis force
+coriolis effect
+precession
+revolution
+centrifugal force
+centripetal force
+orbit
+gyro orbit
+orbital motion
+dynamo
+electromagnetic process
+electromagnetic induction
+induction
+current
+electric current
+magnetism
+state change
+phase transition
+boiling
+evaporation
+sublimation
+vaporization
+melting
+thawing
+condensation
+deposition
+refreezing
+freezing
+deionization
+ionization
+photoionization
+gasification
+liquiefaction
+wave process
+medium wave interaction process
+attenuation
+extinction
+dispersion
+dissipation
+excitation
+interference
+polarization
+reflection
+refraction
+scattering
+mie scattering
+rayleigh scattering
+transmission
+absorption
+backscattering
+damping
+emission
+wave drag
+propagation
+wave propagation
+line of sight propagation
+acoustic back scattering
+echo
+line emission
+electromagnetic radiation
+electromagnetic wave
+diffraction
+fraunhofer diffraction
+fresnel diffraction
+bragg diffraction
+schaefer bergmann diffraction
+property
+role
+physical property
+electromagnetic radiation property
+radiation medium interaction property
+biological property
+thermodynamic property
+hydrogeological property
+motion property
+angular motion property
+reaction property
+chemical property
+electromagnetic property
+geological property
+wave property
+system property
+stock property
+flow property
+fluid property
+measure
+metric
+efficiency
+sensitivity
+fideltiy
+statistical summary
+accuracy
+precision
+distortion
+error
+binary property
+free
+polarity
+capacity
+specific heat
+specific heat capacity
+heat capacity
+molar heat capacity
+volumetric heat capacity
+linear thermal expansion
+coefficient of thermal expansion
+thermal expansion coefficient
+volumetric thermal expansion
+coefficient of heat transfer
+categorical property
+category
+classification
+name
+group
+characteristics
+description
+community
+type
+standard industrial classification
+sic
+industry
+charge
+charge distribution
+electric potential
+electric current density
+electric field strength
+electric current
+electric charge
+electric flux density
+electric charge density
+electric dipole moment
+magnetic moment
+dielectric constant
+permittivity
+inductance
+magneti gradient
+permeability
+magnetic flux density
+magnetic field strength
+magnetic dipole moment
+magnetic flux
+exchange capacity
+cation exchange capacity
+capacitance
+conductivity
+thermal conductivity
+pedersen conductivity
+hall conductivity
+electrical conductivity
+conductance
+specific conductance
+resistance
+resistivity
+impedance
+hydraulic conductivity
+count
+number density
+fluence
+sunspot number
+energy level
+population
+carrying capacity
+neutral number density
+atomic neutral number density
+total electron content
+molecular neutral number density
+difference
+deviation
+tolerance
+bias
+undulation
+anomaly
+amplitude
+saturation deficit
+transmissivity
+diffusivity quantity
+diffusivity
+eddy diffusivity
+kinematic viscosity
+thermal diffusivity
+meridional overtuning streamfunction
+streamfunction
+velocity potential
+diffluence
+confluence
+fractional quantity
+albedo
+bond albedo
+transparency
+absorptance
+reflectance
+absorptivity
+reflectivity
+refractivity
+transmittance
+cloud cover
+efficiency
+fpar
+fraction photosynthetic active radiation
+metallicity
+bioavailability
+porosity
+porousness
+air space ratio
+effective porosity
+mole concentration
+molar concentration
+mole fraction
+mole ratio
+mixing ratio
+mass fraction
+volume fraction
+volume mixing ratio
+saturation mixing ratio
+humidity
+relative humidity
+specific humidity
+field capacity
+capacity factor
+emissivity
+emittance
+water holding capacity
+available water capacity
+differential water capacity
+degree of ionization
+market share
+probability
+conditional probability
+joint probability
+p value
+likelihood
+bivariate statistical summary
+coherence
+correlation
+covariance
+cross correlation
+partial correlation
+pearson product moment correlation
+rank correlation
+index
+air quality index
+benthic index
+benthic index of biological integrity
+bibi
+coefficient of haze
+coh
+environmental index
+environmental performance index
+epi
+environmental sustainability index
+esi
+fire weather index
+environmental indicator
+forest fire danger index
+index of biological integrity
+ibi
+index of biotic integrity
+natural resource management index
+nrmi
+ringelmann chart
+uv index
+water quality index
+blocking index
+health index
+vital statistics
+physiological parameter
+psychological parameter
+shallow convection parameter
+circulation index
+storage coefficient
+storativity
+index defined by difference
+zonal index
+virulence
+computational complexity
+adaptive capacity
+boyden index
+turbidity
+geomagnetic index
+akasofu epsilon
+geophysical index
+kp
+auroral boundary index
+geomagnetic force
+polar cap index
+pc
+north atlantic oscillation index
+north pacific oscillation index
+crop moisture index
+hydropattern
+climate indicator
+common sense climate index
+palmer drought severity index
+pdsi
+palmer drought index
+pdi
+palmer hydrological drought index
+phdi
+drought index
+standardized precipitation index
+surface moisture index
+smi
+kaplan sst index
+mass
+density
+specific volume
+bulk density
+dissolved concentration
+dry weight
+content
+mass content
+mass concentration
+mean molecular weight
+molecular weight
+moles
+potential density
+sigma t
+dosage
+dose
+consistence
+consistency
+consistence property
+strength property
+solid property
+material property
+texture
+elasticity
+malleability
+plasticity
+ductibility
+flexure
+structure
+solidity
+solidness
+roughness
+hardness
+softness
+grade
+optical mass
+mass flux
+differential flux
+darcy flux
+specific capacity
+specific discharge
+primary productivity
+productivity
+gross primary productivity
+gpp
+net primary productivity
+npp
+permeability coefficent
+permeability
+effective permeability
+intrinsic permeability
+specific permeability
+impact
+trust
+belief
+spectral line
+ordinal property
+gradation
+quality
+qualifier
+condition
+level
+trophic level
+mineral assessment
+educational level
+color
+pigment
+streak
+luster
+visibility
+activity level
+spatial scale
+electromagnetic spectrum
+spectral band
+flare class
+age
+temperature range
+processing level
+scientific quantity
+quantity
+quantitative property
+physical quantity
+physical constant
+conserved quantity
+extensive property
+intensive property
+vector quantity
+flux
+vector potential
+stokes parameters
+interval quantity
+biological quantity
+electromagnetic radiation quantity
+electromagnetic quantity
+radiation medium interaction quantity
+thermodynamic quantity
+chemical quantity
+budget equation
+balance equation
+budget
+force
+field strength
+potential
+scalar potential
+spatial property
+spatial measure
+linear extent
+spatial extent
+shape
+spatial configuration
+configuration
+orbital configuration
+connectivity
+containment
+morphology
+spatial source
+curvature
+spatial distribution
+angular distribution
+direction
+angular direction
+attitude
+axis
+azimuth
+azimuthal direction
+bearing
+horizontal direction
+incidence
+inclination
+orientation
+polar direction
+solid angle
+tilt
+vertical direction
+angle
+incoming
+inward
+lateral
+outgoing
+outward
+radial
+zenith
+--- PARSE ERROR http://sweet.jpl.nasa.gov/2.3/propSpaceDistance.owl ---
+height range
+height range km
+altitude
+significant height
+barometric altitude
+geopotential height
+ceiling
+estimated ceiling
+scale height
+mixing height
+crest
+upper level
+level
+vertical extent
+elevation
+freeboard
+height
+flight level
+topography
+topographic prominence
+dynamic topography
+sea state
+geoid
+sea level
+depth range
+depth range km
+depth
+bathymetry
+damping depth
+drawdown
+skin depth
+secchi depth
+center
+control point
+epicenter
+focus
+focii
+location
+position
+center of mass
+lagrangian point
+mirror point
+subsolar point
+nadir
+radar cross section
+cross section
+cross sectional area
+area
+footprint
+carbon footprint
+volume
+capacity
+resolution
+field of view
+angular extent
+moment
+mean
+average
+time mean
+temporal average
+temporal mean
+time average
+annual average
+monthly average
+median
+mid range
+mode
+maximum
+minimum
+peak
+percentile
+quartile
+quintile
+decile
+standard deviation
+variance
+standard error
+error bar
+kurtosis
+skewness
+disturbance
+spread
+threshold
+tipping point
+flipping point
+critical point
+critical level
+time
+age
+cycle
+delay
+latency
+period
+residence time
+doubling time
+e folding time
+timestamp
+duration
+duration description
+time interval
+temporal range
+time range
+temporal extent
+time period
+repose
+hydroperiod
+episode
+episodic
+exposure
+current time
+start time
+end time
+month range
+time step
+geologic time
+average snow cover duration
+average winter duration
+average itcz dominance duration
+snow cover duration
+winter duration
+itcz dominance duration
+proper interval
+interval
+rate
+tendency
+spreading rate
+cadence
+fertility
+frequency
+frequency band
+frequency band m hz
+incidence
+bandwidth
+brunt vaisala frequency
+divergence
+convergence
+acceleration
+inertia
+momentum
+speed
+terminal velocity
+velocity
+vertical velocity
+omega
+doppler velocity
+radial velocity
+wind speed
+drift
+magneti curvature drift
+alfven velocity
+ion velocity
+neutral velocity
+thermal velocity
+tangential acceleration
+wind shear
+group velocity
+phase velocity
+seepage velocity
+escape velocity
+airspeed
+ground speed
+proper motion
+angular momentum
+moment of inertia
+spin
+torque
+enstrophy
+potential vorticity
+ertel potential vorticity
+relative vorticity
+absolute vorticity
+vorticity
+helicity
+angular velocity
+angular acceleration
+circulation
+curl
+gyrofrequency
+cyclotron frequency
+coriolis parameter
+asteroid
+astronomical body
+comet
+galaxy
+moon
+planet
+satellite
+star
+outer space
+extraterrestrial
+upper heliosphere
+heliosphere
+exosphere
+magnetosphere
+ionosphere
+d layer
+e layer
+f layer
+lower heliosphere
+plasmasphere
+radiation belt
+van allen belt
+plasmapause
+heliopause
+active region
+chromosphere
+corona
+photosphere
+stellar atmosphere
+stellar interior
+convection zone
+radiative zone
+stellar core
+stellar realm
+tacocline
+inversion layer
+temperature inversion layer
+atmosphere layer
+lower atmosphere
+mesosphere
+middle atmosphere
+ozone layer
+stratosphere
+troposphere
+thermosphere
+upper atmosphere
+free troposphere
+junge aerosol layer
+mesopause
+stratopause
+tropopause
+melting layer
+cloud base
+cloud top
+convective cloud base
+convective cloud top
+adiabatic condensation level
+condensation level
+convective condensation level
+maximum wind speed level
+lfc
+level of free convection
+freezing level
+melting level
+snow generating level
+free convective layer
+zone of maximum precipitation
+atmospheric boundary layer
+boundary layer
+constant flux layer
+internal boundary layer
+mechanical internal boundary layer
+mixed layer
+nocturnal boundary layer
+outer layer
+planetary boundary layer
+residual layer
+roughness sublayer
+skin layer
+stable boundary layer
+well mixed layer
+cap
+alpine tundra
+glacier
+ice cap
+ice sheet
+ice snow interface
+ice base
+ice stream
+ice surface
+ice core
+ice shelf
+land ice
+tundra
+frozen ground
+glacier terminus
+snout
+ablation zone
+accumulation zone
+calf
+glacial region
+congelation ice
+drift ice
+fast ice
+floe
+ice floe
+frazil ice
+iceberg
+lead
+tabular iceberg
+ice field
+pack ice
+sea ice
+seasonal ice
+bedrock
+continental
+core
+crust
+brittle ductile transition zone
+d layer
+fabric
+geologic feature
+geosphere layer
+geologic province
+geologic structure
+inner core
+lithosphere
+lower mantle
+mantle
+mesosphere
+outer core
+solid earth
+skin layer
+transitional crust
+transitional lithosphere
+asthenosphere
+upper mantle flowing
+upper mantle rigid
+upper mantle
+basement
+cover
+batholith
+dike
+giant dike swarm
+laccolith
+lopolith
+sill
+plutonic structure
+seismic zone
+guttenburg discontinuity
+core mantle boundary
+lehmann discontinuity
+moho
+mohorovi i discontinuity
+crust mantle boundary
+geologic boundary
+subsurface
+back arc basin
+basin
+flysch basin
+foreland basin
+fore arc basin
+intracratonic basin
+intra arc basin
+peripheral foreland basin
+successor basin
+retroarc foreland basin
+transtensional basin
+transpressional basin
+armored relict inclusion
+clot
+corona
+corrosion rim
+dropstone
+floating clast
+groundmass
+epimatrix
+inclusion
+irregular
+kelyphitic rim
+layer
+pseudomatrix
+protomatrix
+orthomatrix
+small concretion
+vein
+clast supporting orthomatrix
+matrix
+sedimentary rock cement
+rock constituent
+interstitial constituent
+megacryst
+particulate constituent
+armoured relict crystal
+chadacryst
+crystalline framework
+granular framework
+oikocryst
+phenoclast
+phenocryst
+porphyroblast
+overgrowth
+porphyroclast
+structural configuration
+vug
+aquifer
+cascading water
+cone of depression
+cone of impression
+confined aquifer
+confined bed
+confined unit
+confined zone
+underground water
+saturated zone
+seepage face
+unconfined aquifer
+water table aquifer
+water table
+aquiclude
+aquifuge
+aquitard
+warm pool
+vadose zone
+unsaturated zone
+water column
+bank
+dike
+dyke
+levee
+embankment
+flood bank
+raised bank
+hydrosphere feature
+surface water
+groundwater level
+potentiometric surface
+aeolian
+eolian
+aeolian landform
+barchan
+desert
+dune
+sand dune
+erg
+high desert
+seif
+slack
+slip face
+yardang
+beach
+shore
+shoreline
+intertidal zone
+littoral zone
+littoral
+intertidal
+tide pool
+tidal
+supratidal
+updrift
+wave cut platform
+shore platform
+wave attack zone
+coastal margin
+coastal plain
+coastal region
+coastal
+riparian
+riparian zone
+coastal landform
+cove
+delta
+bar
+delta bar
+spit
+tombolo
+terracette
+harbor
+hinterland
+isthmus
+shoal
+mud flat
+atoll
+barrier island
+island
+island arc
+key
+alluvial
+alluvial fan
+alluvial plain
+bajada
+bedform
+canyon
+catchment
+cave
+dry lake
+fluvial landform
+flood plain
+fluvial plain
+gorge
+gulley
+karst landform
+lacustrine plain
+piedmont slope
+playa
+ripple
+river bed
+sabkha
+salt flat
+salt lake
+scroll plain
+trench
+tunnel
+turbidite
+valley
+wall
+wash
+watershed
+drainage basin
+glacial landform
+arete
+cirque
+esker
+glacial plain
+glacial outwash plain
+kame
+moraine
+glacial moraine
+outwash fan
+rock glacier
+sandur
+till plain
+till
+thermokarst
+u shaped valley
+continent
+debris basin
+deflation zone
+dryland
+land
+surface region
+land region
+land surface
+land cover
+landscape
+landform
+lamination
+lowland
+highland
+mare
+plain
+prarie
+field
+central creek crater
+complex crater
+crater
+impact basin
+impact crater
+pedestal crater
+pit crater
+rocky pit floor crater
+shatter cone
+spall
+alpine
+bluff
+butte
+cliff
+foothill
+hill
+hummock
+mesa
+mountain
+mountain range
+mountain region
+non orographic
+orography
+orographic
+pass
+plateau
+protrusion
+ridge
+summit
+talus
+topographical region
+ubac
+land reserve
+marine protected area
+mpa
+national forest
+national monument
+national park
+city park
+county park
+park
+parkland
+state forest
+state park
+water reserve
+wildlife refuge
+central volcano
+compound volcano
+composite volcano
+monogenetic
+shield volcano
+stratovolcano
+volcanic system
+volcano
+subaqueous volcano
+submarine volcano
+caldera
+linear volcanic chain
+fumarole
+geyser
+geothermal
+hot spot
+lava plain
+tumulus
+vent
+volcanic chain
+volcanic arc
+volcanic field
+earth ocean
+ocean depth
+ocean area
+ocean volume
+kamchatka current
+yellow sea warm current
+earth ocean current
+earth western boundary current
+earth eastern boundary current
+abyssal plain
+abyssal hill
+algal flat
+cold seep
+continental rise
+continental shelf
+continental slope
+deep ocean basin
+deep sea trench
+abyssal trench
+guyot
+hydrothermal vent
+mid ocean ridge
+ocean ridge
+oceanic plateau
+seamount
+reef
+submarine canyon
+sea floor
+seabed
+ocean floor
+latitude band
+south latitude band
+north latitude band
+latitude line
+north latitude line
+south latitude line
+northern hemisphere
+southern hemisphere
+borealis
+austral
+alfisol
+andisol
+aridisol
+cryosol
+entisol
+gelisol
+histisol
+inceptisol
+mollisol
+oxisol
+paleosol
+soil order
+spodosol
+ultisol
+vertisol
+organic matter
+o horizon
+p horizon
+permafrost
+parent rock
+c horizon
+regolith
+soil layer
+soil horizon
+subsoil
+b horizon
+substrata
+substratum
+talik
+topsoil
+a horizon
+surface soil
+active layer
+ground
+representation
+knowledge
+measurement
+measurement scale
+interval scale
+categorical scale
+ordinal scale
+quantitative scale
+cardinal scale
+logarithmic scale
+qualitative
+ratio scale
+scale
+dimension
+1 d
+2 d
+3 d
+coordinates
+coordinate
+component
+coordinate system
+reference frame
+dependent variable
+independent variable
+file
+header
+byte order
+format
+self describing format
+array
+cell
+character
+column
+data model
+data structure
+delimiter
+field
+grid
+increment
+point
+raster
+reduced grid
+resolution
+spatial representation
+row
+structure
+swath
+swath 2 d
+swath 3 d
+temporal representation
+trajectory
+vector
+parameter
+data
+data product
+layer
+dataset
+ensemble
+fill value
+image
+profile
+climate data record
+cdr
+collection
+granule
+earth science data record
+esdr
+missing value
+offset
+value
+maximum valid
+minimum valid
+scale factor
+scaling
+archive
+archiving
+curate
+curation
+version
+data service
+post processing
+pre processing
+data synchronization
+discover
+discovery
+discovery service
+reformat
+format conversion
+reformatting
+compression
+compression method
+access
+accessing
+interface protocol
+data analysis service
+parameterize
+assimilation
+assimilate
+association rule learning
+fit
+fitting
+train
+training
+classification
+classifier
+classify
+cluster
+clustering
+filter
+spectrum
+power spectrum
+fourier analysis
+fourier transform
+spectral analysis
+frequency domain analysis
+spectral synthesis
+spherical harmonic analysis
+wavelet analysis
+reanalyze
+reanalysis
+reconstruct
+reconstruction
+time series
+knowledge discovery
+interpolate
+interpolation
+interpolation method
+visualization
+visualize
+animation
+animate
+overlay
+superimpose
+plot
+scattergram
+data reduction service
+binning
+subset
+parameter subset
+spatial subset
+temporal subset
+normalize
+normalization
+subsample
+data mining
+mining
+geospatial service
+clip
+buffer
+proximity
+geolocate
+geolocation
+georeference
+georeferencing
+gazetteer
+geocode
+location based service
+lbs
+coordinate transformation
+gridding
+regrid
+regridding
+generalization
+map
+mapping
+geospatial interface protocol
+data cleaning
+mask
+binary mask
+acceptance
+pixel screening
+quality screening
+validation
+verify
+verification
+calibration
+calibrate
+intercalibration
+validation evidence
+security method
+signature
+certificate
+copyright
+key
+encoding
+encryption
+constant
+interval
+window
+neighborhood
+numerical entity
+point
+fuzzy point
+scalar
+set
+fuzzy set
+bag
+multiset
+container
+variable
+array
+matrix
+ordered pair
+unordered pair
+ordered triple
+seq
+order
+sequence
+tensor
+vector
+vector 3 d
+exponent
+collection
+equation
+inequality
+relation
+algebraic function
+binary function
+bivariate
+box car
+square wave
+chi square
+chi square distribution
+continuous
+cubic
+dirac
+discrete
+discrete function
+distribution function
+exponential function
+exponential growth
+exponential decay
+filter
+function
+kernel
+linear
+affine
+logistic
+logarithmic
+nonlinear
+normal
+normal distribution
+normalized function
+optimization function
+polynomial
+power function
+probability density function
+pdf
+probability distribution function
+cdf
+quadratic
+quartic
+scalar function
+transcendental function
+trigonometric function
+utility function
+well
+step
+vector function
+vector quantity
+tensor function
+field
+vector field
+tensor field
+scalar field
+continuity
+discontinuous
+discontinuity
+maxwell boltzmann distribution
+radial basis function
+basis function
+b spline
+cubic spline
+sin
+cosine
+profile
+horizon
+vertical profile
+power law
+orthogonal function
+fourier
+fourier function
+spherical harmonic
+spherical harmonic function
+wavelet function
+harmonic
+degree
+order
+mode
+coefficient
+arc
+cycle
+circuit
+edge
+loop
+weighted edge
+network
+graph
+path
+directed graph
+digraph
+undirected graph
+leaf node
+structural model
+structural component
+vertex
+vertice
+node
+isolated vertex
+ordered vertex pair
+unordered vertex pair
+tree
+forest
+connected graph
+mathematical process
+normalization
+operation
+operation on function
+vector valued operation
+tensor field operation
+scalar field operation
+scalar valued operation
+ternary operation
+binary operation
+subtraction
+difference
+summation
+sum
+multiplication
+product
+division
+quotient
+fraction
+ratio
+unary operation
+half
+double
+square
+square root
+logarithm
+inflection point
+saddle point
+vector field operation
+cross product
+dot product
+laplacian
+biharmonic
+partial derivative
+gradient
+surface integral
+area integral
+volume integral
+multiple integral
+derivative
+differentiation
+slope
+line integral
+integral
+integration
+indefinite integral
+definite integral
+algorithm
+algebraic solution
+analytical solution
+approximation
+breadth first search
+depth first search
+divide and conquer
+dynamic programming
+exhaustive search
+expansion
+flow chart
+genetic algorithm
+heuristic algorithm
+iteration
+map reduce
+newtonian relaxation
+numerical approximation
+numerical solution
+parallel
+parallel algorithm
+reduction
+search
+sensitivity analysis
+series algorithm
+simulate
+simulation
+emulate
+solution
+taylor series
+visual solution
+statistical sample
+regression
+sampling
+statistical inference
+statistics
+t test
+general linear model
+goodness of fit
+hypothesis test
+z test
+analysis of variance
+anova
+chi square test
+ordinary least squares
+ols
+sample statistics
+statistical operation
+statistical distribution
+resource
+source
+sink
+reservoir
+storage
+component
+system component
+environment
+externality
+input
+output
+invariant
+isopleth
+isentrope
+isobar
+isochore
+isohaline
+isotere
+isotherm
+thickness line
+adiabatic invariant
+mathematical theorem
+empirical law
+physical law
+bouguer law
+darcys law
+hookes law
+stokes law
+ideal gas law
+bernoulli theorem
+buys ballot law
+walthers law
+z r relation
+research exploration
+altimetry
+carbon dating
+interferometry
+isotope analysis
+methodology
+photometry
+polarimetry
+radioactive dating
+spectroscopy
+retrieval approach
+imaging
+photography
+aerial photography
+remote sensing
+tomography
+x ray diffraction
+optics
+engineering
+boussinesq approximation
+flux correction
+rigid lid approximation
+ensemble forecast
+forecast
+hypothesis
+mixing scheme
+model
+scientific model
+finite element
+spectral element
+spectral
+parameterization
+parcel
+physical approximation
+predict
+prediction
+theory
+theoretical
+reaction path model
+climate model
+general circulation model
+gcm
+weather forecast
+extended forecast
+estimate
+metadata
+agent
+artifact
+process
+background
+chronology
+documentation
+excavate
+genesis
+history
+pipeline
+provenance
+reconstruction
+sequence
+record
+workflow
+variable mapping
+crosswalk
+provenance element
+justification element
+inference rule
+primitive rule
+derived rule
+method rule
+predecessor
+successor
+unit derived by shifting
+unit derived by scaling
+unit defined by product
+unit derived by raising to power
+base unit
+complex unit
+unit
+prefix
+logarithmic unit
+space
+vertical
+vertical coordinate
+horizontal coordinate
+angular coordinate
+prime meridian
+meridian
+equator
+magnetic pole
+pole
+arc
+contour
+curve
+geometrical object
+geometrical object 0 d
+geometrical object 1 d
+line
+point
+trajectory
+path
+route
+spiral
+bounding box
+circular
+crescent
+parabolic
+circle
+small circle
+great circle
+conic
+conic section
+ellipse
+geometrical object 2 d
+helical
+hyperbola
+hyperplane
+parabola
+plane
+polygon
+rectangle
+square
+star
+surface
+patch
+lattice
+region
+cluster
+family
+swarm
+zone
+ridge
+depression
+trough
+peak
+air space
+belt
+bowl
+cavity
+cone
+corkscrew
+cylinder
+dipole
+dome
+envelope
+geometrical object 3 d
+hemisphere
+layer
+polyhedron
+ring
+shell
+sphere
+spheroid
+strata
+striation
+torus
+tube
+flux tube
+body
+ellipsoid
+reference ellipsoid
+spatial reference system
+horizontal coordinate system
+vertical coordinate system
+polar coordinates
+time
+time frame
+local time
+solar time
+local
+temporal entity
+instant
+duration
+temporal entity
+temporal reference
+time reference
+time zone
+noon
+day
+daytime
+midnight
+nighttime
+nocturnal
+evening
+morning
+sunset
+sunrise
+dawn
+dusk
+twilight
+equinox
+season
+solstice
+dry season
+wet season
+warmest month
+coldest month
+state
+binary state
+biological state
+chemical state
+biochemical state
+a class
+b class
+c class
+m class
+x class
+fluid state
+fluid equilibrium state
+realm configuration
+physical role
+conduction role
+provenance role
+biological role
+consumer
+producer
+habitat
+autotroph
+chemoautotroph
+chemoheterotroph
+heterotroph
+photoautotroph
+photoheterotroph
+chemical role
+geographic role
+collector
+tributary
+edge
+face
+margin
+obstruction
+periphery
+fringe
+boundary
+barrier
+highway
+separation
+representative role
+solid state
+flank
+juxtaposition
+projection
+relief
+shadow
+side
+bottom
+base
+basal
+floor
+top
+rim
+antumbra
+umbra
+penumbra
+broad spectrum
+broad band
+white light
+bolometric
+monochromatic
+narrow spectrum
+narrow band
+band limited
+polychromatic
+system state
+equilibrium state
+unstable
+instability
+stable
+stability
+complex
+coherent
+resilient
+homeostasis
+deficit
+excess
+overflow
+thermodynamic state
+age
+epoch
+period
+era
+eon
+supereon
+geologic time unit
+neotectonic period
+oscillation state
+el nino
+la nina
+solar maximum
+solar minimum
+maunder minimum
+high tide
+low tide
+spring tide
+neap tide
+ice age
+interglacial
+oil spill

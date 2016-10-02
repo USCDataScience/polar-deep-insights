@@ -12,7 +12,7 @@ class ContentExtractor:
 
   def extract(self, include_metadata=False):
     parsed   = self.__modules["TikaWrapper"](self.path, self.__modules).get()
-    content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules, raw=True).getTRR().encode('UTF-8')
+    content  = self.__modules["TikaWrapper"](parsed["content"], self.__modules, raw=True).getTRR()
 
     self.content_type = parsed["metadata"]["Content-Type"]
 

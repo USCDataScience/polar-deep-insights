@@ -5,7 +5,6 @@ from base import Extractor
 class GeoTopicExtractor(Extractor):
 
   def extract(self, content):
-
     try:
       self.locationCount = self.extraction.count("LOCATION")
       self.locationCountHash = reduce(lambda m, l: m.update({ l['name'] : l }) or m, self.locationCount, { })

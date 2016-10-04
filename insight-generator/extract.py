@@ -1,4 +1,4 @@
-import sys, re, nltk, os, json, requests, urllib, urllib2
+import sys, re, nltk, os, json, requests, urllib, urllib2, traceback
 import redis, hashlib
 
 from tika     import parser
@@ -20,7 +20,8 @@ from util.util          import TmpFile
 
 PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
-ERROR_PATH    = sys.argv[3]
+PREFIX        = sys.argv[3]
+ERROR_PATH    = sys.argv[4]
 
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 
@@ -61,9 +62,11 @@ def persistExtraction(d):
   f.close()
 
 try:
-  d = metaExtractor.extract(Extraction(), PATH, include_metadata=True).getData(idf.set(PATH))
+  d = metaExtractor.extract(Extraction(), PREFIX + PATH, include_metadata=True).getData(idf.set(PATH))
   persistExtraction(d)
 except:
   e = open(ERROR_PATH, "a")
-  e.write(PATH + "\n")
+  e.write("ERROR: " + PATH + "\n")
+  traceback.print_exc(file=e)
   e.close()
+

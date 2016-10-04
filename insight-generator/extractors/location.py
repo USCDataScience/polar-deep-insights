@@ -1,26 +1,22 @@
-GEO_TOPIC_ENDPOINT = "http://localhost:8765/api/search?"
-
+import os
 from base import Extractor
+
+GEO_TOPIC_ENDPOINT = os.environ["GEO_TOPIC_ENDPOINT"] + "/api/search?"
 
 class GeoTopicExtractor(Extractor):
 
   def extract(self, content):
-    try:
-      self.locationCount = self.extraction.count("LOCATION")
-      self.locationCountHash = reduce(lambda m, l: m.update({ l['name'] : l }) or m, self.locationCount, { })
-      locations = self.locationCountHash.keys()
+    self.locationCount = self.extraction.count("LOCATION")
+    self.locationCountHash = reduce(lambda m, l: m.update({ l['name'] : l }) or m, self.locationCount, { })
+    locations = filter(lambda l: isinstance(l, str), self.locationCountHash.keys())
 
-      if len(locations) > 0:
-        self.params = "&".join(map(lambda l: "s={0}".format(self.modules['urllib'].quote(l)), locations))
-        self.response = self.modules['urllib2'].urlopen(GEO_TOPIC_ENDPOINT + self.params).read()
-        self.info = self.modules['json'].loads(self.response)
-        extractedLocations = self.getLocations()
-        extractedGeoInfo = self.getInfo()
-      else:
-        extractedLocations = [ ]
-        extractedGeoInfo   = [ ]
-    except:
-      print "Geo topic extraction error"
+    if len(locations) > 0:
+      self.params = "&".join(map(lambda l: "s={0}".format(self.modules['urllib'].quote(l)), locations))
+      self.response = self.modules['urllib2'].urlopen(GEO_TOPIC_ENDPOINT + self.params).read()
+      self.info = self.modules['json'].loads(self.response)
+      extractedLocations = self.getLocations()
+      extractedGeoInfo = self.getInfo()
+    else:
       extractedLocations = [ ]
       extractedGeoInfo   = [ ]
 

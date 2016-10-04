@@ -1,3 +1,5 @@
+import os
+ENDPOINT = os.environ["REDIS_ENDPOINT"]
 PREFIX = "polar-"
 # expects modules {
 #   "redis": redis,
@@ -8,7 +10,7 @@ class DocumentIdentifier:
 
     self.modules = modules
 
-    self.client = self.modules["redis"].StrictRedis(host='localhost', port=6379, db=0)
+    self.client = self.modules["redis"].StrictRedis(host=ENDPOINT, port=6379, db=0)
 
   def key(self, path):
     return self.modules["hashlib"].md5(path.encode("utf")).hexdigest()[ 0 : 15 ]

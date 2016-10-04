@@ -1,6 +1,6 @@
-ENDPOINT = "http://localhost:8080/processQuantityText"
-
+import os
 from base import Extractor
+ENDPOINT = os.environ["GROBID_QUANTITY_ENDPOINT"] + "/processQuantityText"
 
 class QuantityExtractor(Extractor):
   def extract(self, content):

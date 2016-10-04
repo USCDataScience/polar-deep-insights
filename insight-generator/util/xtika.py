@@ -1,6 +1,7 @@
-TIKA_SERVER = 'http://localhost:9998'
 from tika.tika import callServer
+import os
 
+TIKA_SERVER = os.environ["TIKA_PATH"]
 class TikaWrapper:
   def __init__(self, file, modules, raw=False):
     if raw:
@@ -14,7 +15,7 @@ class TikaWrapper:
     self.modules = modules
 
   def __call(self, params={}):
-    (status, response) = callServer('put', TIKA_SERVER, '/rmeta', open(self.file),  params)
+    (status, response) = callServer('put', TIKA_SERVER, '/tika/rmeta', open(self.file),  params)
 
     if status != 200:
       raise "Tika Parse Exception"

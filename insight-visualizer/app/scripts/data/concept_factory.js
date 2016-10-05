@@ -1,7 +1,7 @@
 angular.module("polar.data")
 
-.factory("polar.data.ConceptFactory", ["$resource", "$q", "polar.data.Concept", "polar.data.Relation", "localStorageService", "polar.util.services.$ElasticSearch", "polar.data.Config",
-  function($resource, $q, Concept, Relation, localStorageService, $ES, Config){
+.factory("polar.data.ConceptFactory", ["$resource", "$http", "$q", "polar.data.Concept", "polar.data.Relation", "localStorageService", "polar.util.services.$ElasticSearch", "polar.data.Config",
+  function($resource, $http, $q, Concept, Relation, localStorageService, $ES, Config){
     function ConceptFactory(c, r){
       this.concepts  = Concept.load(c)  || [ ];
       this.relations = Relation.load(r) || [ ];
@@ -94,15 +94,11 @@ angular.module("polar.data")
           self = this;
 
       var c = Config.getData();
-      new $ES(c.endpoint).instance.search({
-        index: c.ontologyIndex,
-        type: c.ontologyDocType,
-        size: 1
-      }).then(function(r){
-        self.concepts = r.hits.hits[0]._source.concepts;
-        self.relations = r.hits.hits[0]._source.relations;
+      $http.get(c.sweetOntologyPath).then(function(d){
+        self.concepts = d.data.concepts;
+        self.relations = d.data.relations;
         deferred.resolve();
-      }, function(){
+      },function(){
         deferred.reject();
       });
 

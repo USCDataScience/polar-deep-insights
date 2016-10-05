@@ -27,7 +27,6 @@
       $scope.state.initiate();
       var fS = $FilterParser($scope.filters);
       Document.aggregateByConcepts(fS, $scope.field).then(function(d){
-        $scope.entitiyCount     = EntityCount.parsedEntityList();
         var totalMatchedDocs    = d.hits.total;
         var selectedIds = _.chain(fS)
                            .filter(function(f){ return f.type == "concept" })
@@ -42,14 +41,21 @@
         var p = _.chain(d.aggregations.entities.entity_name.buckets)
                  .map(function(d){
                     var c = $scope.store.matchConcept(d.key);
-                    if($scope.field == 'tf-idf'){
-                      var idf = Math.log(1 + totalMatchedDocs / (d.doc_count) );
-                      var tf = 1 + Math.log( d.entity_stats[$scope.fn] );
-                      c.value = tf * idf;
-                    } else{
-                      c.value = d.entity_stats[$scope.fn];
+
+                    if(c){
+                      if($scope.field == 'tf-idf'){
+                        var idf = Math.log(1 + totalMatchedDocs / (d.doc_count) );
+                        var tf = 1 + Math.log( d.entity_stats[$scope.fn] );
+                        c.value = tf * idf;
+                      } else{
+                        c.value = d.entity_stats[$scope.fn];
+                      };
                     };
+
                     return c;
+                 })
+                 .filter(function(c){
+                  return c;
                  })
                  .map(function(c){
                     return {
@@ -70,36 +76,6 @@
         var extracted = _.filter(p, function(d){
           return !_.contains(selectedIds, d.label)
         });
-
-        // p = p.concat($scope.store.metaConcepts());
-
-        p = _.unique(p, function(c){
-          return c.id;
-        });
-
-        var nodeIndex = _.reduce(p, function(m,n,i){ m[n.id] = i; return m }, { });
-
-        var edges = _.chain($scope.store.getRelations(p)).map(function(r){
-          r.target = nodeIndex[r.in];
-          r.source = nodeIndex[r.out];
-          r.value = 1;
-          return r;
-        }).filter(function(e){
-          return e.source && e.target;
-        })
-        .value();
-
-        var nodes = _.map(p, function(n){
-          return {
-            id: n.id,
-            group: 1
-          };
-        });
-
-        $scope.gData = {
-          nodes: nodes,
-          links: edges,
-        };
 
         $scope.state.success();
 

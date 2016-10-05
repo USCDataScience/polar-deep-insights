@@ -177,16 +177,6 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "          </tr>\n" +
     "\n" +
     "          <tr>\n" +
-    "            <td>Elastic search ontology index</td>\n" +
-    "            <td><input class=\"form-control\" data-ng-model=\"config.ontologyIndex\" placeholder=\"polar-ontology\" /></td>\n" +
-    "          </tr>\n" +
-    "\n" +
-    "          <tr>\n" +
-    "            <td>Elastic search ontology doc-type</td>\n" +
-    "            <td><input class=\"form-control\" data-ng-model=\"config.ontologyDocType\" placeholder=\"graph\" /></td>\n" +
-    "          </tr>\n" +
-    "\n" +
-    "          <tr>\n" +
     "            <td>Elastic search measurements index</td>\n" +
     "            <td><input class=\"form-control\" data-ng-model=\"config.measurementIndex\" placeholder=\"polar-measurements\" /></td>\n" +
     "          </tr>\n" +
@@ -199,6 +189,11 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "          <tr>\n" +
     "            <td>Entity Count JSON path</td>\n" +
     "            <td><input class=\"form-control\" data-ng-model=\"config.entityCountPath\" placeholder=\"http://mydomain/entitiy-count.json\" /></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <td>Sweet ontology path</td>\n" +
+    "            <td><input class=\"form-control\" data-ng-model=\"config.sweetOntologyPath\" placeholder=\"http://mydomain/sweet.json\" /></td>\n" +
     "          </tr>\n" +
     "\n" +
     "          <tr>\n" +

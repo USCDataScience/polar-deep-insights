@@ -22,7 +22,7 @@ var gViz = (function(){
     linkDistance: 160,
     charge: -1500,
     friction: 0.9,
-    gravity: 0.1
+    gravity: 0.5
   };
 
   Viz.setup = function(b){

@@ -23,11 +23,10 @@ angular.module("polar.data")
           self.data.endpoint,
           self.data.index,
           self.data.docType,
-          self.data.ontologyIndex,
-          self.data.ontologyDocType,
           self.data.entityCountPath,
           self.data.measurementIndex,
           self.data.measurementDocType,
+          self.data.sweetOntologyPath,
         ]
 
         return ! _.any(fields, _.isEmpty);

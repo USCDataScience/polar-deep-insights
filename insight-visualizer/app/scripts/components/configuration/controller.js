@@ -33,6 +33,7 @@
         measurementIndex: "polar-measurements",
         measurementDocType: "raw-measurements",
         entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count.json",
+        sweetOntologyPath: "http://localhost:9000/data/sweet.json",
       }
     };
 

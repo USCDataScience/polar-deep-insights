@@ -607,7 +607,7 @@ gViz.Engine = (function(defaultConfig, behavior, merger, Vertex, Edge, VertexMen
 
       this.circle.exit().remove();
       this.viewport.call(d3.behavior.zoom()
-          .scaleExtent([0.5, 5])
+          .scaleExtent([0.1, 5])
           .on("zoom", this.zoom));
     };
 

@@ -22,6 +22,7 @@ PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
 PREFIX        = sys.argv[3]
 ERROR_PATH    = sys.argv[4]
+MIN_SIZE      = int(sys.argv[5])
 
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 
@@ -61,12 +62,13 @@ def persistExtraction(d):
   f.write("\n")
   f.close()
 
-try:
-  d = metaExtractor.extract(Extraction(), PREFIX + PATH, include_metadata=True).getData(idf.set(PATH))
-  persistExtraction(d)
-except:
-  e = open(ERROR_PATH, "a")
-  e.write("ERROR: " + PATH + "\n")
-  traceback.print_exc(file=e)
-  e.close()
+if os.path.getsize(PREFIX + PATH) > MIN_SIZE:
+  try:
+    d = metaExtractor.extract(Extraction(), PREFIX + PATH, include_metadata=True).getData(idf.set(PATH))
+    persistExtraction(d)
+  except:
+    e = open(ERROR_PATH, "a")
+    e.write("ERROR: " + PATH + "\n")
+    traceback.print_exc(file=e)
+    e.close()
 

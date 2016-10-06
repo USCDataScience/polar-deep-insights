@@ -57,9 +57,7 @@ class ContentExtractor:
       r = sr.Recognizer()
       with sr.AudioFile(tmp.path) as source:
         audio = r.record(source)
-      HOUNDIFY_CLIENT_ID = "r0m3MxqkxG_r5fKQOt6qaw=="
-      HOUNDIFY_CLIENT_KEY = "u2s0qH3kHm8jAntPSf46ISe87JUvUwaAi03iJYcsXTyiXISDom825P1sEVW-6gU8q3td8Coe5dWFQXN3TGdf0Q=="
-      d = r.recognize_houndify(audio, client_id=HOUNDIFY_CLIENT_ID, client_key=HOUNDIFY_CLIENT_KEY)
+      d = r.recognize_sphinx(audio)
       tmp.destroy()
     except Exception as e:
       print "Speech conversion error {0}".format(e)

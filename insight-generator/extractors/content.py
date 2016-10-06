@@ -18,13 +18,15 @@ class ContentExtractor:
 
     if self.isExtractableImage():
       c = self.imageObjectExtractor()
-      content = c + content
-      parsed["metadata"]["mm-text"] = c
+      if c != "":
+        content = c + content
+        parsed["metadata"]["mm-text"] = c
 
     if self.isExtractableAudio():
       c = self.audioSpeechExtractor()
-      content = c + content
-      parsed["metadata"]["mm-text"] = c
+      if c != "":
+        content = c + content
+        parsed["metadata"]["mm-text"] = c
 
     def safeStringify(d):
       if(type(d) ==  type([ ])):

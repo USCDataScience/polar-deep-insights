@@ -15,7 +15,7 @@ class TikaWrapper:
     self.modules = modules
 
   def __call(self, params={}):
-    (status, response) = callServer('put', TIKA_SERVER, '/tika/rmeta', open(self.file),  params)
+    (status, response) = callServer('put', TIKA_SERVER, '/rmeta', open(self.file),  params)
 
     if status != 200:
       raise "Tika Parse Exception"

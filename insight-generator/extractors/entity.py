@@ -10,7 +10,7 @@ class EntityExtractor(Extractor):
 
   def generateExp(self):
     entities = [ e.strip() for e in self.entityFile ]
-    regStr = r"\b({0})\b".format( "|".join( entities ) )
+    regStr = r"({0})".format( "|".join( entities ) )
     return self.modules["re"].compile( regStr )
 
   def extract(self, content):

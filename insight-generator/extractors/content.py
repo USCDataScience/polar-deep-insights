@@ -28,6 +28,14 @@ class ContentExtractor:
         content = c + content
         parsed["metadata"]["mm-text"] = c
 
+        # Deleting unnecessary fields
+        if "Red TRC" in parsed["metadata"]:
+          del parsed["metadata"]["Red TRC"]
+        if "Green TRC" in parsed["metadata"]:
+          del parsed["metadata"]["Green TRC"]
+        if "Blue TRC" in parsed["metadata"]:
+          del parsed["metadata"]["Blue TRC"]
+
     def safeStringify(d):
       if(type(d) ==  type([ ])):
         return "\n".join( map(safeStringify, d) )

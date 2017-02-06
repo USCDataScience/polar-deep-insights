@@ -12,6 +12,7 @@
         <span data-ng-show="filter.type == 'concept'">Concept</span>
         <span data-ng-show="filter.type == 'measurement'">Measurement</span>
         <span data-ng-show="filter.type == 'entity'">Entity</span>
+        <span data-ng-show="filter.type == 'docType'">File Type</span>
 
         <span class="pull-right">
           <button class="btn btn-xs btn-default" data-ng-click="edit(filter)"><i class="fa fa-pencil"></i></button>
@@ -68,6 +69,16 @@
 
         <span data-ng-show="filter.entities.length > 0">
           {{ filter.entities.length }} entity(s)
+        </span>
+      </span>
+
+      <span data-ng-show="filter.type == 'docType'">
+        <i data-ng-show="!filter.docTypes || filter.docTypes.length == 0">
+          Add filter specifications
+        </i>
+
+        <span data-ng-show="filter.docTypes.length > 0">
+          {{ filter.docTypes.length }} document type(s)
         </span>
       </span>
 

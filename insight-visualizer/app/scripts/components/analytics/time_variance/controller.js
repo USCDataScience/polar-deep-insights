@@ -2,8 +2,8 @@
 
   var app = angular.module("polar.components.analytics.timeVariance");
   app.controller("polar.components.analytics.timeVariance.Controller",
-  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler","polar.data.EntityCount",
-  function ($scope, Document, $FilterParser, StateHandler,EntityCount){
+  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler",
+  function ($scope, Document, $FilterParser, StateHandler){
 
     function init(){
       $scope.state = StateHandler.getInstance(false, true);
@@ -26,7 +26,6 @@
       };
 
       Document.aggregateByDates($FilterParser($scope.filters), $scope.field).then(function(d){
-        $scope.entitiyCount = EntityCount.data;
         var totalMatchedDocs    = d.hits.total;
         var r = _.chain(d.aggregations.entities.entity_name.buckets)
                  .filter(function(b){ return b.key >= $scope.r.min && b.key <= $scope.r.max })

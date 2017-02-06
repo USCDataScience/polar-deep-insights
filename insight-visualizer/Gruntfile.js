@@ -80,9 +80,9 @@ module.exports = function (grunt) {
       },
       proxies: [
         {
-          context: '/production',
-          host: '104.236.190.155',
-          port: 80,
+          context: '/elasticsearch',
+          host: 'localhost',
+          port: 7777,
           https: false,
           xforward: false,
           headers: {

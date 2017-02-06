@@ -13,11 +13,11 @@
         minZoom: 2,
         maxBounds: {
           northEast: {
-            lat: 90,
+            lat: 95,
             lng: 180,
           },
           southWest: {
-            lat: -90,
+            lat: -95,
             lng: -180,
           }
         },
@@ -65,7 +65,7 @@
 
     function loadData(){
       $scope.state.initiate();
-      Document.aggregateByLocations($FilterParser($scope.filters)).then(function(d){
+      Document.aggregateByLocations($FilterParser($scope.filters), "count", 10000).then(function(d){
         $scope.map.markers = _.chain(d.aggregations.entities.entity_name.buckets)
                                .reduce(function(m, l, i){
                                   m["marker"+i] = {

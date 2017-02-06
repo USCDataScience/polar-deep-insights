@@ -146,6 +146,14 @@ angular.module("polar.data")
         };
       };
 
+      var typeQuery = function(filter){
+        return {
+          "terms" : {
+            "mime-type.raw" : _.pluck(filter.docTypes, "name")
+          }
+        };
+      };
+
       var queries = _.map(filters, function(f){
         if(f.type == "geo"){
           return geoQuery(f);
@@ -157,6 +165,8 @@ angular.module("polar.data")
           return measurementQuery(f);
         } else if(f.type == "entity"){
           return entityQuery(f);
+        } else if(f.type == "docType"){
+          return typeQuery(f);
         };
       });
 
@@ -180,6 +190,31 @@ angular.module("polar.data")
 
     Document.aggregateStats = function(filters){
       return Document.query(filters, {
+        "textSize":{
+          "stats": {
+            "field": "stat.extracted-text-size"
+          }
+        },
+        "fileSize":{
+          "stats": {
+            "field": "stat.file-size"
+          }
+        },
+        "infoRatio":{
+          "stats": {
+            "field": "stat.information-extracted"
+          }
+        },
+        "metaSize":{
+          "stats": {
+            "field": "stat.metadata-size"
+          }
+        },
+        "metaRatio":{
+          "stats": {
+            "field": "stat.metadata-file-size-ratio"
+          }
+        },
         "datesOC": {
           "stats": {
             "field": "dates-occuranceCount"
@@ -285,7 +320,7 @@ angular.module("polar.data")
       var agg = { };
 
       if(field == 'tf-idf'){
-        field='count';
+        field='tf';
       };
 
       return Document.query(filters, {
@@ -314,7 +349,7 @@ angular.module("polar.data")
 
     Document.aggregateByEntity = function(filters, type, field){
       if(field == 'tf-idf'){
-        field='count';
+        field='tf';
       };
 
       return Document.query(filters, {
@@ -326,7 +361,7 @@ angular.module("polar.data")
              "entity_name": {
                "terms": {
                  "field": ( type || "places" ) + ".name.raw",
-                 "size": 1000
+                 "size": 10000
                },
                "aggs": {
                  "entity_stats": {
@@ -344,7 +379,7 @@ angular.module("polar.data")
 
     Document.aggregateByConcepts = function(filters, field){
       if(field == 'tf-idf'){
-        field='count';
+        field='tf';
       };
 
       return Document.query(filters, {
@@ -369,6 +404,17 @@ angular.module("polar.data")
            }
         },
         "entity_count" : { "sum" : { "field" : "entities-occuranceCount" } }
+      });
+    };
+
+    Document.aggregateByType = function(filters){
+      return Document.query(filters, {
+        "type_count" : {
+          "terms" : {
+            "field" : "mime-type.raw",
+            "size": 150
+          }
+        }
       });
     };
 
@@ -415,9 +461,13 @@ angular.module("polar.data")
       });
     };
 
-    Document.aggregateByLocations = function(filters, field){
+    Document.aggregateByLocations = function(filters, field, size){
       if(field == 'tf-idf'){
-        field='count';
+        field='tf';
+      };
+
+      if(!size){
+        size = 1000;
       };
 
       return Document.query(filters, {
@@ -429,7 +479,7 @@ angular.module("polar.data")
             "entity_name": {
               "terms": {
                 "field": "locations.name.raw",
-                "size": 1000
+                "size": size
               },
               "aggs": {
                 "lat": {

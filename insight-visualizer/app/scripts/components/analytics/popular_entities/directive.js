@@ -16,7 +16,7 @@
         $scope.options = {
           chart: {
             type: 'multiBarHorizontalChart',
-            height: 2000,
+            height: 6000,
             width: 1150,
             margin : {
               left: 150

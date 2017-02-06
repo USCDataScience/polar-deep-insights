@@ -16,11 +16,12 @@
         var cont = elem.find(".idf-location")[0];
         var bubble_map = new Datamap({
           element: cont,
-          height: 600,
+          height: 800,
           width: $(".query-result").width(),
           geographyConfig: {
             popupOnHover: false,
-            highlightOnHover: false
+            highlightOnHover: false,
+            hideAntarctica: false,
           },
           fills: {
             defaultFill: '#ABDDA4',

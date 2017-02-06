@@ -36,6 +36,27 @@
                 }
             }
         };
+
+        $scope.typeOptions = {
+            chart: {
+                type: 'pieChart',
+                height: 1000,
+                x: function(d){ return d.key.split(";")[0].substring(0, 25); },
+                y: function(d){ return d.doc_count; },
+                showLabels: true,
+                duration: 500,
+                labelThreshold: 0.01,
+                labelSunbeamLayout: true,
+                legend: {
+                    margin: {
+                        top: 5,
+                        right: 35,
+                        bottom: 5,
+                        left: 0
+                    }
+                }
+            }
+        };
       }
     };
   }]);

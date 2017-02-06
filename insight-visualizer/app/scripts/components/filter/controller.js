@@ -16,12 +16,14 @@
         f.regions         = nF.regions || [ ];
         f.timeRanges      = nF.timeRanges || [ ];
         f.factory         = nF.factory ||  {};
+        f.docTypes        = nF.docTypes ||  {};
 
         f.$valid = ( f.entities && f.entities.length > 0 )  ||
                    ( f.measurements && f.measurements.length > 0 )  ||
                    ( f.regions && f.regions.length > 0 )       ||
                    ( f.timeRanges && f.timeRanges.length > 0 ) ||
-                   ( f.factory.concepts && f.factory.concepts.length > 0 );
+                   ( f.factory.concepts && f.factory.concepts.length > 0 ) ||
+                   ( f.docTypes && f.docTypes.length > 0 );
       });
     };
 

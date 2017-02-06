@@ -5,7 +5,9 @@
                   replace-spaces-with-dashes="false"
                   data-add-from-autocomplete-only="true"
                   placeholder="Search for a concept ..">
-        <auto-complete source="filterConcepts($query)"></auto-complete>
+        <auto-complete source="filterConcepts($query)" max-results-to-show="100">
+
+        </auto-complete>
       </tags-input>
     </div>
 

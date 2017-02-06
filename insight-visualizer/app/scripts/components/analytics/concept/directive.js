@@ -16,7 +16,7 @@
         $scope.options = {
           chart: {
             type: 'multiBarHorizontalChart',
-            height: 950,
+            height: 500,
             width: 1150,
             margin : {
               left: 150
@@ -37,29 +37,9 @@
             }
           }
         };
-
-        var color = d3.scale.category20();
-        $scope.gOptions = {
-          chart: {
-            type: 'forceDirectedGraph',
-            height: 600,
-            width: 1150,
-            margin:{top: 20, right: 20, bottom: 20, left: 20},
-            color: function(d){
-              return color(d.group)
-            },
-            nodeExtras: function(node) {
-              node && node
-                .append("text")
-                .attr("dx", 8)
-                .attr("dy", ".35em")
-                .text(function(d) { return d.id })
-                .style('font-size', '12px');
-            },
-            tooltip: false
-          }
-        };
+        $scope.api = { };
       }
+
     };
   }]);
 

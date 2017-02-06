@@ -40,7 +40,8 @@ svg:not(.active):not(.ctrl) path.edge {
 }
 
 .vertex text {
-  fill: white;
+  fill: black;
+  font-weight: bold;
 }
 
 text.vlabel {

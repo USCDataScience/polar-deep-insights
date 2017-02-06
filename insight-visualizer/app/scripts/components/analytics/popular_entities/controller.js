@@ -2,8 +2,8 @@
 
   var app = angular.module("polar.components.analytics.popularEntities");
   app.controller("polar.components.analytics.popularEntities.Controller",
-  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler","polar.data.EntityCount",
-  function ($scope, Document, $FilterParser, StateHandler, EntityCount){
+  [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler",
+  function ($scope, Document, $FilterParser, StateHandler){
 
     function init(){
       $scope.state = StateHandler.getInstance(false, true);
@@ -13,7 +13,6 @@
     function loadData(){
       $scope.state.initiate();
       Document.aggregateByEntity($FilterParser($scope.filters), $scope.eType, $scope.field).then(function(d){
-        var entitiyCount     = EntityCount.data[$scope.eType];
         var totalMatchedDocs    = d.hits.total;
 
         var p = _.chain(d.aggregations.entities.entity_name.buckets)
@@ -33,7 +32,7 @@
                     return -c.value;
                  })
                  .value()
-                 .slice(0, 150);
+                 .slice(0, 500);
 
         var filteredEntities = _.chain($scope.filters)
           .pluck("entities")

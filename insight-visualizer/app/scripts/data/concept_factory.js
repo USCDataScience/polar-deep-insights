@@ -11,6 +11,10 @@ angular.module("polar.data")
       return _.find(this.concepts, function(c){ return c.id == id });
     };
 
+    ConceptFactory.prototype.getConceptByIds = function(ids){
+      return _.filter(this.concepts, function(c){ return _.include(ids, c.id) });
+    };
+
     ConceptFactory.prototype.getConceptNames = function(){
       return _.chain(this.concepts)
       .reduce(function(m, c){

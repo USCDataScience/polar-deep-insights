@@ -39,6 +39,11 @@
         $timeout(function(){
           $scope.active = ( tabInverseMapping[$scope.initTab] || 6 );
         }, 500);
+
+
+        $scope.fullScreen = function(){
+          $(".query-result").requestFullScreen();
+        };
       }
     };
   }]);

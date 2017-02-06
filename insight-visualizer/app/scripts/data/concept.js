@@ -11,6 +11,10 @@ angular.module("polar.data")
       this.id        = mkId(c.name);
       this.isConcept = true;
       this.isVertex  = true;
+
+      if(!this.type){
+        this.type = "concept";
+      };
     };
 
 

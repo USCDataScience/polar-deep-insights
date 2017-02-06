@@ -12,6 +12,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <option value=\"concept\">Conceptual</option>\n" +
     "        <option value=\"measurement\">Measurement</option>\n" +
     "        <option value=\"entity\">Entity</option>\n" +
+    "        <option value=\"docType\">File Type</option>\n" +
     "      </select>\n" +
     "     </fieldset>\n" +
     "  </div>\n" +
@@ -39,6 +40,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <div polar-add-filter data-filters=\"filters\"></div>\n" +
     "        <button class=\"btn btn-info\" data-ng-click=\"filters = [ ]; loadData()\"><i class=\"fa fa-refresh\"></i></button>\n" +
     "        <button class=\"btn btn-warning\" data-ng-click=\"loadData()\"><i class=\"fa fa-search\"></i></button>\n" +
+    "        <button class=\"btn btn-info\" data-ng-click=\"fullScreen()\"><i class=\"fa fa-arrows-alt\"></i></button>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -48,31 +50,31 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "\n" +
     "       <uib-tabset active=\"active\">\n" +
     "        <uib-tab index=\"6\" heading=\"Stats\"  select=\"active = 6\">\n" +
-    "          <div polar-analytics-stats  data-filters=\"filters\" data-ng-if=\"active == 6\"></div>\n" +
+    "          <div polar-analytics-stats  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 6\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"0\" heading=\"Date Distribution\" select=\"active = 0\">\n" +
-    "          <div polar-analytics-time-variance data-filters=\"filters\" data-ng-if=\"active == 0\"></div>\n" +
+    "          <div polar-analytics-time-variance class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 0\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"1\" heading=\"Geographic Distribution\" select=\"active = 1\">\n" +
-    "          <div polar-analytics-geo-distribution  data-filters=\"filters\" data-ng-if=\"active == 1\"></div>\n" +
+    "          <div polar-analytics-geo-distribution  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 1\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"2\" heading=\"Concept Correlation\" select=\"active = 2\">\n" +
-    "          <div polar-analytics-concept  data-filters=\"filters\" data-ng-if=\"active == 2\"></div>\n" +
+    "          <div polar-analytics-concept  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 2\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"5\" heading=\"Popular Entities\"  select=\"active = 5\">\n" +
-    "          <div polar-analytics-popular-entities  data-filters=\"filters\" data-ng-if=\"active == 5\"></div>\n" +
+    "          <div polar-analytics-popular-entities  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 5\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"3\" heading=\"Measurement Distribution\"  select=\"active = 3\">\n" +
-    "          <div polar-analytics-measurement  data-filters=\"filters\" data-ng-if=\"active == 3\"></div>\n" +
+    "          <div polar-analytics-measurement  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 3\"></div>\n" +
     "        </uib-tab>\n" +
     "\n" +
     "        <uib-tab index=\"4\" heading=\"Regions of interest\"  select=\"active = 4\">\n" +
-    "          <div polar-analytics-geo-diversity  data-filters=\"filters\" data-ng-if=\"active == 4\"></div>\n" +
+    "          <div polar-analytics-geo-diversity  class=\"query-result-view\" data-filters=\"filters\" data-ng-if=\"active == 4\"></div>\n" +
     "        </uib-tab>\n" +
     "      </uib-tabset>\n" +
     "\n" +
@@ -260,6 +262,8 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <div polar-filter-measurement data-filter=\"data.filter\" data-ng-if=\"data.filter.type == 'measurement'\"></div>\n" +
     "\n" +
     "        <div polar-filter-entity data-filter=\"data.filter\" data-ng-if=\"data.filter.type == 'entity'\"></div>\n" +
+    "\n" +
+    "        <div polar-filter-doc-type data-filter=\"data.filter\" data-ng-if=\"data.filter.type == 'docType'\"></div>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "\n" +
@@ -289,6 +293,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <span data-ng-show=\"filter.type == 'concept'\">Concept</span>\n" +
     "        <span data-ng-show=\"filter.type == 'measurement'\">Measurement</span>\n" +
     "        <span data-ng-show=\"filter.type == 'entity'\">Entity</span>\n" +
+    "        <span data-ng-show=\"filter.type == 'docType'\">File Type</span>\n" +
     "\n" +
     "        <span class=\"pull-right\">\n" +
     "          <button class=\"btn btn-xs btn-default\" data-ng-click=\"edit(filter)\"><i class=\"fa fa-pencil\"></i></button>\n" +
@@ -345,6 +350,16 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <span data-ng-show=\"filter.entities.length > 0\">\n" +
     "          {{ filter.entities.length }} entity(s)\n" +
+    "        </span>\n" +
+    "      </span>\n" +
+    "\n" +
+    "      <span data-ng-show=\"filter.type == 'docType'\">\n" +
+    "        <i data-ng-show=\"!filter.docTypes || filter.docTypes.length == 0\">\n" +
+    "          Add filter specifications\n" +
+    "        </i>\n" +
+    "\n" +
+    "        <span data-ng-show=\"filter.docTypes.length > 0\">\n" +
+    "          {{ filter.docTypes.length }} document type(s)\n" +
     "        </span>\n" +
     "      </span>\n" +
     "\n" +
@@ -492,7 +507,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
   $templateCache.put('app/scripts/components/analytics/concept/template.html',
     "<div>\n" +
     "  <div class=\"row\">\n" +
-    "    <div class=\"col-md-6\">\n" +
+    "    <div class=\"col-md-2\">\n" +
     "      <div class=\"btn-group\" role=\"group\" data-ng-init=\"view = 'chart'\">\n" +
     "        <button type=\"button\"\n" +
     "                class=\"btn btn-info\"\n" +
@@ -504,20 +519,54 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "                data-ng-click=\"view = 'graph'\">Graph</button>\n" +
     "      </div>\n" +
     "    </div>\n" +
-    "    <div class=\"col-md-6\">\n" +
+    "    <div class=\"col-md-4\">\n" +
+    "        <rzslider rz-slider-model=\"nResults\"\n" +
+    "            rz-slider-options=\"{ 'floor': 0, 'ceil': 500, 'step': 1 }\"></rzslider>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-md-2\">\n" +
+    "        <rzslider rz-slider-model=\"inferenceBound\"\n" +
+    "            rz-slider-options=\"{ 'floor': 2, 'ceil': 10, 'step': 1 }\"></rzslider>\n" +
+    "    </div>\n" +
+    "    <div class=\"col-md-4\">\n" +
     "      <div polar-analytics-filter data-field=\"field\" data-fn=\"fn\"></div>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
     "  <div class=\"row\" data-ng-if=\"view == 'chart'\">\n" +
     "    <div class=\"col-md-12\">\n" +
-    "      <nvd3 options=\"options\" data=\"data\"></nvd3>\n" +
+    "      <nvd3 options=\"options\" data=\"data\" api=\"api.api\"></nvd3>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
     "  <div class=\"row\" data-ng-if=\"view == 'graph'\">\n" +
     "    <div class=\"col-md-12\">\n" +
-    "      <nvd3 options=\"gOptions\" data=\"gData\" class=\"with-3d-shadow with-transitions\"></nvd3>\n" +
+    "      <div class=\"graph-container\"\n" +
+    "           tg-graph\n" +
+    "           graph=\"graph\"\n" +
+    "           on-load=\"onGraphLoad(graph)\"\n" +
+    "           edge-menu=\"edgeMenu\"\n" +
+    "           node-menu=\"nodeMenu\"\n" +
+    "           metadata=\"metadata\"\n" +
+    "           configration=\"configration\"\n" +
+    "           behavior=\"behavior\"\n" +
+    "           stream=\"stream\"\n" +
+    "           helpers=\"helpers\"></div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div class=\"row\" data-ng-if=\"infered.length > 0\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <h4>Semantic inference</h4>\n" +
+    "\n" +
+    "      <table class=\"table table-bordered\">\n" +
+    "        <thead>\n" +
+    "          <tr><th>Inferred</th></tr>\n" +
+    "        </thead>\n" +
+    "        <tr data-ng-repeat=\"i in infered\">\n" +
+    "          <td data-ng-bind=\"i\"></td>\n" +
+    "        </tr>\n" +
+    "      </table>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "</div>\n"
@@ -562,7 +611,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "<div>\n" +
     "  <div class=\"row\" data-ng-init=\"slider = { 'value': 100 , 'scale': 100 }\">\n" +
     "    <div class=\"col-md-5\">\n" +
-    "      <rzslider rz-slider-model=\"slider.value\" rz-slider-options=\"{ 'floor': 1, 'ceil': 1000 }\"></rzslider>\n" +
+    "      <rzslider rz-slider-model=\"slider.value\" rz-slider-options=\"{ 'floor': 1, 'ceil': 10000 }\"></rzslider>\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"col-md-3\">\n" +
@@ -716,19 +765,69 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "<div>\n" +
     "  <div class=\"row\">\n" +
     "    <div class=\"col-md-6\">\n" +
-    "      <center>\n" +
-    "        <h4>\n" +
-    "          Number of Hits\n" +
-    "        </h4>\n" +
-    "\n" +
-    "        <h3 data-ng-bind=\"docCount | number\" class=\"muted\"></h3>\n" +
-    "      </center>\n" +
-    "\n" +
-    "      <hr />\n" +
-    "      <nvd3 options=\"options\" data=\"data\"></nvd3>\n" +
+    "      <nvd3 options=\"typeOptions\" data=\"typeData\"></nvd3>\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
+    "      <table class=\"table table-bordered\">\n" +
+    "        <thead>\n" +
+    "          <tr>\n" +
+    "            <td></td>\n" +
+    "            <td>Max</td>\n" +
+    "            <td>Average</td>\n" +
+    "            <td>Sum (Bytes)</td>\n" +
+    "          </tr>\n" +
+    "        </thead>\n" +
+    "        <tbody>\n" +
+    "          <tr>\n" +
+    "            <th>Number of Documents</th>\n" +
+    "            <td colspan=\"3\"><center data-ng-bind=\"docCount | number\"></center></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <th>Extracted information size</th>\n" +
+    "            <td data-ng-bind=\"results.textSize.max| number\"></td>\n" +
+    "            <td data-ng-bind=\"results.textSize.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.textSize.sum| number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <th>File size</th>\n" +
+    "            <td data-ng-bind=\"results.fileSize.max| number\"></td>\n" +
+    "            <td data-ng-bind=\"results.fileSize.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.fileSize.sum| number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <th>Information Extracted ( Extracted size / File size )</th>\n" +
+    "            <td data-ng-bind=\"results.textSize.max / results.fileSize.max | number\"></td>\n" +
+    "            <td data-ng-bind=\"results.textSize.avg / results.fileSize.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.textSize.sum / results.fileSize.sum | number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <th>Metadata size</th>\n" +
+    "            <td data-ng-bind=\"results.metaSize.max / results.fileSize.max | number\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaSize.avg / results.fileSize.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaSize.sum / results.fileSize.sum | number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr>\n" +
+    "            <th>Metadata ratio ( Metadata size / File size )</th>\n" +
+    "            <td data-ng-bind=\"results.metaRatio.max| number\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaRatio.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaRatio.sum| number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "        </tbody>\n" +
+    "      </table>\n" +
+    "\n" +
+    "      <hr />\n" +
+    "\n" +
+    "      <nvd3 options=\"options\" data=\"data\"></nvd3>\n" +
+    "\n" +
+    "      <hr />\n" +
+    "\n" +
     "      <select class=\"form-control\" data-ng-model=\"sE\" data-ng-init=\"sE = keys[0]\" data-ng-options=\"k for k in keys\"></select>\n" +
     "\n" +
     "      <table class=\"table table-striped\">\n" +
@@ -859,7 +958,9 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "                  replace-spaces-with-dashes=\"false\"\n" +
     "                  data-add-from-autocomplete-only=\"true\"\n" +
     "                  placeholder=\"Search for a concept ..\">\n" +
-    "        <auto-complete source=\"filterConcepts($query)\"></auto-complete>\n" +
+    "        <auto-complete source=\"filterConcepts($query)\" max-results-to-show=\"100\">\n" +
+    "\n" +
+    "        </auto-complete>\n" +
     "      </tags-input>\n" +
     "    </div>\n" +
     "\n" +
@@ -895,6 +996,57 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('app/scripts/components/filter/doc_type/template.html',
+    "<div>\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-12\">\n" +
+    "      <tags-input ng-model=\"sC\"\n" +
+    "                  display-property=\"name\"\n" +
+    "                  replace-spaces-with-dashes=\"false\"\n" +
+    "                  data-add-from-autocomplete-only=\"true\"\n" +
+    "                  data-min-length=\"1\"\n" +
+    "                  placeholder=\"Search for a measurement\">\n" +
+    "        <auto-complete source=\"filterTypes($query)\"\n" +
+    "                       load-on-empty=\"true\" load-on-focus=\"true\" load-on-down-arrow=\"true\"></auto-complete>\n" +
+    "      </tags-input>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <button class=\"btn btn-primary\" data-ng-click=\"addType(sC); sC=[]\">\n" +
+    "        Add File Type &nbsp;<i class=\"fa fa-plus\"></i>\n" +
+    "      </button>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <hr />\n" +
+    "\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-12\">\n" +
+    "\n" +
+    "      <table class=\"table table-striped\" data-ng-show=\"filter.docTypes.length > 0\">\n" +
+    "        <thead>\n" +
+    "          <tr>\n" +
+    "            <th>File Type</th>\n" +
+    "            <th></th>\n" +
+    "          </tr>\n" +
+    "        </thead>\n" +
+    "\n" +
+    "        <tbody>\n" +
+    "          <tr data-ng-repeat=\"g in filter.docTypes\">\n" +
+    "            <td data-ng-bind=\"g.name\"></td>\n" +
+    "            <td class=\"cursor text-danger\" data-ng-click=\"filter.docTypes.splice($index, 1)\"><i class=\"fa fa-times\"></i></td>\n" +
+    "          </tr>\n" +
+    "        </tbody>\n" +
+    "      </table>\n" +
+    "\n" +
+    "\n" +
+    "    </div>\n" +
+    "  </div>\n" +
     "</div>\n"
   );
 

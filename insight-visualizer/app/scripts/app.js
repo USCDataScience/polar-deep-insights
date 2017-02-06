@@ -39,18 +39,6 @@ angular
       return defer.promise;
     }],
 
-    entityCount: ["polar.data.EntityCount", "$q", "$location", function(EntityCount, $q, $location){
-      var defer = $q.defer();
-      if(EntityCount.isSet()){
-        defer.resolve();
-      } else {
-        $location.path('/config');
-        defer.reject();
-      };
-      defer.resolve();
-      return defer.promise;
-    }],
-
     ontology: ["polar.data.ConceptFactory", "$q", "$location", function(ConceptFactory, $q, $location){
       var defer = $q.defer();
       if(ConceptFactory.isSet()){
@@ -79,7 +67,6 @@ angular
       resolve: {
         configration: resolutions.config,
         ontology: resolutions.ontology,
-        //entityCount: resolutions.entityCount,
       }
     })
 
@@ -89,7 +76,6 @@ angular
       resolve: {
         configration: resolutions.config,
         ontology: resolutions.ontology,
-        //entityCount: resolutions.entityCount,
       }
     })
 

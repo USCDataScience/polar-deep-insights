@@ -5,4 +5,5 @@ angular.module("polar.components.filter", [
   "polar.components.filter.concept",
   "polar.components.filter.measurement",
   "polar.components.filter.entity",
+  "polar.components.filter.docType",
 ]);

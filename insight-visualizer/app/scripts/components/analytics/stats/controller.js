@@ -6,14 +6,14 @@
   [ "$scope", "polar.data.Document", "polar.components.filter.$FilterParser", "polar.util.services.StateHandler",
   function ($scope, Document, $FilterParser, StateHandler){
     function init(){
-      $scope.state = StateHandler.getInstance(false, true);
       $scope.keys = ["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"];
       $scope.loadData = loadData;
       loadData();
     };
 
     function loadData(){
-      $scope.state.initiate();
+      var state = StateHandler.getInstance(false, true)
+      state.initiate();
       Document.aggregateStats([ ])
       .then(function(d){
         $scope.totalDocCount = d.hits.total;
@@ -33,11 +33,23 @@
             y: ( $scope.totalDocCount - $scope.docCount )
           }
         ];
-
-        $scope.state.success();
+        state.success();
       }, function(){
-        $scope.state.fatal();
-      })
+        state.fatal();
+      });
+      loadTypeData();
+    };
+
+    function loadTypeData(){
+      var state = StateHandler.getInstance(false, true)
+      state.initiate();
+      Document.aggregateByType($FilterParser($scope.filters))
+      .then(function(d){
+        $scope.typeData = d.aggregations.type_count.buckets;
+        state.success();
+      }, function(){
+        state.fatal();
+      });
     };
 
     init();

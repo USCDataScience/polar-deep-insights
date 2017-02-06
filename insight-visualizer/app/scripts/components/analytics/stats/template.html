@@ -1,19 +1,69 @@
 <div>
   <div class="row">
     <div class="col-md-6">
-      <center>
-        <h4>
-          Number of Hits
-        </h4>
-
-        <h3 data-ng-bind="docCount | number" class="muted"></h3>
-      </center>
-
-      <hr />
-      <nvd3 options="options" data="data"></nvd3>
+      <nvd3 options="typeOptions" data="typeData"></nvd3>
     </div>
 
     <div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td></td>
+            <td>Max</td>
+            <td>Average</td>
+            <td>Sum (Bytes)</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Number of Documents</th>
+            <td colspan="3"><center data-ng-bind="docCount | number"></center></td>
+          </tr>
+
+          <tr>
+            <th>Extracted information size</th>
+            <td data-ng-bind="results.textSize.max| number"></td>
+            <td data-ng-bind="results.textSize.avg | number:2"></td>
+            <td data-ng-bind="results.textSize.sum| number"></td>
+          </tr>
+
+          <tr>
+            <th>File size</th>
+            <td data-ng-bind="results.fileSize.max| number"></td>
+            <td data-ng-bind="results.fileSize.avg | number:2"></td>
+            <td data-ng-bind="results.fileSize.sum| number"></td>
+          </tr>
+
+          <tr>
+            <th>Information Extracted ( Extracted size / File size )</th>
+            <td data-ng-bind="results.textSize.max / results.fileSize.max | number"></td>
+            <td data-ng-bind="results.textSize.avg / results.fileSize.avg | number:2"></td>
+            <td data-ng-bind="results.textSize.sum / results.fileSize.sum | number"></td>
+          </tr>
+
+          <tr>
+            <th>Metadata size</th>
+            <td data-ng-bind="results.metaSize.max / results.fileSize.max | number"></td>
+            <td data-ng-bind="results.metaSize.avg / results.fileSize.avg | number:2"></td>
+            <td data-ng-bind="results.metaSize.sum / results.fileSize.sum | number"></td>
+          </tr>
+
+          <tr>
+            <th>Metadata ratio ( Metadata size / File size )</th>
+            <td data-ng-bind="results.metaRatio.max| number"></td>
+            <td data-ng-bind="results.metaRatio.avg | number:2"></td>
+            <td data-ng-bind="results.metaRatio.sum| number"></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <hr />
+
+      <nvd3 options="options" data="data"></nvd3>
+
+      <hr />
+
       <select class="form-control" data-ng-model="sE" data-ng-init="sE = keys[0]" data-ng-options="k for k in keys"></select>
 
       <table class="table table-striped">

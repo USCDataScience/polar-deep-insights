@@ -20,16 +20,14 @@ from util.util          import TmpFile
 
 PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
-PREFIX        = sys.argv[3]
-ERROR_PATH    = sys.argv[4]
-MIN_SIZE      = int(sys.argv[5])
+ERROR_PATH    = sys.argv[3]
 
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 
 extractors = [
   EntityExtractor,
   NERExtractor,
-  QuantityExtractor,
+  # QuantityExtractor,
   GeoTopicExtractor,
   StatExtractor,
 ]
@@ -51,10 +49,10 @@ dependencies = {
 
 metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)
 
-idf = DocumentIdentifier({
-  "redis": redis,
-  "hashlib": hashlib,
-})
+# idf = DocumentIdentifier({
+#   "redis": redis,
+#   "hashlib": hashlib,
+# })
 
 def persistExtraction(d):
   f = open(OUTPUT_PATH, "a")
@@ -62,13 +60,20 @@ def persistExtraction(d):
   f.write("\n")
   f.close()
 
-if os.path.getsize(PREFIX + PATH) > MIN_SIZE:
+
+for l in open(PATH):
   try:
-    d = metaExtractor.extract(Extraction(), PREFIX + PATH, include_metadata=True).getData(idf.set(PATH))
+    cw = json.loads(l.strip("\n"))
+    crawlHash = { k: cw[k] for k in cw if k not in ['raw_content', 'id', 'extracted_text'] }
+    fw = TmpFile()
+    fw.write(cw['raw_content'])
+    d = metaExtractor.extract(Extraction(), fw.path, include_metadata=False).getData(cw['id'], crawlHash)
     persistExtraction(d)
+    fw.destroy()
   except:
     e = open(ERROR_PATH, "a")
-    e.write("ERROR: " + PATH + "\n")
+    e.write("ERROR: " + cw['id'] + "\n")
     traceback.print_exc(file=e)
     e.close()
+
 

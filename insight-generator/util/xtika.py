@@ -35,6 +35,9 @@ class TikaWrapper:
   def get(self):
     return self.__call()
 
+  def getInsights(self):
+    return self.__call({ 'Content-Type': 'application/text-insight' })['metadata']
+
   def getTRR(self):
     return self.__call({ 'Content-Type': 'application/tag-ratio' })['metadata']['trr-extracted']
 

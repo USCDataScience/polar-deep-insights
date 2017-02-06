@@ -1,4 +1,4 @@
-import sys, re, nltk, os, json, requests, urllib, urllib2, traceback
+import sys, re, nltk, os, json, requests, urllib, urllib2, traceback, shutil
 import redis, hashlib
 
 from tika     import parser
@@ -29,7 +29,7 @@ tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"])
 extractors = [
   EntityExtractor,
   NERExtractor,
-  QuantityExtractor,
+  # QuantityExtractor,
   GeoTopicExtractor,
   StatExtractor,
 ]
@@ -75,7 +75,11 @@ def process(path, ab):
 
 i = open(PATH, "r")
 for p in i:
-  path = p.strip('\n')
-  process(PREFIX + path, path) 
+  t = TmpFile()
+  path = p.strip('\n').split(',')[ 0 ]
+  print path
+  shutil.copyfile(PREFIX + path, t.path)
+  process(t.path, path)
+  t.destroy()
 i.close()
 

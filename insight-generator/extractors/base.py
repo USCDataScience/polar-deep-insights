@@ -9,7 +9,7 @@ class Extractor(object):
     raise NotImplementedError("method extractor needs be overridden")
 
   def sentTokenize(self, content):
-    return self.modules["nltk"].tokenize.sent_tokenize(content).lower()
+    return self.modules["nltk"].tokenize.sent_tokenize(content)
 
   def wordTokenize(self, content):
     return self.modules["nltk"].tokenize.word_tokenize(content)

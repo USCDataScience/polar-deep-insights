@@ -11,3 +11,9 @@ insight-visualizer/.travis.yml
 *.pyc
 
 insight-generator/results/*
+insight-generator/experiments/*
+insight-generator/nsidc/*
+
+
+.DS_Store
+*.error

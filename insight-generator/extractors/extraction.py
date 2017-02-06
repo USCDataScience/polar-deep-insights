@@ -13,7 +13,7 @@ class Extraction:
 
     self.data[entity] = self.data[entity] + d
 
-  def getData(self, id):
+  def getData(self, id, crawlHash={}):
     d = {
       "dates"        : self.count("DATE"),
       "entities"     : self.count("entities"),
@@ -30,6 +30,7 @@ class Extraction:
       "stat"         : self.get("stat"),
     }
     d["id"] = id
+    d["crawl-hash"] = crawlHash
     d["mime-type"] = d["metadata"]["Content-Type"]
 
     for e in ["entities", "dates", "time", "places", "organizations", "percentages", "money", "people", "locations"]:

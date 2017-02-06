@@ -17,9 +17,11 @@ for line in f:
   lineNumber = lineNumber + 1
   try:
     d = json.loads(line.strip('\n'))
+    del d['crawl-hash']['outlinks']
     print " INDEXING : " + d["id"] + " LINE NUMBER : " + str(lineNumber)
     es.write(d)
   except Exception as e:
+    print e
     print >> sys.stderr, str(lineNumber)
 
 f.close()

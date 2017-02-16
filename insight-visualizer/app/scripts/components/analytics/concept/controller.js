@@ -70,17 +70,9 @@
         var p = _.chain(d.aggregations.entities.entity_name.buckets)
                  .map(function(d){
                     var c = $scope.store.matchConcept(d.key);
-
                     if(c){
-                      if($scope.field == 'tf-idf'){
-                        var idf = Math.log(1 + (d.doc_count/totalMatchedDocs));
-                        var tf = 1 + Math.log( d.entity_stats[$scope.fn] );
-                        c.value = tf * idf;
-                      } else{
-                        c.value = d.entity_stats[$scope.fn];
-                      };
+                      c.value = d.entity_stats[$scope.fn];
                     };
-
                     return c;
                  })
                  .filter(function(c){

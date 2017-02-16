@@ -23,17 +23,43 @@
       }, 500);
     };
 
-    function loadDefault(){
-      $scope.config = {
-        endpoint: "http://polar.usc.edu/elasticsearch",
-        index: "polar-deep-insights-pdf",
-        docType: "docs",
-        ontologyIndex: "polar-ontology",
-        ontologyDocType: "graph",
-        measurementIndex: "polar-measurements",
-        measurementDocType: "raw-measurements",
-        entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count.json",
-        sweetOntologyPath: "http://localhost:9000/data/sweet.json",
+    function loadDefault(type){
+      if(type == 1){
+        $scope.config = {
+          endpoint: "http://polar.usc.edu/elasticsearch",
+          index: "pdi-trec-dd-pdf",
+          docType: "docs",
+          ontologyIndex: "polar-ontology",
+          ontologyDocType: "graph",
+          measurementIndex: "polar-measurements",
+          measurementDocType: "raw-measurements",
+          entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count-trec-dd-pdf.json",
+          sweetOntologyPath: "http://polar.usc.edu/html/polar-deep-insights/data/ontology.json",
+        }
+      } else if( type == 2 ){
+        $scope.config = {
+          endpoint: "http://polar.usc.edu/elasticsearch",
+          index: "pdi-trec-dd-sample",
+          docType: "docs",
+          ontologyIndex: "polar-ontology",
+          ontologyDocType: "graph",
+          measurementIndex: "polar-measurements",
+          measurementDocType: "raw-measurements",
+          entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count-trec-dd-sample.json",
+          sweetOntologyPath: "http://polar.usc.edu/html/polar-deep-insights/data/sweet.json",
+        }
+      } else {
+        $scope.config = {
+          endpoint: "http://polar.usc.edu/elasticsearch",
+          index: "polar-deep-insights-complete",
+          docType: "docs",
+          ontologyIndex: "polar-ontology",
+          ontologyDocType: "graph",
+          measurementIndex: "polar-measurements",
+          measurementDocType: "raw-measurements",
+          entityCountPath: "http://polar.usc.edu/html/polar-deep-insights/data/entity-count-nsidc.json",
+          sweetOntologyPath: "http://polar.usc.edu/html/polar-deep-insights/data/sea-ice.json",
+        }
       }
     };
 

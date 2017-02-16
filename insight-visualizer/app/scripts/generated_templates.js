@@ -145,7 +145,11 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <span class=\"badge\" data-ng-show=\"!(isConfigSet() && isOntologySet())\">Incomplete</span>\n" +
     "        <span class=\"badge\" data-ng-show=\"isConfigSet() && isOntologySet()\">Complete</span>\n" +
     "      </h3>\n" +
-    "      <button class=\"btn btn-primary\" data-ng-click=\"loadDefault()\">Load Default</button>\n" +
+    "\n" +
+    "      <button class=\"btn btn-primary\" data-ng-click=\"loadDefault(1)\">Trec-DD-PDF</button>\n" +
+    "      <button class=\"btn btn-primary\" data-ng-click=\"loadDefault(2)\" data-ng-disabled=\"true\">Trec-DD-Sample</button>\n" +
+    "      <button class=\"btn btn-primary\" data-ng-click=\"loadDefault(3)\">NSIDC-crawl</button>\n" +
+    "\n" +
     "      <hr />\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -449,7 +453,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "                <td colspan=\"2\"><i class=\"text-warning\">No groups</i></td>\n" +
     "              </tr>\n" +
     "\n" +
-    "              <tr data-ng-repeat=\"g in groups\" data-ng-class=\"{'success' : (selectedGroup == $index) }\" data-ng-click=\"selectGroup($index)\">\n" +
+    "              <tr data-ng-repeat=\"g in groups track by g\" data-ng-class=\"{'success' : (selectedGroup == $index) }\" data-ng-click=\"selectGroup($index)\">\n" +
     "                <td data-ng-bind=\"g\"></td>\n" +
     "                <td><a class=\"text-danger\" data-ng-click=\"removeGroup($index)\"><i class=\"fa fa-times\"></i></a></td>\n" +
     "              </tr>\n" +
@@ -578,7 +582,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "  <div class=\"row\">\n" +
     "    <div class=\"col-md-6\">\n" +
     "      <div class=\"form-group\">\n" +
-    "        <select class=\"form-control\" placeholder=\"FIELD\" data-ng-model=\"field\" data-ng-init=\"field='count'\">\n" +
+    "        <select class=\"form-control\" placeholder=\"FIELD\" data-ng-model=\"field\" data-ng-init=\"field='tf-idf'\">\n" +
     "          <option value=\"count\">Entity Count</option>\n" +
     "          <option value=\"tf\">Term Frequency</option>\n" +
     "          <option value=\"tf-alpha\">Term Occurrence Frequency</option>\n" +
@@ -592,8 +596,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <select class=\"form-control\"\n" +
     "                placeholder=\"OPERATION\"\n" +
     "                data-ng-model=\"fn\"\n" +
-    "                data-ng-init=\"fn='sum'\"\n" +
-    "                data-ng-disabled=\"field == 'tf-idf'\">\n" +
+    "                data-ng-init=\"fn='avg'\">\n" +
     "          <option value=\"count\">Document Count</option>\n" +
     "          <option value=\"sum\">Sum</option>\n" +
     "          <option value=\"avg\">Average</option>\n" +
@@ -635,9 +638,21 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('app/scripts/components/analytics/geo_diversity/template.html',
     "<div>\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <rzslider rz-slider-model=\"slider.value\" rz-slider-options=\"{ 'floor': 1, 'ceil': 10000 }\"></rzslider>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <div polar-analytics-filter data-field=\"field\" data-fn=\"fn\"></div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
     "  <div class=\"row\" class=\"idf-location-cont\">\n" +
-    "    <div class=\"col-md-12\">\n" +
-    "      <leaflet defaults=\"options\" maxbounds=\"options.maxBounds\" lf-center=\"center\"  layers=\"layers\"  markers=\"map.markers\" event-broadcast=\"events\" height=\"640px\" width=\"100%\"></leaflet>\n" +
+    "    <div class=\"col-md-8 col-md-offset-2\">\n" +
+    "      <leaflet lf-center=\"center\" layers=\"layers\" width=\"1050px\" height=\"850px\" defaults=\"options\" maxbounds=\"options.maxBounds\"></leaflet>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "</div>\n"
@@ -647,7 +662,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
   $templateCache.put('app/scripts/components/analytics/measurement/hist_modal_template.html',
     "<div>\n" +
     "  <div class=\"modal-body\">\n" +
-    "    <div polar-analytics-measurement-histogram data-unit=\"data.unit\" data-filters=\"data.filters\"></div>\n" +
+    "    <div polar-analytics-measurement-histogram data-unit=\"data.unit\" data-filters=\"data.filters\" data-type=\"data.type\"></div>\n" +
     "  </div>\n" +
     "\n" +
     "  <div class=\"modal-footer\">\n" +
@@ -691,6 +706,15 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
   $templateCache.put('app/scripts/components/analytics/measurement/template.html',
     "<div>\n" +
     "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <select class=\"form-control\" data-ng-model=\"mType\">\n" +
+    "          <option value=\"normal\">Normalized measurements</option>\n" +
+    "          <option value=\"raw\">Raw measurements</option>\n" +
+    "        </select>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
     "    <div class=\"col-md-6\">\n" +
     "      <div class=\"form-group\">\n" +
     "        <select class=\"form-control\" data-ng-model=\"filteredType\" data-ng-options=\"t for t in types\">\n" +
@@ -784,39 +808,39 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "            <td colspan=\"3\"><center data-ng-bind=\"docCount | number\"></center></td>\n" +
     "          </tr>\n" +
     "\n" +
-    "          <tr>\n" +
+    "          <tr data-ng-show=\"results.textSize.avg\">\n" +
     "            <th>Extracted information size</th>\n" +
     "            <td data-ng-bind=\"results.textSize.max| number\"></td>\n" +
     "            <td data-ng-bind=\"results.textSize.avg | number:2\"></td>\n" +
     "            <td data-ng-bind=\"results.textSize.sum| number\"></td>\n" +
     "          </tr>\n" +
     "\n" +
-    "          <tr>\n" +
+    "          <tr data-ng-show=\"results.fileSize.avg\">\n" +
     "            <th>File size</th>\n" +
     "            <td data-ng-bind=\"results.fileSize.max| number\"></td>\n" +
     "            <td data-ng-bind=\"results.fileSize.avg | number:2\"></td>\n" +
     "            <td data-ng-bind=\"results.fileSize.sum| number\"></td>\n" +
     "          </tr>\n" +
     "\n" +
-    "          <tr>\n" +
+    "          <tr data-ng-show=\"results.textSize.avg\">\n" +
     "            <th>Information Extracted ( Extracted size / File size )</th>\n" +
     "            <td data-ng-bind=\"results.textSize.max / results.fileSize.max | number\"></td>\n" +
     "            <td data-ng-bind=\"results.textSize.avg / results.fileSize.avg | number:2\"></td>\n" +
     "            <td data-ng-bind=\"results.textSize.sum / results.fileSize.sum | number\"></td>\n" +
     "          </tr>\n" +
     "\n" +
-    "          <tr>\n" +
+    "          <tr data-ng-show=\"results.metaSize.avg\">\n" +
     "            <th>Metadata size</th>\n" +
+    "            <td data-ng-bind=\"results.metaSize.max| number\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaSize.avg | number:2\"></td>\n" +
+    "            <td data-ng-bind=\"results.metaSize.sum| number\"></td>\n" +
+    "          </tr>\n" +
+    "\n" +
+    "          <tr data-ng-show=\"results.metaSize.avg\">\n" +
+    "            <th>Metadata ratio ( Metadata size / File size )</th>\n" +
     "            <td data-ng-bind=\"results.metaSize.max / results.fileSize.max | number\"></td>\n" +
     "            <td data-ng-bind=\"results.metaSize.avg / results.fileSize.avg | number:2\"></td>\n" +
     "            <td data-ng-bind=\"results.metaSize.sum / results.fileSize.sum | number\"></td>\n" +
-    "          </tr>\n" +
-    "\n" +
-    "          <tr>\n" +
-    "            <th>Metadata ratio ( Metadata size / File size )</th>\n" +
-    "            <td data-ng-bind=\"results.metaRatio.max| number\"></td>\n" +
-    "            <td data-ng-bind=\"results.metaRatio.avg | number:2\"></td>\n" +
-    "            <td data-ng-bind=\"results.metaRatio.sum| number\"></td>\n" +
     "          </tr>\n" +
     "\n" +
     "        </tbody>\n" +

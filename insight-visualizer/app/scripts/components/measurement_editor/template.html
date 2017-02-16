@@ -53,7 +53,7 @@
                 <td colspan="2"><i class="text-warning">No groups</i></td>
               </tr>
 
-              <tr data-ng-repeat="g in groups" data-ng-class="{'success' : (selectedGroup == $index) }" data-ng-click="selectGroup($index)">
+              <tr data-ng-repeat="g in groups track by g" data-ng-class="{'success' : (selectedGroup == $index) }" data-ng-click="selectGroup($index)">
                 <td data-ng-bind="g"></td>
                 <td><a class="text-danger" data-ng-click="removeGroup($index)"><i class="fa fa-times"></i></a></td>
               </tr>

@@ -40,9 +40,14 @@ angular.module("polar.data")
       return deferred.promise;
     };
 
-    Measurement.fetchDistribution = function(unit, filters){
+    Measurement.fetchDistribution = function(unit, filters, type){
       var queries = Document.generateQueryObject(filters);
       var c = Config.getData();
+
+      var mType = (type == 'raw') ? "rawUnit" : "normalizedUnit";
+      var mKey = "measurements." + mType + "-name.raw";
+      var mHash = { };
+      mHash[mKey] = unit;
 
       queries.push({
         "nested": {
@@ -50,9 +55,7 @@ angular.module("polar.data")
           "query":{
             "bool": {
               "should": [{
-                "match" : {
-                  "measurements.rawUnit-name.raw": unit
-                }
+                "match" : mHash
               }]
             }
           },
@@ -75,7 +78,7 @@ angular.module("polar.data")
         deferred.resolve(m);
         return deferred.promise;
       } else {
-        return Document.aggregateByRawMeasurements([ ], 400).then(function(d){
+        return Document.aggregateByRawMeasurements([ ], 400, 'raw').then(function(d){
           var measurements = _.chain(d.aggregations.entities.entity_name.buckets)
                                 .map(function(m){
                                   return { name : m.key, count: m.doc_count }

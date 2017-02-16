@@ -6,7 +6,7 @@
         $scope.state = StateHandler.getInstance();
 
         $scope.state.initiate();
-        Measurement.fetchDistribution($scope.unit, $scope.filters).then(function(r){
+        Measurement.fetchDistribution($scope.unit, $scope.filters, $scope.type).then(function(r){
           $scope.state.success();
 
           var units = _.chain(r).map(parseResp).flatten().value();

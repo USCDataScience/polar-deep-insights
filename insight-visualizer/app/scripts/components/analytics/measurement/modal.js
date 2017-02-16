@@ -14,7 +14,7 @@
         controller: 'polar.util.controllers.modal.Controller',
         size: "md",
         resolve: {
-          data: function(){ return { unit: f.unit, filters: f.filters }; }
+          data: function(){ return { unit: f.unit, filters: f.filters, type: f.type }; }
         }
       }).result;
     };

@@ -15,16 +15,6 @@
     function loadData(){
       $scope.state.initiate();
 
-      function parseValue(totalMatchedDocs, y){
-        if($scope.field == 'tf-idf'){
-          var idf = Math.log(1 + totalMatchedDocs / (y.doc_count) );
-          var tf = 1 + Math.log( y.entity_stats[$scope.fn] );
-          return tf * idf;
-        } else {
-          return y.entity_stats[$scope.fn];
-        }
-      };
-
       Document.aggregateByDates($FilterParser($scope.filters), $scope.field).then(function(d){
         var totalMatchedDocs    = d.hits.total;
         var r = _.chain(d.aggregations.entities.entity_name.buckets)
@@ -35,7 +25,7 @@
         $scope.data = [{
           key: "Computed",
           values: _.map(r, function(y){
-            return { series: "Computed", x: y.key , y: parseValue(totalMatchedDocs, y) };
+            return { series: "Computed", x: y.key , y: y.entity_stats[$scope.fn] };
           })
         }];
 

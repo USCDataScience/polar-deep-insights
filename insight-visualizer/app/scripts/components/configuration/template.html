@@ -6,7 +6,11 @@
         <span class="badge" data-ng-show="!(isConfigSet() && isOntologySet())">Incomplete</span>
         <span class="badge" data-ng-show="isConfigSet() && isOntologySet()">Complete</span>
       </h3>
-      <button class="btn btn-primary" data-ng-click="loadDefault()">Load Default</button>
+
+      <button class="btn btn-primary" data-ng-click="loadDefault(1)">Trec-DD-PDF</button>
+      <button class="btn btn-primary" data-ng-click="loadDefault(2)" data-ng-disabled="true">Trec-DD-Sample</button>
+      <button class="btn btn-primary" data-ng-click="loadDefault(3)">NSIDC-crawl</button>
+
       <hr />
     </div>
   </div>

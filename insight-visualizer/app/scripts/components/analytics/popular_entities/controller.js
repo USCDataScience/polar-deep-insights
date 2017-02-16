@@ -19,13 +19,7 @@
                  .map(function(d){
                     var c = { };
                     c.label = d.key;
-                    if($scope.field == 'tf-idf'){
-                      var idf = Math.log(1 + totalMatchedDocs / (d.doc_count) );
-                      var tf = 1 + Math.log( d.entity_stats[$scope.fn] );
-                      c.value = tf * idf;
-                    } else{
-                      c.value = d.entity_stats[$scope.fn];
-                    };
+                    c.value = d.entity_stats[$scope.fn];
                     return c;
                  })
                  .sortBy(function(c){

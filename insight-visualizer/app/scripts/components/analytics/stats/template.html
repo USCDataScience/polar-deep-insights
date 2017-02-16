@@ -20,39 +20,39 @@
             <td colspan="3"><center data-ng-bind="docCount | number"></center></td>
           </tr>
 
-          <tr>
+          <tr data-ng-show="results.textSize.avg">
             <th>Extracted information size</th>
             <td data-ng-bind="results.textSize.max| number"></td>
             <td data-ng-bind="results.textSize.avg | number:2"></td>
             <td data-ng-bind="results.textSize.sum| number"></td>
           </tr>
 
-          <tr>
+          <tr data-ng-show="results.fileSize.avg">
             <th>File size</th>
             <td data-ng-bind="results.fileSize.max| number"></td>
             <td data-ng-bind="results.fileSize.avg | number:2"></td>
             <td data-ng-bind="results.fileSize.sum| number"></td>
           </tr>
 
-          <tr>
+          <tr data-ng-show="results.textSize.avg">
             <th>Information Extracted ( Extracted size / File size )</th>
             <td data-ng-bind="results.textSize.max / results.fileSize.max | number"></td>
             <td data-ng-bind="results.textSize.avg / results.fileSize.avg | number:2"></td>
             <td data-ng-bind="results.textSize.sum / results.fileSize.sum | number"></td>
           </tr>
 
-          <tr>
+          <tr data-ng-show="results.metaSize.avg">
             <th>Metadata size</th>
+            <td data-ng-bind="results.metaSize.max| number"></td>
+            <td data-ng-bind="results.metaSize.avg | number:2"></td>
+            <td data-ng-bind="results.metaSize.sum| number"></td>
+          </tr>
+
+          <tr data-ng-show="results.metaSize.avg">
+            <th>Metadata ratio ( Metadata size / File size )</th>
             <td data-ng-bind="results.metaSize.max / results.fileSize.max | number"></td>
             <td data-ng-bind="results.metaSize.avg / results.fileSize.avg | number:2"></td>
             <td data-ng-bind="results.metaSize.sum / results.fileSize.sum | number"></td>
-          </tr>
-
-          <tr>
-            <th>Metadata ratio ( Metadata size / File size )</th>
-            <td data-ng-bind="results.metaRatio.max| number"></td>
-            <td data-ng-bind="results.metaRatio.avg | number:2"></td>
-            <td data-ng-bind="results.metaRatio.sum| number"></td>
           </tr>
 
         </tbody>

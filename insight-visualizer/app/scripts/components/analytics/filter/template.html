@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
-        <select class="form-control" placeholder="FIELD" data-ng-model="field" data-ng-init="field='count'">
+        <select class="form-control" placeholder="FIELD" data-ng-model="field" data-ng-init="field='tf-idf'">
           <option value="count">Entity Count</option>
           <option value="tf">Term Frequency</option>
           <option value="tf-alpha">Term Occurrence Frequency</option>
@@ -16,8 +16,7 @@
         <select class="form-control"
                 placeholder="OPERATION"
                 data-ng-model="fn"
-                data-ng-init="fn='sum'"
-                data-ng-disabled="field == 'tf-idf'">
+                data-ng-init="fn='avg'">
           <option value="count">Document Count</option>
           <option value="sum">Sum</option>
           <option value="avg">Average</option>

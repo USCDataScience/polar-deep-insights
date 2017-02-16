@@ -319,10 +319,6 @@ angular.module("polar.data")
     Document.aggregateByDates = function(filters, field){
       var agg = { };
 
-      if(field == 'tf-idf'){
-        field='tf';
-      };
-
       return Document.query(filters, {
         "entities": {
            "nested": {
@@ -348,10 +344,6 @@ angular.module("polar.data")
     };
 
     Document.aggregateByEntity = function(filters, type, field){
-      if(field == 'tf-idf'){
-        field='tf';
-      };
-
       return Document.query(filters, {
         "entities": {
            "nested": {
@@ -378,10 +370,6 @@ angular.module("polar.data")
     };
 
     Document.aggregateByConcepts = function(filters, field){
-      if(field == 'tf-idf'){
-        field='tf';
-      };
-
       return Document.query(filters, {
         "entities": {
            "nested": {
@@ -418,7 +406,11 @@ angular.module("polar.data")
       });
     };
 
-    Document.aggregateByMeasurements = function(filters){
+    Document.aggregateByMeasurements = function(filters, type){
+
+      var mType = (type == 'raw') ? "rawUnit" : "normalizedUnit";
+      var qty   = (type == 'raw') ? "parsedValue" : "normalizedQuantity";
+
       return Document.query(filters, {
         "entities": {
           "nested": {
@@ -427,13 +419,13 @@ angular.module("polar.data")
           "aggs": {
             "entity_name": {
               "terms": {
-                "field": "measurements.rawUnit-name.raw",
+                "field": "measurements." + mType + "-name.raw",
                 "size": 1000
               },
               "aggs" : {
                 "entity_stats" : {
                     "stats" : {
-                      "field" : "measurements.parsedValue"
+                      "field" : "measurements." + qty
                     }
                 }
               }
@@ -443,7 +435,9 @@ angular.module("polar.data")
       });
     };
 
-    Document.aggregateByRawMeasurements = function(filters, size){
+    Document.aggregateByRawMeasurements = function(filters, size, type){
+      var mType = (type == 'raw') ? "rawUnit" : "normalizedUnit";
+
       return Document.query(filters, {
         "entities": {
           "nested": {
@@ -452,7 +446,7 @@ angular.module("polar.data")
           "aggs": {
             "entity_name": {
               "terms": {
-                "field": "measurements.rawUnit-name.raw",
+                "field": "measurements." + mType + "-name.raw",
                 "size": ( size || 1000 )
               }
             }
@@ -462,10 +456,6 @@ angular.module("polar.data")
     };
 
     Document.aggregateByLocations = function(filters, field, size){
-      if(field == 'tf-idf'){
-        field='tf';
-      };
-
       if(!size){
         size = 1000;
       };

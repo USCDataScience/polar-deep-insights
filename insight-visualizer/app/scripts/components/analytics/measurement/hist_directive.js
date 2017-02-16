@@ -6,7 +6,8 @@
     return{
       scope: {
         unit: "=",
-        filters: "="
+        filters: "=",
+        type: "="
       },
       replace: true,
 

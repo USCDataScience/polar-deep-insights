@@ -60,7 +60,9 @@ angular.module("polar.data")
     };
 
     ConceptFactory.prototype.removeRelation = function(id){
-      this.relations = _.filter(this.relations, function(r){ return (r.in != id.split("_")[1] && r.out != id.split("_")[0]) });
+      this.relations = _.filter(this.relations, function(r){
+        return !(r.in == id.split("_")[1] && r.out == id.split("_")[0]);
+      });
     };
 
     ConceptFactory.prototype.getStream = function(){

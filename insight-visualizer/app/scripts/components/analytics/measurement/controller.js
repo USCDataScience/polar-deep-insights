@@ -29,24 +29,39 @@
       loadValidMeasurements()
         .then(loadData);
 
+      $scope.mType = "normal";
     };
+
 
     function loadValidMeasurements(){
       var state = StateHandler.getInstance();
       state.initiate();
-      return Measurement.fetchRawMeasurements().then(function(m){
-        state.success();
-        m = _.filter(m, function(x){ return x.group });
-        $scope.validMeasurements = _.pluck(m, "name");
-        $scope.validMeasurementsObjects = m;
-      }, function(){
-        state.fatal("Unable to fetch valid measurements");
-      });
+
+      if($scope.mType == 'raw'){
+        return Measurement.fetchRawMeasurements().then(function(m){
+          state.success();
+          m = _.filter(m, function(x){ return x.group });
+          $scope.validMeasurements = _.pluck(m, "name");
+          $scope.validMeasurementsObjects = m;
+        }, function(){
+          state.fatal("Unable to fetch valid measurements");
+        });
+      } else {
+         var deferred = $q.defer();
+         deferred.resolve();
+         state.success();
+         $scope.validMeasurements = _.keys(typeMapping);
+         $scope.validMeasurementsObjects = _.map(typeMapping, function(v,k){
+            return { name: k, group: v }
+         });
+         return deferred.promise;
+      }
+
     };
 
     function loadData(){
       $scope.state.initiate();
-      Document.aggregateByMeasurements($FilterParser($scope.filters)).then(function(d){
+      Document.aggregateByMeasurements($FilterParser($scope.filters), $scope.mType).then(function(d){
         $scope.data = _.chain(d.aggregations.entities.entity_name.buckets)
                        .map(function(d){
                          return {
@@ -66,7 +81,8 @@
                        })
                        .value();
 
-        $scope.types = _.chain($scope.data).pluck("type").unique().value();
+        $scope.types = _.values(typeMapping);
+        // _.chain($scope.data).pluck("type").unique().value();
         $scope.filteredType = $scope.types[0]
         $scope.state.success();
 
@@ -76,13 +92,13 @@
     };
 
     function openHistogram(u){
-      $HistModal.open({ unit:u, filters: $scope.filters });
+      $HistModal.open({ unit:u, filters: $scope.filters, type: $scope.mType });
     };
 
     init();
 
     $scope.$on('polar.components.analytics.reloadData.Measurement', function(e, msg){
-      loadData();
+      loadValidMeasurements().then(loadData);
     });
   }]);
 

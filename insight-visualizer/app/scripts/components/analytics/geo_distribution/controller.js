@@ -13,23 +13,13 @@
     function loadData(){
       $scope.state.initiate();
 
-      function parseValue(totalMatchedDocs, y){
-        if($scope.field == 'tf-idf'){
-          var idf = Math.log(1 + totalMatchedDocs / (y.doc_count) );
-          var tf = 1 + Math.log( y.entity_stats[$scope.fn] );
-          return tf * idf;
-        } else {
-          return y.entity_stats[$scope.fn];
-        }
-      };
-
       Document.aggregateByLocations($FilterParser($scope.filters), $scope.field).then(function(d){
         var totalMatchedDocs    = d.hits.total;
         var r = _.chain(d.aggregations.entities.entity_name.buckets)
                  .map(function(d){
                     return {
                       name: d.key,
-                      count: parseValue(totalMatchedDocs, d),
+                      count: d.entity_stats[$scope.fn],
                       country: 'USA',
                       fillKey: 'USA',
                       latitude: d.lat.value,

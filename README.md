@@ -1,4 +1,4 @@
-#Polar Deep Insights
+# Polar Deep Insights
 
 The [trec polar dataset](https://github.com/chrismattmann/trec-dd-polar) is a set of web pages, scientific data, zip files, PDFs, images, and science code related to the polar sciences and available publicly from agencies like ACADIS, AMD, and NSIDC. The literature in these documents describe a wide array of issues pertaining to the Arctic region like oil spills, glacier retreat, pollution, temperature increase, sea level rise (etc). They contain rich spatial data, through references to places, locations and countries. They are temporally rich with references to dates and times.
 
@@ -23,6 +23,6 @@ Checkout our [wiki](https://github.com/nithinkrishna/polar-deep-insights/wiki) f
 
 ***
 
-##Affiliation
+## Affiliation
 
 [Information retrieval and Data Science](http://irds.usc.edu) Research Group, University of Southern California.

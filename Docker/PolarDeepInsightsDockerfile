@@ -1,0 +1,55 @@
+FROM ubuntu:16.04
+MAINTAINER Apache Tika Team
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        apt-utils \
+        curl \
+        git \
+        python \
+        
+        python2.7-dev \
+        software-properties-common \
+        unzip \
+        wget \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install pip
+RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
+    python get-pip.py && \
+    rm get-pip.py
+
+# Installing Insight-Generator Requirements
+# Install basic python requirements
+RUN pip --no-cache-dir install \
+        flask \
+        numpy \
+        pillow \
+        requests \
+        tika 
+
+# Elastic Search Installation 
+RUN curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.3.zip \
+unzip elasticsearch-6.2.3.zip \
+cd elasticsearch-6.2.3 \
+./bin/elasticsearch 
+
+
+#NLTK installation
+RUN pip install -U nltk
+
+# Insight-Visualizer Requirements
+# npm installation
+RUN brew install npm
+
+# Bower installation 
+RUN npm install -g bower
+
+# Grunt installation
+RUN npm install -g grunt \
+echo "{}" > package.json \
+npm install grunt --save-dev
+
+
+CMD ["python", “path of python file you need to run”]

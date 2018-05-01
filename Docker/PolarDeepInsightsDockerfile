@@ -51,5 +51,19 @@ RUN npm install -g grunt \
 echo "{}" > package.json \
 npm install grunt --save-dev
 
+#Grobid installation
+RUN wget https://github.com/kermitt2/grobid/archive/0.5.1.zip
+unzip 0.5.1.zip \
+cd 0.5.1 \
+./gradlew clean install \
+./gradlew run
+
+#Speech Recognition setup
+RUN pip install SpeechRecognition
+
+#Redis installation
+RUN brew install redis \
+redis-server /usr/local/etc/redis.conf
+
 
 CMD ["python", “path of python file you need to run”]

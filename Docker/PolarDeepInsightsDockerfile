@@ -30,31 +30,55 @@ RUN pip --no-cache-dir install \
         tika 
 
 # Elastic Search Installation 
-RUN curl -L -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.3.zip \
-unzip elasticsearch-6.2.3.zip \
-cd elasticsearch-6.2.3 \
+RUN curl -l -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.3.zip
+RUN unzip elasticsearch-6.2.3.zip
+RUN cd elasticsearch-6.2.3 \
 ./bin/elasticsearch 
 
 
 #NLTK installation
 RUN pip install -U nltk
 
+RUN pwd
+
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 4.4.7
+
+# install nvm
+# https://github.com/creationix/nvm#install-script
+RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+
+# install node and npm
+RUN . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+# add node and npm to path so the commands are available
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+# confirm installation
+RUN node -v
+RUN npm -v
+
 # Insight-Visualizer Requirements
 # npm installation
-RUN brew install npm
+#RUN apt-get install nodejs
+
+#RUN apt-get install npm
+#RUN pip install npm
 
 # Bower installation 
-RUN npm install -g bower
+RUN npm install bower -g
 
 # Grunt installation
-RUN npm install -g grunt \
-echo "{}" > package.json \
-npm install grunt --save-dev
+RUN npm install -g grunt-cli
 
 #Grobid installation
-RUN wget https://github.com/kermitt2/grobid/archive/0.5.1.zip
-unzip 0.5.1.zip \
-cd 0.5.1 \
+RUN curl -l -O https://github.com/kermitt2/grobid/zipball/master
+RUN unzip kermitt2-grobid-0.5.0-50-gf6a3eda.zip
+RUN cd kermitt2-grobid-f6a3eda \
 ./gradlew clean install \
 ./gradlew run
 

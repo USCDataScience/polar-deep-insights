@@ -88,11 +88,6 @@ angular
       templateUrl: 'app/scripts/sections/home/measurement_editor.html',
       controller: 'polar.util.controllers.StaticPageController',
     })
-    // .otherwise({
-    //     redirectTo: '/'
-    //   });
-
-    //  $locationProvider.hashPrefix('');
 
     .when('/about', {
       templateUrl: 'views/about.html',

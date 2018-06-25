@@ -1,4 +1,5 @@
 
+
 # encoding: utf-8
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -68,4 +69,3 @@ EXPOSE 9000
 EXPOSE 35729
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["grunt", "serve"]
-

@@ -1,93 +1,71 @@
-FROM ubuntu:16.04
-MAINTAINER Apache Tika Team
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        apt-utils \
-        curl \
-        git \
-        python \
-        
-        python2.7-dev \
-        software-properties-common \
-        unzip \
-        wget \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install pip
-RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    rm get-pip.py
-
-# Installing Insight-Generator Requirements
-# Install basic python requirements
-RUN pip --no-cache-dir install \
-        flask \
-        numpy \
-        pillow \
-        requests \
-        tika 
-
-# Elastic Search Installation 
-RUN curl -l -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.3.zip
-RUN unzip elasticsearch-6.2.3.zip
-RUN cd elasticsearch-6.2.3 \
-./bin/elasticsearch 
 
 
-#NLTK installation
-RUN pip install -U nltk
+# encoding: utf-8
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-RUN pwd
+FROM ruby:2.3-alpine
+MAINTAINER USC Information Retrieval and Data Science (IRDS) irds-L@mymaillists.usc.edu
 
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 4.4.7
+# Internal unpriviled user will have this ID:
+ENV CONTAINER_USER_ID="1000" \
+    CONTAINER_GROUP_ID="1000"
 
-# install nvm
-# https://github.com/creationix/nvm#install-script
-RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+# Updates OS and adds system required packages
+RUN apk update && apk upgrade
+RUN apk add nodejs git ruby 
+RUN apk add --update build-base libffi-dev 
+RUN gem install compass
 
-# install node and npm
-RUN . $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
+# creates a user "user"
+RUN adduser -D -u ${CONTAINER_USER_ID} -g ${CONTAINER_GROUP_ID} -h /home/user -s /bin/sh user
 
-# add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+# Global npm folder writeable by "user"
+RUN mkdir -p /opt/npm-global && \
+    chown user:user /opt/npm-global
 
-# confirm installation
-RUN node -v
-RUN npm -v
+# After this point everthing is done as unpriveleged user
+USER user
 
-# Insight-Visualizer Requirements
-# npm installation
-#RUN apt-get install nodejs
+# configuring environment variables
+ENV NPM_CONFIG_PREFIX=/opt/npm-global
+ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
 
-#RUN apt-get install npm
-#RUN pip install npm
+# Installing usefull npm packages
+RUN npm install -g \
+    npm@3.10.6 \
+    grunt@1.0.1 \
+    grunt-cli@1.2.0 \
+    bower@1.7.9 \
+    yo@1.8.4
 
-# Bower installation 
-RUN npm install bower -g
+# Creating a directory inside the container
+WORKDIR /home/user/src
 
-# Grunt installation
-RUN npm install -g grunt-cli
+# Copy entrypoint script into the container
+COPY ./entrypoint.sh /entrypoint.sh
 
-#Grobid installation
-RUN curl -l -O https://github.com/kermitt2/grobid/zipball/master
-RUN unzip kermitt2-grobid-0.5.0-50-gf6a3eda.zip
-RUN cd kermitt2-grobid-f6a3eda \
-./gradlew clean install \
-./gradlew run
+# Copy everything to the workdir, inside the container
+COPY ./ . 
 
-#Speech Recognition setup
-RUN pip install SpeechRecognition
+# Always root is set as the owner, so let's change it to user
+USER root
+RUN chown -R user:user .
+USER user
 
-#Redis installation
-RUN brew install redis \
-redis-server /usr/local/etc/redis.conf
-
-
-CMD ["python", “path of python file you need to run”]
+EXPOSE 9000 
+EXPOSE 35729
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["grunt", "serve"]

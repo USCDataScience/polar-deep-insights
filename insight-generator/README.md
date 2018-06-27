@@ -10,7 +10,7 @@
 
 5. Download tika-server-1.15-SNAPSHOT.jar from [here](https://drive.google.com/open?id=1vPUudh39r0vkKdVx3gm01YZEbDScqJlD) and unzip it. 
 
-5. On a new terminal window, run tika-server-1.15-SNAPSHOT.jar using this command 
+5. On a new terminal window, run tika-server using this command 
 ```
 java –jar tika-server-1.15-SNAPSHOT.jar
 ```

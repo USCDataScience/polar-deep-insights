@@ -1,3 +1,19 @@
+# encoding: utf-8
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import sys, re, nltk, os, json, requests, urllib, urllib2, traceback
 import redis, hashlib
 
@@ -23,7 +39,9 @@ PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
 ERROR_PATH    = sys.argv[3]
 
+#tagger = StanfordNERTagger('/Users/prerana/Desktop/Polar-Deep-Insights/classifiers/english.muc.7class.distsim.crf.ser.gz',encoding='utf-8')
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"],encoding='utf-8')
+
 
 extractors = [
   EntityExtractor,
@@ -54,16 +72,22 @@ c=0
 for l in open(PATH):
   cw = json.loads(l.strip("\n"));
   try:
-    crawlHash = { k: cw[k] for k in cw if k not in ['raw_content', 'id', 'extracted_text'] }
-
+    
+    #print cw
+    crawlHash = { k: cw[k] for k in cw if k not in ['raw_content','id', 'extracted_text'] }
+    #print crawlHash
+    #print cw['raw_content']
+    #print "Hello"
     fw = TmpFile()
     fw.write(cw['extracted_text'])
+    #print fw.content
     d = metaExtractor.extract(Extraction(), fw.path, include_metadata=False).getData(cw['id'], crawlHash)
     print d
     FILE = '{0}_{1}.json'.format(OUTPUT_PATH, c)
     f = open(FILE, "w")
     f.write(json.dumps(d))
     f.close()
+    #fw.close()
     fw.destroy()
   except:
     e = open(ERROR_PATH, "a")
@@ -71,4 +95,3 @@ for l in open(PATH):
     traceback.print_exc(file=e)
     e.close()
   c+=1
-

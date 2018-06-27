@@ -39,9 +39,7 @@ PATH          = sys.argv[1]
 OUTPUT_PATH   = sys.argv[2]
 ERROR_PATH    = sys.argv[3]
 
-#tagger = StanfordNERTagger('/Users/prerana/Desktop/Polar-Deep-Insights/classifiers/english.muc.7class.distsim.crf.ser.gz',encoding='utf-8')
 tagger = StanfordNERTagger(os.environ["STANDFORD_NER_MODEL_PATH"],encoding='utf-8')
-
 
 extractors = [
   EntityExtractor,
@@ -72,22 +70,15 @@ c=0
 for l in open(PATH):
   cw = json.loads(l.strip("\n"));
   try:
-    
-    #print cw
     crawlHash = { k: cw[k] for k in cw if k not in ['raw_content','id', 'extracted_text'] }
-    #print crawlHash
-    #print cw['raw_content']
-    #print "Hello"
     fw = TmpFile()
     fw.write(cw['extracted_text'])
-    #print fw.content
     d = metaExtractor.extract(Extraction(), fw.path, include_metadata=False).getData(cw['id'], crawlHash)
     print d
     FILE = '{0}_{1}.json'.format(OUTPUT_PATH, c)
     f = open(FILE, "w")
     f.write(json.dumps(d))
     f.close()
-    #fw.close()
     fw.destroy()
   except:
     e = open(ERROR_PATH, "a")

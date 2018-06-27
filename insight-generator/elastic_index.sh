@@ -1,266 +1,32 @@
+# encoding: utf-8
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 #!/bin/bash
 #!usr/bin/env python .
 
 source env.sh
 
-cd requirements
-
-bin/elasticsearch
-
+# Delete old index if exists
 curl -XDELETE 'localhost:9200/insight-generator'
 
 # create ElasticSearch index
-curl -XPOST 'http://localhost:9200/insight-generator' -d '{
-  "settings": {
-    "index": {
-      "mapping.allow_type_wrapper": true
-    }
-  }
-}'
+curl -XPOST 'http://localhost:9200/insight-generator'
 
 # create mapping
-curl -X POST -d '{
-      "docs": {
-        "properties": {
-          "dates": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "long"
-              }
-            }
-          },
-          "entities": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "locations": {
-            "type": "nested",
-            "properties": {
-              "admin1Code": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              },
-              "admin2Code": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              },
-              "countryCode": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              },
-              "location": {
-                "type": "geo_point",
-                "lat_lon": true,
-                "geohash": true
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              },
-              "rawText": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              },
-              "count": {
-                "type": "long"
-              }
-            }
-          },
-          "id": {
-            "type": "string"
-          },
-          "geo": {
-            "type": "geo_point",
-            "lat_lon": true,
-            "geohash": true
-          },
-          "mime-type": {
-            "type": "string",
-            "fields": {
-              "raw": {
-                "type": "string",
-                "index": "not_analyzed",
-                "null_value": "NULL"
-              }
-            }
-          },
-          "places": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "people": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "organizations": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "money": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "percentages": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "time": {
-            "type": "nested",
-            "properties": {
-              "count": {
-                "type": "long"
-              },
-              "name": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          },
-          "measurements": {
-            "type": "nested",
-            "properties": {
-              "value": {
-                "type": "long"
-              },
-              "unit": {
-                "type": "string",
-                "fields": {
-                  "raw": {
-                    "type": "string",
-                    "index": "not_analyzed",
-                    "null_value": "NULL"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-}' "http://localhost:9200/insight-generator/docs/_mapping"
+curl -XPOST 'http://localhost:9200/insight-generator/docs/_mapping' -d '@di-mapping-schema.json'
 
 # get the indices
 curl 'localhost:9200/_cat/indices?v'
@@ -277,7 +43,7 @@ python extract.py sparkler_data.json $DIRECTORY/output error
 cd $DIRECTORY
 
 # uploading Insight-generator output onto ElasticSearch index 
-for x in *; do
-	echo $x
-	curl -X POST 'http://localhost:9200/insight-generator/docs' -d @$x
+find . -name "*.json"|while read fname; do
+  echo "$fname"
+  curl -X POST 'http://localhost:9200/insight-generator/docs' -d @$fname
 done

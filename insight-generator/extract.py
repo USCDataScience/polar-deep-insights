@@ -64,7 +64,6 @@ for l in open(PATH):
     f = open(FILE, "w")
     f.write(json.dumps(d))
     f.close()
-    #fw.close()
     fw.destroy()
   except:
     e = open(ERROR_PATH, "a")

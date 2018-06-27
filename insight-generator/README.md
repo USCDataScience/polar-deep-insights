@@ -1,6 +1,6 @@
 ## Steps for running insisight-generator on sparkler data input file and indexing on local Elasticsearch index 
 
-1. Run requirements.sh to download all the requirements inside requirements folder.
+1. Run ```./requirements.sh``` to download all the requirements inside requirements folder.
 
 2. On a new terminal window, follow instructions from [here](https://github.com/elastic/elasticsearch) to start Elasticsearch:
 
@@ -16,4 +16,4 @@ java –jar tika-server-1.15-SNAPSHOT.jar
 ```
 6. Set the environmental variables in env.sh
 
-7. Run elastic_index.sh
+7. Run ```./elastic_index.sh```

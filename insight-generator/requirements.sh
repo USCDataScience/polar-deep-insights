@@ -1,5 +1,3 @@
-#! /usr/bin/env bash
-
 # encoding: utf-8
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +14,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export REDIS_ENDPOINT=localhost
-export TIKA_PATH=http://localhost:9998
-export GROBID_QUANTITY_ENDPOINT=http://localhost:8060
-export GEO_TOPIC_ENDPOINT=http://localhost:8765
-export CLASSPATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/stanford-ner.jar
-export STANDFORD_NER_MODEL_PATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
-echo "Done!!"
+#! /bin/bash
+
+DIRECTORY="requirements"
+
+if [ ! -d $DIRECTORY ]; then
+  # Control will enter here if $DIRECTORY doesn't exist.
+  mkdir $DIRECTORY
+fi
+
+cd $DIRECTORY
+
+# Elasticsearch
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.0.zip
+unzip elasticsearch-6.3.0.zip
+
+# Stanford-ner
+wget https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip
+
+unzip stanford-ner-2018-02-27.zip
+
+# Geo-topic-parser
+git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git
+
+# Grobid - required for Grobid Quantities
+git clone https://github.com/kermitt2/grobid.git
+
+cd grobid 
+
+# Grobid Quantities
+git clone https://github.com/kermitt2/grobid-quantities.git

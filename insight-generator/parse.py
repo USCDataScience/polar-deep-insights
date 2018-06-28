@@ -1,5 +1,3 @@
-#! /usr/bin/env bash
-
 # encoding: utf-8
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -16,10 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export REDIS_ENDPOINT=localhost
-export TIKA_PATH=http://localhost:9998
-export GROBID_QUANTITY_ENDPOINT=http://localhost:8060
-export GEO_TOPIC_ENDPOINT=http://localhost:8765
-export CLASSPATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/stanford-ner.jar
-export STANDFORD_NER_MODEL_PATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
-echo "Done!!"
+import sys, re, nltk, os, json, requests, urllib, urllib2, traceback
+
+PATH          = sys.argv[1]
+OUTPUT_PATH   = sys.argv[2]
+
+for l in open(PATH):
+	l = l[l.index('"docs":['):]
+	l1 = l.replace('"docs":[','').replace('},','}\n').replace('}]}}','}').replace('""','"no data"')
+	f = open(OUTPUT_PATH, "w")
+	f.write(l1)
+f.close()

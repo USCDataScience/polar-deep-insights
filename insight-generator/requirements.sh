@@ -44,4 +44,3 @@ cd grobid
 
 # Grobid Quantities
 git clone https://github.com/kermitt2/grobid-quantities.git
-

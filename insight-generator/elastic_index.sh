@@ -17,6 +17,13 @@
 #!/bin/bash
 #!usr/bin/env python .
 
+# Download Sparkler data from Solr
+curl -L "http://localhost:8983/solr/crawldb/select?fl=extracted_text,%20id&fq=status:FETCHED&indent=off&q=*:*&rows=100" > sparkler_rawdata.json
+
+# Parse Sparkler data to the format required by insight-generator
+python parse.py sparkler_rawdata.json sparkler_data.json
+
+# set the environment variables
 source env.sh
 
 # Delete old index if exists
@@ -34,12 +41,17 @@ curl 'localhost:9200/_cat/indices?v'
 DIRECTORY="out"
 
 if [ -d $DIRECTORY ]; then
-  # Control will enter here if $DIRECTORY doesn't exist.
+  # Control will enter here if $DIRECTORY exists.
   rm -rf $DIRECTORY
 fi
+
+# Make output directory
 mkdir $DIRECTORY
+
+# Run extract.py script on the output files
 python extract.py sparkler_data.json $DIRECTORY/output error
 
+# Change to output directory
 cd $DIRECTORY
 
 # uploading Insight-generator output onto ElasticSearch index 

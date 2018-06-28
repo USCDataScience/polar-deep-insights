@@ -20,6 +20,6 @@ export REDIS_ENDPOINT=localhost
 export TIKA_PATH=http://localhost:9998
 export GROBID_QUANTITY_ENDPOINT=http://localhost:8060
 export GEO_TOPIC_ENDPOINT=http://localhost:8765
-export CLASSPATH=/Users/prerana/Desktop/Polar-Deep-Insights/stanford-ner-2018-02-27/stanford-ner.jar
-export STANDFORD_NER_MODEL_PATH=/Users/prerana/Desktop/Polar-Deep-Insights/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
+export CLASSPATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/stanford-ner.jar
+export STANDFORD_NER_MODEL_PATH=/Users/prerana/Desktop/polar-deep-insights/insight-generator/requirements/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
 echo "Done!!"

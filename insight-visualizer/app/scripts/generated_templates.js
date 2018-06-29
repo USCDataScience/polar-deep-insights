@@ -216,7 +216,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "      <p>\n" +
     "        A concept ontology is required for this application to function.\n" +
     "\n" +
-    "        You can <a href=\"#/concept_editor\">create</a> your own ontology or\n" +
+    "        You can <a href=\"/#!/concept_editor\">create</a> your own ontology or\n" +
     "        download a predefined ontology from your elasticsearch index.\n" +
     "      </p>\n" +
     "\n" +
@@ -245,7 +245,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "\n" +
     "      <hr />\n" +
     "\n" +
-    "      You can Curate extracted measurements <a href=\"#/measurement_editor\">here</a>.\n" +
+    "      You can Curate extracted measurements <a href=\"/#!/measurement_editor\">here</a>.\n" +
     "    </div>\n" +
     "  </div>\n" +
     "</div>\n"
@@ -487,7 +487,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <span class=\"icon-bar\"></span>\n" +
     "        <span class=\"icon-bar\"></span>\n" +
     "      </button>\n" +
-    "      <a class=\"navbar-brand\" href=\"#/\">Polar Deep Insights</a>\n" +
+    "      <a class=\"navbar-brand\" href=\"#!/\">Polar Deep Insights</a>\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"collapse navbar-collapse navbar-collapse\" id=\"navbarLinks\">\n" +
@@ -497,9 +497,9 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "\n" +
     "\n" +
     "      <ul class=\"nav navbar-nav navbar-right\">\n" +
-    "        <li data-ng-class=\"$location.path() == '/concept_editor' ? 'active' : '' \"><a href=\"#/concept_editor\">Concept Editor</a></li>\n" +
-    "        <li data-ng-class=\"$location.path() == '/query' ? 'active' : '' \"><a href=\"#/query\">Query Interface</a></li>\n" +
-    "        <li data-ng-class=\"$location.path() == '/config' ? 'active' : '' \"><a href=\"#/config\">Configure</a></li>\n" +
+    "        <li data-ng-class=\"$location.path() == '/concept_editor' ? 'active' : '' \"><a href=\"/#!/concept_editor\">Concept Editor</a></li>\n" +
+    "        <li data-ng-class=\"$location.path() == '/query' ? 'active' : '' \"><a href=\"/#!/query\">Query Interface</a></li>\n" +
+    "        <li data-ng-class=\"$location.path() == '/config' ? 'active' : '' \"><a href=\"/#!/config\">Configure</a></li>\n" +
     "      </ul>\n" +
     "    </div>\n" +
     "\n" +

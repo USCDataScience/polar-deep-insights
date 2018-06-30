@@ -17,6 +17,7 @@
 #! /bin/bash
 
 DIRECTORY="requirements"
+brew install wget 
 
 if [ ! -d $DIRECTORY ]; then
   # Control will enter here if $DIRECTORY doesn't exist.
@@ -28,11 +29,12 @@ cd $DIRECTORY
 # Elasticsearch
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.0.zip
 unzip elasticsearch-6.3.0.zip
+rm elasticsearch-6.3.0.zip
 
 # Stanford-ner
 wget https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip
-
 unzip stanford-ner-2018-02-27.zip
+rm stanford-ner-2018-02-27.zip
 
 # Geo-topic-parser
 git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git

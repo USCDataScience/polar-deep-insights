@@ -223,7 +223,7 @@
             "type": "nested",
             "properties": {
               "value": {
-                "type": "long"
+                "type": "double"
               },
               "unit": {
                 "type": "string",

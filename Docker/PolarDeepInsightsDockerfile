@@ -46,8 +46,11 @@ RUN npm install -g \
     npm@3.10.6 \
     grunt@1.0.1 \
     grunt-cli@1.2.0 \
-    bower@1.7.9 \
+    bower \
     yo@1.8.4
+
+ RUN bower cache clean \
+ bower install requirejs -V
 
 # Creating a directory inside the container
 WORKDIR /home/user/src

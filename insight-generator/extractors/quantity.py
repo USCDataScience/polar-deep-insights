@@ -22,6 +22,7 @@ class QuantityExtractor(Extractor):
     return self.extraction
 
   def extractValue(self, q):
+    q['parsedValue'] = float(q['parsedValue'])
     return q
 
   def extractRange(self, m):

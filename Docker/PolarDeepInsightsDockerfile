@@ -46,7 +46,7 @@ RUN npm install -g \
     npm@3.10.6 \
     grunt@1.0.1 \
     grunt-cli@1.2.0 \
-    bower \
+    bower@1.8.4 \
     yo@1.8.4
 
 # Creating a directory inside the container

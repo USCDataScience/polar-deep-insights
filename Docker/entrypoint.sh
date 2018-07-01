@@ -27,7 +27,7 @@ if [ "${cmd}" == "grunt serve" ]; then
     fi
 
     if [ -f 'bower.json' ]; then
-        bower install || exit
+        bower cache clean && bower install || exit
     else 
         echo "No 'bower.json' inside $(pwd). Skipping 'bower install'."
     fi

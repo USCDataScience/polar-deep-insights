@@ -43,11 +43,14 @@ ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
 
 # Installing usefull npm packages
 RUN npm install -g \
-    npm@3.10.6 \
-    grunt@1.0.1 \
-    grunt-cli@1.2.0 \
-    bower@1.7.9 \
-    yo@1.8.4
+    npm \
+    grunt \
+    grunt-cli \
+    bower \
+    yo
+
+ RUN bower cache clean \
+ bower install requirejs -V
 
 # Creating a directory inside the container
 WORKDIR /home/user/src

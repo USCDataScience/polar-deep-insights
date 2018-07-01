@@ -16,8 +16,7 @@
 
 #! /bin/bash
 
-DIRECTORY="requirements"
-brew install wget 
+DIRECTORY="requirements" 
 
 if [ ! -d $DIRECTORY ]; then
   # Control will enter here if $DIRECTORY doesn't exist.

@@ -1,4 +1,4 @@
-## Steps for running insisight-generator on sparkler data input file and indexing on local Elasticsearch index 
+## Steps for running insight-generator on sparkler data input file and indexing on local Elasticsearch index 
 
 1. Run [Sparkler](https://github.com/USCDataScience/sparkler) on a set of seed urls.
 

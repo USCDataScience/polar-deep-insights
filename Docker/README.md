@@ -5,6 +5,9 @@
 3. cd ../insight-visualizer/
 4. docker run --rm -it -v "$PWD:/home/user/src" -p 9000:9000 -p 35729:35729 uscdatascience/polar-deep-insights
 
+**Note**: If you run into Bower error please do ``` bower cache clean ```
+and run step #4 again.
+
 After the execution completes, the Application can be accessed on this url:
 http://0.0.0.0:9000/#!/config
 

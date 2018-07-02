@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # encoding: utf-8
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,23 +15,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmd="$@"
-
-if [ "${cmd}" == "grunt serve" ]; then
-    echo "Installing requirements..."
-
-    if [ -f 'package.json' ]; then 
-        npm install || exit
-    else 
-        echo "No 'package.json' inside $(pwd). Skipping 'npm install'."
-    fi
-
-    if [ -f 'bower.json' ]; then
-        bower install || exit
-    else 
-        echo "No 'bower.json' inside $(pwd). Skipping 'bower install'."
-    fi
-fi
-
-echo "Running the container command '${cmd}'..."
-exec $cmd
+cd $HOME/insight-visualizer
+grunt serve

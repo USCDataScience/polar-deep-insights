@@ -14,28 +14,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ruby:2.3-alpine
+#FROM ruby:2.3-alpine
+FROM ubuntu:16.04
 MAINTAINER USC Information Retrieval and Data Science (IRDS) irds-L@mymaillists.usc.edu
 
 # Internal unpriviled user will have this ID:
-ENV CONTAINER_USER_ID="1000" \
-    CONTAINER_GROUP_ID="1000"
+ENV CONTAINER_USER_ID="pdi" \
+    CONTAINER_GROUP_ID="pdi"
 
 # Updates OS and adds system required packages
-RUN apk update && apk upgrade
-RUN apk add nodejs git ruby 
-RUN apk add --update build-base libffi-dev 
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
+      nodejs \
+      nodejs-legacy \
+      npm \
+      git \
+      ruby \
+      ruby-dev \
+      libffi-dev \
+      build-essential \
+      wget \
+        && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/*
+
 RUN gem install compass
 
 # creates a user "user"
-RUN adduser -D -u ${CONTAINER_USER_ID} -g ${CONTAINER_GROUP_ID} -h /home/user -s /bin/sh user
+RUN useradd -U -d /home/pdi -s /bin/sh ${CONTAINER_USER_ID}
+RUN mkdir /home/pdi
+RUN chown pdi:pdi /home/pdi
 
 # Global npm folder writeable by "user"
 RUN mkdir -p /opt/npm-global && \
-    chown user:user /opt/npm-global
+    chown pdi:pdi /opt/npm-global
 
 # After this point everthing is done as unpriveleged user
-USER user
+USER pdi
 
 # configuring environment variables
 ENV NPM_CONFIG_PREFIX=/opt/npm-global
@@ -50,20 +64,21 @@ RUN npm install -g \
     yo@1.8.4
 
 # Creating a directory inside the container
-WORKDIR /home/user/src
+WORKDIR /home/pdi/src
 
 # Copy entrypoint script into the container
 COPY ./entrypoint.sh /entrypoint.sh
 
-# Copy everything to the workdir, inside the container
-COPY ./ . 
-
 # Always root is set as the owner, so let's change it to user
 USER root
-RUN chown -R user:user .
-USER user
+RUN chown -R pdi:pdi /home/pdi/src
+USER pdi
+
+# Checkout PDI and then enter insights-visualizer dir
+RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
+WORKDIR /home/pdi/src/polar-deep-insights/insight-visualizer/
+CMD npm install && bower install
 
 EXPOSE 9000 
 EXPOSE 35729
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["grunt", "serve"]

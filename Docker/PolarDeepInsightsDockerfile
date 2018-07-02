@@ -21,6 +21,8 @@ MAINTAINER USC Information Retrieval and Data Science (IRDS) irds-L@mymaillists.
 ENV CONTAINER_USER_ID="pdi" \
     CONTAINER_GROUP_ID="pdi"
 
+ENV PDI_HOME="/home/pdi/src/polar-deep-insights"
+
 # Updates OS and adds system required packages
 RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       nodejs \
@@ -76,7 +78,7 @@ USER pdi
 # Checkout PDI and then enter insights-visualizer dir
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
 WORKDIR /home/pdi/src/polar-deep-insights/insight-visualizer/
-CMD npm install && bower install
+RUN npm install && bower install
 
 EXPOSE 9000 
 EXPOSE 35729

@@ -15,5 +15,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cd $HOME/src/polar-deep-insights/insight-visualizer
-grunt serve
+echo "PDI_HOME=$PDI_HOME/insight-visualizer"
+cd $PDI_HOME/insight-visualizer && grunt serve

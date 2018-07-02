@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#FROM ruby:2.3-alpine
 FROM ubuntu:16.04
 MAINTAINER USC Information Retrieval and Data Science (IRDS) irds-L@mymaillists.usc.edu
 
@@ -39,12 +38,12 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-reco
 
 RUN gem install compass
 
-# creates a user "user"
+# creates a user "pdi"
 RUN useradd -U -d /home/pdi -s /bin/sh ${CONTAINER_USER_ID}
 RUN mkdir /home/pdi
 RUN chown pdi:pdi /home/pdi
 
-# Global npm folder writeable by "user"
+# Global npm folder writeable by "pdi"
 RUN mkdir -p /opt/npm-global && \
     chown pdi:pdi /opt/npm-global
 
@@ -69,7 +68,7 @@ WORKDIR /home/pdi/src
 # Copy entrypoint script into the container
 COPY ./entrypoint.sh /entrypoint.sh
 
-# Always root is set as the owner, so let's change it to user
+# Always root is set as the owner, so let's change it to pdi
 USER root
 RUN chown -R pdi:pdi /home/pdi/src
 USER pdi

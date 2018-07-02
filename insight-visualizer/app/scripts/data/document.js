@@ -419,7 +419,7 @@ angular.module("polar.data")
           "aggs": {
             "entity_name": {
               "terms": {
-                "field": "measurements." + mType + "-name.raw",
+                "field": "measurements." + mType + "-name",
                 "size": 1000
               },
               "aggs" : {

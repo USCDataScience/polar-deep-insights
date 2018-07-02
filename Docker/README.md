@@ -4,9 +4,6 @@
 2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`
 3. `docker run -p 35279:35279 -p 9000:9000 uscdatascience/polar-deep-insights`
 
-**Note**: If you run into Bower error please do ``` bower cache clean ```
-and run step #4 again.
-
 After the execution completes, the Application can be accessed on this url:
 http://0.0.0.0:9000/#!/config
 

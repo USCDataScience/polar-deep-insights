@@ -1,7 +1,14 @@
+# Pre-Reqs
+
+1. Install [elasticsearch-tools](https://www.npmjs.com/package/elasticsearch-tools) from [NPM](http://npmjs.org/).
+2. You will need to export the mappings and data from `polar.usc.edu/elasticsearch`<br/>
+  a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
+  b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` (will take a while)
+
 # Installation 
 1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`
 2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`
-3. `PDI_JSON_PATH=/path/to/polar-data.json docker-compose up -d` # omit the polar-data.json portion of the path
+3. `PDI_JSON_PATH=/path/to/polar-data.json docker-compose up -d` # omit the polar-data.json portion of the path, e.g., `/data/polar`
 
 After the execution completes, the Application can be accessed on this url:
 http://0.0.0.0:9000/#!/config

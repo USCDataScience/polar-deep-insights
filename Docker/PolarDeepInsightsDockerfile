@@ -60,6 +60,7 @@ RUN chown -R pdi:pdi /home/pdi
 
 # sudo access
 RUN adduser pdi sudo
+RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Global npm folder writeable by "pdi"
 RUN mkdir -p /opt/npm-global && \
@@ -90,7 +91,11 @@ COPY ./entrypoint.sh /deploy/entrypoint.sh
 # Checkout PDI and then enter insights-visualizer dir
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
 WORKDIR /home/pdi/src/polar-deep-insights/insight-visualizer/
+
+# Build
 RUN npm install && bower install
+
+
 
 # Always root is set as the owner, so let's change it to pdi
 USER root
@@ -115,12 +120,10 @@ USER root
 ENV APACHE_RUN_USER pdi
 ENV APACHE_RUN_GROUP pdi
 ENV APACHE_LOG_DIR /var/log/apache2
-RUN chown -R pdi:pdi /etc/apache2
-COPY ./pdi.conf /etc/apache2/conf-enabled
+COPY ./app-conf/httpd/pdi.conf /etc/apache2/conf-enabled
 RUN a2enmod proxy_http proxy_ajp rewrite headers
 RUN echo "ServerName pdi" >> /etc/apache2/apache2.conf
 RUN chown -R pdi:pdi /etc/apache2 /var/log/apache2
-RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER pdi
 
 EXPOSE 80

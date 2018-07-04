@@ -45,6 +45,7 @@ done
 
 if [ -d "$PDI_JSON_PATH" ]; then
     echo "Using PDI JSON and loading into Elasticsearch: [http://localhost:9200]: JSON path: $PDI_JSON_PATH"
+    es-import-mappings --url http://localhost:9200 --file $PDI_JSON_PATH/polar-data-mappings.json 
     es-import-bulk --url http://localhost:9200 --file $PDI_JSON_PATH/polar-data.json --requestTimeout 100000 --max 1000
 fi
 

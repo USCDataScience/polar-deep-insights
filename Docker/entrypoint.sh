@@ -23,6 +23,26 @@ sudo apachectl start
 echo "Starting ElasticSearch using ELASTIC_PATH=$ELASTIC_PATH"
 elasticsearch -d
 
+WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://localhost:9200/_cat/health?h=st) = 200 ]'
+WAIT_LOOPS=10
+WAIT_SLEEP=2
+
+is_ready() {
+    eval "$WAIT_COMMAND"
+}
+
+# wait until is ready
+i=0
+while ! is_ready; do
+    i=`expr $i + 1`
+    if [ $i -ge $WAIT_LOOPS ]; then
+        echo "$(date) - Elasticsearch still not ready, giving up"
+        exit 1
+    fi
+    echo "$(date) - waiting for Elasticsearch to be ready"
+    sleep $WAIT_SLEEP
+done
+
 if [ -d "$PDI_JSON_PATH" ]; then
     echo "Using PDI JSON and loading into Elasticsearch: [http://localhost:9200]: JSON path: $PDI_JSON_PATH"
     es-import-bulk --url http://localhost:9200 --file $PDI_JSON_PATH/polar-data.json --requestTimeout 100000 --max 1000

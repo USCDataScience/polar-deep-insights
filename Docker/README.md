@@ -10,7 +10,7 @@ Assuming you used `/data/polar` for the pre-reqs mapping and JSON data location,
 
 1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`
 2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`<br/>
-(or optionally, if you don't want to build locally and just pull from dockerhub)<br/>
+(or optionally, if you don't want to build locally and just [pull from dockerhub](https://hub.docker.com/r/uscdatascience/polar-deep-insights/))<br/>
 `docker pull uscdatascience/polar-deep-insights`
 3. `PDI_JSON_PATH=/data/polar docker-compose up -d` 
 

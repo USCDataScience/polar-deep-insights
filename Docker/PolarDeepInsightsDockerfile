@@ -94,8 +94,8 @@ WORKDIR /home/pdi/src/polar-deep-insights/insight-visualizer/
 
 # Override template htmls for context /pdi for Apache2
 
-COPY app-conf/ng-app/scripts/components/configuration/template.html /home/pdi/src/polar-deep-insights/insight-visualizer/scripts/components/configuration/template.html
-COPY app-conf/ng-app/scripts/components/navigation/template.html /home/pdi/src/polar-deep-insights/insight-visualizer/scripts/components/navigation/template.html
+COPY app-conf/ng-app/scripts/components/configuration/template.html /home/pdi/src/polar-deep-insights/insight-visualizer/app/scripts/components/configuration/template.html
+COPY app-conf/ng-app/scripts/components/navigation/template.html /home/pdi/src/polar-deep-insights/insight-visualizer/app/scripts/components/navigation/template.html
 
 # Build
 RUN npm install && bower install

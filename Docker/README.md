@@ -38,7 +38,8 @@ Use this command to log onto the container. Note that the pdi user has sudo acce
 The container exposes:
 
 * `80` - Apache2/HTTPD server
-* `9200` - Elasticsearch 2.4.6 server
 * `9000` - Grunt server servig up the PDI application
+* `9200` - Elasticsearch 2.4.6 server
+* `35729` - Auto refresh port for AngularJS apps
 
 

@@ -6,14 +6,20 @@
   b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` (will take a while)
 
 # Installation 
+Assuming you used `/data/polar` for the pre-reqs mapping and JSON data location, then:
+
 1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`
 2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`
-3. `PDI_JSON_PATH=/path/to/polar-data.json docker-compose up -d` # omit the polar-data.json portion of the path, e.g., `/data/polar`
+3. `PDI_JSON_PATH=/data/polar docker-compose up -d` 
 
 After the execution completes, the Application can be accessed on this url:
-http://0.0.0.0:9000/#!/config
+http://localhost/pdi/
 
-**Note:** You need to add CORS extension to the browser and enable it in-order to Download concept ontology and additional precomputed information.
+And Elasticsearch is available from:
+
+http://localhost/elasticsearch/
+
+**Note:** You need to add CORS extension to the browser and to enable it in order to download concept ontology and additional precomputed information from `http://polar.usc.edu/elasticsearch/` and elsewhere. 
 
 # Monitoring the Container
 

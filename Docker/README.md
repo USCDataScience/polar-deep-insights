@@ -8,10 +8,10 @@
 # Installation 
 Assuming you used `/data/polar` for the pre-reqs mapping and JSON data location, then:
 
-1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`<br/>
+1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`
+2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`<br/>
 (or optionally, if you don't want to build locally and just pull from dockerhub)<br/>
 `docker pull uscdatascience/polar-deep-insights`
-2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`
 3. `PDI_JSON_PATH=/data/polar docker-compose up -d` 
 
 After the execution completes, the Application can be accessed on this url:

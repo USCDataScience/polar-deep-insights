@@ -222,10 +222,23 @@
           "measurements": {
             "type": "nested",
             "properties": {
-              "value": {
-                "type": "double"
+              "normalizedQuantity": {
+                "type": "long"
               },
-              "unit": {
+              "normalizedUnit": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "system": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              },
+              "normalizedUnit-name": {
                 "type": "string",
                 "fields": {
                   "raw": {
@@ -234,6 +247,90 @@
                     "null_value": "NULL"
                   }
                 }
+              },
+              "normalizedUnit-system": {
+                "type": "string",
+                "fields": {
+                  "raw": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "null_value": "NULL"
+                  }
+                }
+              },
+              "normalizedUnit-type": {
+                "type": "string",
+                "fields": {
+                  "raw": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "null_value": "NULL"
+                  }
+                }
+              },
+              "offsetEnd": {
+                "type": "long"
+              },
+              "offsetStart": {
+                "type": "long"
+              },
+              "parsedValue": {
+                "type": "long"
+              },
+              "rawUnit": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "offsetEnd": {
+                    "type": "long"
+                  },
+                  "offsetStart": {
+                    "type": "long"
+                  }
+                }
+              },
+              "rawUnit-name": {
+                "type": "string",
+                "fields": {
+                  "raw": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "null_value": "NULL"
+                  }
+                }
+              },
+              "rawUnit-offsetEnd": {
+                "type": "long"
+              },
+              "rawUnit-offsetStart": {
+                "type": "long"
+              },
+              "rawUnit-system": {
+                "type": "string",
+                "fields": {
+                  "raw": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "null_value": "NULL"
+                  }
+                }
+              },
+              "rawUnit-type": {
+                "type": "string",
+                "fields": {
+                  "raw": {
+                    "type": "string",
+                    "index": "not_analyzed",
+                    "null_value": "NULL"
+                  }
+                }
+              },
+              "rawValue": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
               }
             }
           }

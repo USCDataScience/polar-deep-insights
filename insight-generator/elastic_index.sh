@@ -27,16 +27,16 @@ python parse.py sparkler_rawdata.json sparkler_data.json
 source env.sh
 
 # Delete old index if exists
-curl -XDELETE 'localhost:9200/insight-generator'
+curl -XDELETE 'http://localhost/elasticsearch/insight-generator'
 
 # create ElasticSearch index
-curl -XPOST 'http://localhost:9200/insight-generator'
+curl -XPOST 'http://localhost/elasticsearch/insight-generator'
 
 # create mapping
-curl -XPOST 'http://localhost:9200/insight-generator/docs/_mapping' -d '@di-mapping-schema.json'
+curl -XPOST 'http://localhost/elasticsearch/insight-generator/docs/_mapping' -d '@di-mapping-schema.json'
 
 # get the indices
-curl 'localhost:9200/_cat/indices?v'
+curl 'localhost/elasticsearch/_cat/indices?v'
 
 DIRECTORY="out"
 
@@ -57,5 +57,5 @@ cd $DIRECTORY
 # uploading Insight-generator output onto ElasticSearch index 
 find . -name "*.json"|while read fname; do
   echo "$fname"
-  curl -X POST 'http://localhost:9200/insight-generator/docs' -d @$fname
+  curl -X POST 'http://localhost/elasticsearch/insight-generator/docs' -d @$fname
 done

@@ -27,7 +27,7 @@
     "angularjs-slider": "^4.0.2",
     "elasticsearch": "^11.0.1",
     "angular-nvd3": "^1.0.8",
-    "datamaps": "^0.5.7",
+    "datamaps": "^0.5.9",
     "js-quantities": "^1.6.2",
     "angular-ui-sortable": "^0.14.3",
     "leaflet.heat": "Leaflet.heat#*"
@@ -38,6 +38,6 @@
   },
   "appPath": "app",
   "resolutions": {
-    "angular": "1.7.2"
+    "angular": "^1.7.2"
   }
 }

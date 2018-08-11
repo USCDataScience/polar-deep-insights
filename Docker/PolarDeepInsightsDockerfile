@@ -100,11 +100,27 @@ COPY app-conf/ng-app/scripts/components/navigation/template.html /home/pdi/src/p
 # Build
 RUN npm install && bower install
 
+# changing workdir to insight-generator
+WORKDIR /home/pdi/src/polar-deep-insights/insight-generator/
+
 # Always root is set as the owner, so let's change it to pdi
 USER root
+RUN mkdir -p /deploy/requirements
 RUN chown -R pdi:pdi /deploy
 RUN chown -R pdi:pdi /home/pdi/src
 USER pdi
+
+# changing workdir to requirements
+WORKDIR /deploy/requirements
+
+# Downloading Standford NER, GeoTopicParser and Grobid requirements for insight-generator into requirements folder
+RUN curl -L -O https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip && \
+unzip stanford-ner-2018-02-27.zip && \
+git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git && \
+git clone https://github.com/kermitt2/grobid.git && \
+cd grobid && \
+git clone https://github.com/kermitt2/grobid-quantities.git
+
 
 # Install ElasticSearch 2.4.6
 WORKDIR /deploy
@@ -133,5 +149,9 @@ EXPOSE 80
 EXPOSE 9000
 EXPOSE 9200
 EXPOSE 35729
+EXPOSE 8060
+EXPOSE 9998
+EXPOSE 8765
+
 
 ENTRYPOINT ["/deploy/entrypoint.sh"]

@@ -1,0 +1,181 @@
+# encoding: utf-8
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+FROM ubuntu:16.04
+MAINTAINER USC Information Retrieval and Data Science (IRDS) irds-L@mymaillists.usc.edu
+
+# Internal unpriviled user will have this ID:
+ENV CONTAINER_USER_ID="pdi" \
+    CONTAINER_GROUP_ID="pdi"
+
+ENV PDI_HOME="/home/pdi/src/polar-deep-insights"
+
+# Updates OS and adds system required packages
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
+      apache2 \
+      python-setuptools python-dev \
+      build-essential \
+      openjdk-8-jre \
+      nodejs \
+      nodejs-legacy \
+      npm \
+      vim \
+      emacs \
+      git \
+      sudo \
+      curl \
+      libffi-dev \
+      software-properties-common \
+      wget \
+      maven \
+      unzip \
+        && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/*
+
+# OpenJDK version 8 for ES
+RUN add-apt-repository ppa:openjdk-r/ppa
+RUN apt-get update
+RUN apt-get install -y openjdk-8-jdk
+RUN apt-get install -y openjdk-8-jre
+RUN update-alternatives --config java
+RUN update-alternatives --config javac
+
+# creates a user "pdi"
+RUN useradd -U -d /home/pdi -s /bin/sh ${CONTAINER_USER_ID}
+RUN mkdir /home/pdi
+RUN chown -R pdi:pdi /home/pdi
+
+# sudo access
+RUN adduser pdi sudo
+RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Global npm folder writeable by "pdi"
+RUN mkdir -p /opt/npm-global && \
+    chown pdi:pdi /opt/npm-global
+
+# After this point everthing is done as unpriveleged user
+USER pdi
+
+# configuring environment variables
+ENV NPM_CONFIG_PREFIX=/opt/npm-global
+ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
+
+# Installing usefull npm packages
+RUN npm install -g \
+    npm@3.10.6
+
+# Creating a directory inside the container
+RUN mkdir /home/pdi/src
+WORKDIR /home/pdi/src
+
+# Copy entrypoint script into the container
+COPY ./entrypoint.sh /deploy/entrypoint.sh
+
+# Checkout PDI and then enter insights-visualizer dir
+RUN git clone https://github.com/prenastro/polar-deep-insights.git
+
+WORKDIR /home/pdi/src/polar-deep-insights/insight-generator/
+
+
+# Always root is set as the owner, so let's change it to pdi
+USER root
+RUN mkdir -p /deploy/requirements
+RUN chown -R pdi:pdi /deploy
+RUN chown -R pdi:pdi /home/pdi/src
+USER pdi
+
+# Downloading the Requirements 
+WORKDIR /deploy/requirements
+RUN curl -L -O https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip && \
+unzip stanford-ner-2018-02-27.zip && \
+git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git && \
+git clone https://github.com/kermitt2/grobid.git && \
+cd grobid && \
+git clone https://github.com/kermitt2/grobid-quantities.git
+
+# Installing Gradle
+RUN curl https://services.gradle.org/distributions/gradle-4.9-bin.zip -O -J -L && \
+unzip gradle-4.9-bin.zip
+ENV PATH=$PATH:/deploy/requirements/gradle-4.9/bin
+RUN gradle -v
+
+# Installing Grobid (Required for Grobid-Quantities)
+WORKDIR /deploy/requirements/grobid/
+RUN ./gradlew clean install
+
+# Installing Grobid-Quantities
+# WORKDIR /deploy/requirements/grobid/grobid-quantities
+# Need to add commands to build model from scratch or use a prebuilt model
+
+# Running Tika-Server
+# Need to download JAR file from repo, install and run java -jar tika-server-1.1X-SNAPSHOT.jar
+
+# Installing Geo-Topic-Parser
+WORKDIR /deploy/requirements/lucene-geo-gazetteer/
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH=$PATH:$JAVA_HOME/bin
+RUN mvn install assembly:assembly
+ENV PATH=$PATH:/deploy/requirements/lucene-geo-gazetteer/src/main/bin
+RUN curl -O http://download.geonames.org/export/dump/allCountries.zip
+RUN unzip allCountries.zip
+RUN lucene-geo-gazetteer -i geoIndex -b allCountries.txt
+# RUN lucene-geo-gazetteer -server
+
+
+# Install ElasticSearch 2.4.6
+WORKDIR /deploy
+RUN curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.4.6/elasticsearch-2.4.6.zip
+RUN unzip elasticsearch-2.4.6.zip
+
+# Install Elasticsearch-Tools
+RUN npm install -g elasticsearch-tools
+
+# configuring environment variables
+ENV ELASTIC_PATH=/deploy/elasticsearch-2.4.6
+ENV PATH=$ELASTIC_PATH/bin:$PATH
+
+# start Apache HTTPD
+USER root
+ENV APACHE_RUN_USER pdi
+ENV APACHE_RUN_GROUP pdi
+ENV APACHE_LOG_DIR /var/log/apache2
+COPY ./app-conf/httpd/pdi.conf /etc/apache2/conf-enabled
+RUN a2enmod proxy_http proxy_ajp rewrite headers
+RUN echo "ServerName pdi" >> /etc/apache2/apache2.conf
+RUN chown -R pdi:pdi /etc/apache2 /var/log/apache2
+USER pdi
+
+# WORKDIR /deploy/elasticsearch-2.4.6/
+# RUN ./bin/elasticsearch
+
+# For Apache Server
+EXPOSE 80
+
+# For Elasticsearch-2.4.6
+EXPOSE 9200
+
+# For Grobid-Quantities 
+EXPOSE 8060
+
+# For Tika-Server
+EXPOSE 9998
+
+# For GeoTopicParser
+EXPOSE 8765
+
+CMD ["/bin/sh", "-c", "lucene-geo-gazetteer -server > server.log 2>&1"]
+

@@ -5,10 +5,10 @@
   a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
   b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` (will take a while)
 
-# Installation 
+# Insight-Visualizer Installation 
 Assuming you used `/data/polar` for the pre-reqs mapping and JSON data location, then:
 
-1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker`
+1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker/insight-visualizer`
 2.  `docker build -t uscdatascience/polar-deep-insights -f PolarDeepInsightsDockerfile .`<br/>
 (or optionally, if you don't want to build locally and just [pull from dockerhub](https://hub.docker.com/r/uscdatascience/polar-deep-insights/))<br/>
 `docker pull uscdatascience/polar-deep-insights`

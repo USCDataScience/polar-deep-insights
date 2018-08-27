@@ -5,7 +5,7 @@
   a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
   b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` (will take a while)
 
-# Insight-Visualizer Installation 
+## Insight-Visualizer Installation 
 Assuming you used `/data/polar` for the pre-reqs mapping and JSON data location, then:
 
 1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker/insight-visualizer`
@@ -23,19 +23,19 @@ http://localhost/elasticsearch/
 
 **Note:** You need to add CORS extension to the browser and to enable it in order to download concept ontology and additional precomputed information from `http://polar.usc.edu/elasticsearch/` and elsewhere. 
 
-# Monitoring the Container
+### Monitoring the Container
 
 Use this command to monitor what's going on in the container
 
 1. `docker logs -f docker_polar-deep-insights_1` # replace docker_polar-deep-insights_1 with the container id or tag
 
-# Logging onto the Container with a Bash Shell
+### Logging onto the Container with a Bash Shell
 
 Use this command to log onto the container. Note that the pdi user has sudo access if you need it.
 
 1. `docker exec -it docker_polar-deep-insights_1 bash`
 
-# Ports
+### Ports
 
 The container exposes:
 

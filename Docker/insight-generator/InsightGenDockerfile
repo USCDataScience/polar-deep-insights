@@ -27,6 +27,7 @@ ENV PDI_HOME="/home/pdi/src/polar-deep-insights"
 RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
       python \
       python-pip \
+      python-setuptools \
       build-essential \
       openjdk-8-jre \
       vim \
@@ -39,6 +40,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-reco
       wget \
       maven \
       unzip \
+      at \
         && \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/*
@@ -71,18 +73,23 @@ RUN chown -R pdi:pdi /deploy
 RUN adduser pdi sudo
 RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Insight Generator Python dependencies
-RUN pip install -r dependencies.txt
-
-# NLTK
-RUN python -c "import nltk; nltk.download('punkt');"
-
 # After this point everthing is done as unpriveleged user
 USER pdi
 
 # Checkout PDI and then enter insights-generator dir
 WORKDIR /home/pdi/src
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
+
+# Insight Generator Python dependencies
+WORKDIR /home/pdi/src/polar-deep-insights/insight-generator
+
+# need root to install pip deps
+USER root
+RUN pip install -r dependencies.txt
+USER pdi
+
+# NLTK
+RUN python -c "import nltk; nltk.download('punkt');"
 
 # Downloading the Requirements 
 WORKDIR /deploy/requirements
@@ -105,7 +112,7 @@ RUN ./gradlew clean install
 
 # Installing Grobid-Quantities
 WORKDIR /deploy/requirements/grobid/grobid-quantities
-RUN mvn -Dmaven.test.skip=true clean install war
+RUN mvn -Dmaven.test.skip=true clean install war:war
 
 # Build models
 RUN mvn generate-resources -Ptrain_units

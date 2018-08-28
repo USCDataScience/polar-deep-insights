@@ -36,7 +36,7 @@ cd /deploy/requirements/lucene-geo-gazetteer && \
     lucene-geo-gazetteer -server >> /deploy/requirements/pdi-generator.log 2>&1&
 
 
-if [ -d "$SPARKLER_JSON_PATH/sparkler.json" && -d "$ES_URL"]; then
+if [ -d "$SPARKLER_JSON_PATH/sparkler.json" && -d "$ES_URL" ]; then
     echo "Using SPARKLER JSON and loading into Elasticsearch: [$ES_URL]: JSON path: $SPARKLER_JSON_PATH/sparkler.json"
     # add command here
 

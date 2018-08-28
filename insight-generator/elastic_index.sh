@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+JSON_LINE_DATA_FILE="$1"
+
 # Delete old index if exists
 curl -XDELETE "$ES_URL/insight-generator"
 
@@ -39,7 +41,7 @@ fi
 mkdir $DIRECTORY
 
 # Run extract.py script on the output files
-python extract.py sparkler_data.json $DIRECTORY/output error
+python extract.py $JSON_LINE_DATA_FILE $DIRECTORY/output error
 
 # Change to output directory
 pushd $DIRECTORY

@@ -24,12 +24,12 @@ echo "Starting Apache2 (HTTPD)"
 sudo apachectl start
 
 echo "Starting Grobid Quantities"
-cd /deploy/requirements/grobid-quantities && \
+cd /deploy/requirements/grobid/grobid-quantities && \
     mvn -Dmaven.test.skip=true jetty:run-war >> /deploy/requirements/pdi-generator.log 2>&1&
 
 echo "Starting Tika Server"
 cd /deploy/requirements/tika-server && \
-    java -jar tika-server-1.15.jar >> /deploy/requirements/pdi-generator.log 2>&1&
+    java -jar tika-server-1.15-SNAPSHOT.jar >> /deploy/requirements/pdi-generator.log 2>&1&
 
 echo "Starting Lucene Geo Gazetteer Server"
 cd /deploy/requirements/lucene-geo-gazetteer && \
@@ -41,3 +41,7 @@ if [ -d "$SPARKLER_JSON_PATH/sparkler.json" && -d "$ES_URL"]; then
     # add command here
 
 fi
+
+# watch log
+echo "Watching pdi-generator log...."
+tail -f /deploy/requirements/pdi-generator.log

@@ -139,9 +139,9 @@ ENV REDIS_ENDPOINT localhost
 ENV TIKA_PATH http://localhost:9998
 ENV GROBID_QUANTITY_ENDPOINT http://localhost:8060
 ENV GEO_TOPIC_ENDPOINT http://localhost:8765
+ENV ES_URL http://polar-deep-insights/elasticsearch
 ENV CLASSPATH /deploy/requirements/stanford-ner-2018-02-27/stanford-ner.jar
 ENV STANDFORD_NER_MODEL_PATH /deploy/requirements/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
-
 
 # Copy entrypoint script into the container
 COPY ./entrypoint.sh /deploy/entrypoint.sh

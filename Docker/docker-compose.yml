@@ -29,6 +29,19 @@ services:
     volumes:
       - ${PDI_JSON_PATH}:/data/polar
 
+  pdi-generator:
+    image: uscdatascience/pdi-generator
+    networks:
+      - pdi-network
+    entrypoint:
+      - /deploy/entrypoint.sh
+    ports:
+      - "9999:9998"
+      - "8765:8765"
+      - "8060:8060"
+    volumes:
+      - ${PDI_JSON_PATH}:/data/polar
+
 networks:
   pdi-network:
     driver: bridge

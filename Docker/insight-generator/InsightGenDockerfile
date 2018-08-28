@@ -57,16 +57,19 @@ RUN pip install --upgrade pip
 # creates a user "pdi"
 RUN useradd -U -d /home/pdi -s /bin/sh ${CONTAINER_USER_ID}
 RUN mkdir /home/pdi
+
+# deploy dir
+RUN mkdir -p /deploy/requirements
+
+# permissions
+RUN mkdir /home/pdi/src
 RUN chown -R pdi:pdi /home/pdi
+RUN chown -R pdi:pdi /home/pdi/src
+RUN chown -R pdi:pdi /deploy
 
 # sudo access
 RUN adduser pdi sudo
 RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# setup install area and permissions
-RUN mkdir -p /deploy/requirements
-RUN chown -R pdi:pdi /deploy
-RUN chown -R pdi:pdi /home/pdi/src
 
 # Insight Generator Python dependencies
 RUN pip install -r dependencies.txt
@@ -77,11 +80,8 @@ RUN python -c "import nltk; nltk.download('punkt');"
 # After this point everthing is done as unpriveleged user
 USER pdi
 
-# Creating a directory inside the container
-RUN mkdir /home/pdi/src
-WORKDIR /home/pdi/src
-
 # Checkout PDI and then enter insights-generator dir
+WORKDIR /home/pdi/src
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
 
 # Downloading the Requirements 

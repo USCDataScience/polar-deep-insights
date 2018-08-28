@@ -1,3 +1,4 @@
+#!/bin/bash
 # encoding: utf-8
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,29 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/bin/bash
-#!usr/bin/env python .
-
-# Download Sparkler data from Solr
-curl -L "http://localhost:8983/solr/crawldb/select?fl=extracted_text,%20id&fq=status:FETCHED&indent=off&q=*:*&rows=100" > sparkler_rawdata.json
-
-# Parse Sparkler data to the format required by insight-generator
-python parse.py sparkler_rawdata.json sparkler_data.json
-
-# set the environment variables
-source env.sh
-
 # Delete old index if exists
-curl -XDELETE 'http://localhost/elasticsearch/insight-generator'
+curl -XDELETE "$ES_URL/insight-generator"
 
 # create ElasticSearch index
-curl -XPOST 'http://localhost/elasticsearch/insight-generator'
+curl -XPOST "$ES_URL/insight-generator"
 
 # create mapping
-curl -XPOST 'http://localhost/elasticsearch/insight-generator/docs/_mapping' -d '@di-mapping-schema.json'
+echo "Creating ES mapping....."
+curl -XPOST "$ES_URL/insight-generator/docs/_mapping" -d @'di-mapping-schema.json'
 
 # get the indices
-curl 'localhost/elasticsearch/_cat/indices?v'
+curl "$ES_URL/_cat/indices?v"
 
 DIRECTORY="out"
 
@@ -52,10 +42,12 @@ mkdir $DIRECTORY
 python extract.py sparkler_data.json $DIRECTORY/output error
 
 # Change to output directory
-cd $DIRECTORY
+pushd $DIRECTORY
 
 # uploading Insight-generator output onto ElasticSearch index 
 find . -name "*.json"|while read fname; do
   echo "$fname"
-  curl -X POST 'http://localhost/elasticsearch/insight-generator/docs' -d @$fname
+  curl -X POST "$ES_URL/insight-generator/docs" -d @"$fname"
 done
+
+popd

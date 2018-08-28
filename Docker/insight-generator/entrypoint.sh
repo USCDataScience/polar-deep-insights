@@ -15,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SPARKLER_JSON_PATH=/data/polar
+PDI_JSON_PATH=/data/polar
 
 mkdir -p /deploy/requirements/logs/
 touch /deploy/requirements/logs/pdi-generator.log
 touch /deploy/requirements/logs/pdi-ingest.log
 
 WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://polar-deep-insights/elasticsearch/_cat/health?h=st) = 200 ]'
-WAIT_LOOPS=10
+WAIT_LOOPS=30
 WAIT_SLEEP=2
 
 is_ready() {
@@ -55,15 +55,15 @@ cd /deploy/requirements/lucene-geo-gazetteer && \
 
 if [[ ! -z "${PDI_JSON_PATH}" ]]; then
 
-    if [ -d "$PDI_JSON_PATH/sparkler/raw" ]; then
+    if [ -f "$PDI_JSON_PATH/sparkler/raw/sparkler_rawdata.json" ]; then
 	echo "Raw sparkler data provided in $PDI_JSON_PATH/sparkler/raw....parsing."
 	pushd $PDI_HOME/insight-generator/;
 	python parse.py $PDI_JSON_PATH/sparkler/raw/sparkler_rawdata.json $PDI_JSON_PATH/ingest/ingest_data.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1 ;
 	popd
 	INGEST=1
-    elif [ -d "$PDI_JSON_PATH/sparkler/parsed" ]; then
+    elif [ -f "$PDI_JSON_PATH/sparkler/parsed/sparkler_data.json" ]; then
 	echo "Parsed sparkler data provided in $PDI_JSON_PATH/sparkler/parsed...preparing to ingest."
-	cp $PDI_JSON_PATH/sparkler/parsed/sparkler_data.json $PDI_JSON_PATH/sparkler/ingest/ingest_data.json;
+	cp $PDI_JSON_PATH/sparkler/parsed/sparkler_data.json $PDI_JSON_PATH/ingest/ingest_data.json;
 	INGEST=1
     elif [ -d "$PDI_JSON_PATH/files" ]; then
 	echo "Calling Apache Tika and prepping JSONs on $PDI_JSON_PATH/files: outputting to $PDI_JSON_PATH/ingest"
@@ -76,10 +76,10 @@ if [[ ! -z "${PDI_JSON_PATH}" ]]; then
     if [[ ! -z "${INGEST}" ]]; then
 	echo "Using ES URL $ES_URL for ingestion."
 	pushd $PDI_HOME/insight-generator/;
-	./elastic_index $PDI_JSON_PATH/ingest/ingest_data.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1&;
+	./elastic_index.sh $PDI_JSON_PATH/ingest/ingest_data.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1&
 	popd
     fi
-	
+
 fi
 
 

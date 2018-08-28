@@ -115,8 +115,11 @@ WORKDIR /deploy/requirements/grobid/grobid-quantities
 RUN mvn -Dmaven.test.skip=true clean install war:war
 
 # Build models
-RUN mvn generate-resources -Ptrain_units
-RUN echo  mvn generate-resources -Ptrain_quantities | at now + 5 min
+RUN mkdir -p /deploy/requirements/grobid/grobid-home/models/units
+RUN mkdir -p /deploy/requirements/grobid/grobid-home/models/quantities
+WORKDIR /deploy/requirements/grobid/grobid-home/models
+RUN curl -L -o quantities/model.waipiti "https://www.dropbox.com/s/ggkm7u480ixubbm/model.wapiti?dl=1"
+RUN curl -L -o units/model.waipiti "https://www.dropbox.com/s/kux0xjjbswkvv0l/model.wapiti?dl=1"
 
 # Running Tika-Server
 # Need to download JAR file from repo, install and run java -jar tika-server-1.1X-SNAPSHOT.jar

@@ -63,6 +63,17 @@ RUN chown -R pdi:pdi /home/pdi
 RUN adduser pdi sudo
 RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# setup install area and permissions
+RUN mkdir -p /deploy/requirements
+RUN chown -R pdi:pdi /deploy
+RUN chown -R pdi:pdi /home/pdi/src
+
+# Insight Generator Python dependencies
+RUN pip install -r dependencies.txt
+
+# NLTK
+RUN python -c "import nltk; nltk.download('punkt');"
+
 # After this point everthing is done as unpriveleged user
 USER pdi
 
@@ -70,24 +81,8 @@ USER pdi
 RUN mkdir /home/pdi/src
 WORKDIR /home/pdi/src
 
-# Checkout PDI and then enter insights-visualizer dir
+# Checkout PDI and then enter insights-generator dir
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
-WORKDIR /home/pdi/src/polar-deep-insights/insight-generator/
-
-# Always root is set as the owner, so let's change it to pdi
-USER root
-RUN mkdir -p /deploy/requirements
-RUN chown -R pdi:pdi /deploy
-RUN chown -R pdi:pdi /home/pdi/src
-
-# Insight Generator Python dependencies 
-RUN pip install -r dependencies.txt 
-
-# NLTK
-RUN python -c "import nltk; nltk.download('punkt');"
-
-# back to regular user - from here
-USER pdi
 
 # Downloading the Requirements 
 WORKDIR /deploy/requirements

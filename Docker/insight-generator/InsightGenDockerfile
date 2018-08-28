@@ -25,13 +25,10 @@ ENV PDI_HOME="/home/pdi/src/polar-deep-insights"
 
 # Updates OS and adds system required packages
 RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
-      apache2 \
-      python-setuptools python-dev \
+      python \
+      python-pip \
       build-essential \
       openjdk-8-jre \
-      nodejs \
-      nodejs-legacy \
-      npm \
       vim \
       emacs \
       git \
@@ -54,6 +51,9 @@ RUN apt-get install -y openjdk-8-jre
 RUN update-alternatives --config java
 RUN update-alternatives --config javac
 
+# Python / PIP
+RUN pip install --upgrade pip
+
 # creates a user "pdi"
 RUN useradd -U -d /home/pdi -s /bin/sh ${CONTAINER_USER_ID}
 RUN mkdir /home/pdi
@@ -63,27 +63,12 @@ RUN chown -R pdi:pdi /home/pdi
 RUN adduser pdi sudo
 RUN echo "pdi ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Global npm folder writeable by "pdi"
-RUN mkdir -p /opt/npm-global && \
-    chown pdi:pdi /opt/npm-global
-
 # After this point everthing is done as unpriveleged user
 USER pdi
-
-# configuring environment variables
-ENV NPM_CONFIG_PREFIX=/opt/npm-global
-ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
-
-# Installing usefull npm packages
-RUN npm install -g \
-    npm@3.10.6
 
 # Creating a directory inside the container
 RUN mkdir /home/pdi/src
 WORKDIR /home/pdi/src
-
-# Copy entrypoint script into the container
-COPY ./entrypoint.sh /deploy/entrypoint.sh
 
 # Checkout PDI and then enter insights-visualizer dir
 RUN git clone https://github.com/USCDataScience/polar-deep-insights.git
@@ -95,8 +80,11 @@ RUN mkdir -p /deploy/requirements
 RUN chown -R pdi:pdi /deploy
 RUN chown -R pdi:pdi /home/pdi/src
 
-# Python dependencies 
+# Insight Generator Python dependencies 
 RUN pip install -r dependencies.txt 
+
+# NLTK
+RUN python -c "import nltk; nltk.download('punkt');"
 
 # back to regular user - from here
 USER pdi
@@ -121,11 +109,16 @@ WORKDIR /deploy/requirements/grobid/
 RUN ./gradlew clean install
 
 # Installing Grobid-Quantities
-# WORKDIR /deploy/requirements/grobid/grobid-quantities
-# Need to add commands to build model from scratch or use a prebuilt model
+WORKDIR /deploy/requirements/grobid/grobid-quantities
+RUN mvn -Dmaven.test.skip=true clean install war
+
+# Build models
+RUN mvn generate-resources -Ptrain_units
+RUN echo  mvn generate-resources -Ptrain_quantities | at now + 5 min
 
 # Running Tika-Server
 # Need to download JAR file from repo, install and run java -jar tika-server-1.1X-SNAPSHOT.jar
+RUN mkdir /deploy/requirements/tika-server
 WORKDIR /deploy/requirements/tika-server
 RUN curl -L -o tika-server-1.15-SNAPSHOT.jar.zip "https://www.dropbox.com/s/9w0pynm70doqrhn/tika-server-1.15-SNAPSHOT.jar.zip?dl=1"
 RUN unzip tika-server-1.15-SNAPSHOT.jar.zip
@@ -141,29 +134,21 @@ RUN curl -O http://download.geonames.org/export/dump/allCountries.zip
 RUN unzip allCountries.zip
 RUN lucene-geo-gazetteer -i geoIndex -b allCountries.txt
 
-# Install Elasticsearch-Tools
-RUN npm install -g elasticsearch-tools
-
-# start Apache HTTPD
-USER root
-ENV APACHE_RUN_USER pdi
-ENV APACHE_RUN_GROUP pdi
-ENV APACHE_LOG_DIR /var/log/apache2
-COPY ./app-conf/httpd/pdi.conf /etc/apache2/conf-enabled
-RUN a2enmod proxy_http proxy_ajp rewrite headers
-RUN echo "ServerName pdi" >> /etc/apache2/apache2.conf
-RUN chown -R pdi:pdi /etc/apache2 /var/log/apache2
-USER pdi
-
 # env vars
 ENV REDIS_ENDPOINT localhost
-ENV TIKA_PATH http://localhost/tika
-ENV GROBID_QUANTITY_ENDPOINT http://localhost/grobid-quantities
-ENV GEO_TOPIC_ENDPOINT http://localhost/geo-topic
+ENV TIKA_PATH http://localhost:9998
+ENV GROBID_QUANTITY_ENDPOINT http://localhost:8060
+ENV GEO_TOPIC_ENDPOINT http://localhost:8765
 ENV CLASSPATH /deploy/requirements/stanford-ner-2018-02-27/stanford-ner.jar
 ENV STANDFORD_NER_MODEL_PATH /deploy/requirements/stanford-ner-2018-02-27/classifiers/english.muc.7class.distsim.crf.ser.gz
 
-# For Apache Server
-EXPOSE 80
+
+# Copy entrypoint script into the container
+COPY ./entrypoint.sh /deploy/entrypoint.sh
+
+# Geo Topic Parser, Tika Server, and Grobid
+EXPOSE 8765
+EXPOSE 9998
+EXPOSE 8060
 
 CMD ["/deploy/entrypoint.sh"]

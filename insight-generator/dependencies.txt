@@ -2,3 +2,4 @@ tika
 elasticsearch
 redis
 nltk
+SpeechRecognition

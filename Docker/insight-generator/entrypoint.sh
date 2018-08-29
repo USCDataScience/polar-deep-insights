@@ -68,7 +68,7 @@ if [[ ! -z "${PDI_JSON_PATH}" ]]; then
     elif [ -d "$PDI_JSON_PATH/files" ]; then
 	echo "Calling Apache Tika and prepping JSONs on $PDI_JSON_PATH/files: outputting to $PDI_JSON_PATH/ingest"
 	pushd $PDI_HOME/insight-generator/;
-	python tika_prepare.py $PDI_JSON_PATH/files $PDI_JSON_PATH/ingest >> /deploy/requirements/logs/pdi-ingest.log 2>&1 ;
+	python tika-prepare.py $PDI_JSON_PATH/files $PDI_JSON_PATH/ingest >> /deploy/requirements/logs/pdi-ingest.log 2>&1 ;
 	popd
 	INGEST=1
     fi

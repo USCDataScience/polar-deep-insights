@@ -57,6 +57,8 @@ if [[ ! -z "${PDI_JSON_PATH}" ]]; then
 
     if [ -f "$PDI_JSON_PATH/sparkler/raw/sparkler_rawdata.json" ]; then
 	echo "Raw sparkler data provided in $PDI_JSON_PATH/sparkler/raw....parsing."
+	echo "Removing prior ingest data from $PDI_JSON_PATH/ingest/ingest_data.json"
+	rm -rf $PDI_JSON_PATH/ingest/ingest_data.json;
 	pushd $PDI_HOME/insight-generator/;
 	python parse.py $PDI_JSON_PATH/sparkler/raw/sparkler_rawdata.json $PDI_JSON_PATH/ingest/ingest_data.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1 ;
 	popd
@@ -66,6 +68,8 @@ if [[ ! -z "${PDI_JSON_PATH}" ]]; then
 	cp $PDI_JSON_PATH/sparkler/parsed/sparkler_data.json $PDI_JSON_PATH/ingest/ingest_data.json;
 	INGEST=1
     elif [ -d "$PDI_JSON_PATH/files" ]; then
+	echo "Removing prior ingest data from $PDI_JSON_PATH/ingest/ingest_data.json"
+	rm -rf $PDI_JSON_PATH/ingest/ingest_data.json;
 	echo "Calling Apache Tika and prepping JSONs on $PDI_JSON_PATH/files: outputting to $PDI_JSON_PATH/ingest"
 	pushd $PDI_HOME/insight-generator/;
 	python tika-prepare.py $PDI_JSON_PATH/files $PDI_JSON_PATH/ingest >> /deploy/requirements/logs/pdi-ingest.log 2>&1 ;

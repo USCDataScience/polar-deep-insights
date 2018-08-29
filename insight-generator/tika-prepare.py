@@ -32,9 +32,14 @@ outputFileName = OUTPUT_DIR + "ingest_data.json"
 for root, dirs, files in os.walk(DIR):
     for name in files:
         parsed = parser.from_file(join(root, name))
-        outdoc = { "id" : hashlib.sha224(b""+join(root,name)).hexdigest() , "extracted_text" : parsed["content"]}
+        content = None
+        if "content" in parsed:
+            content = parsed["content"]
+        else:
+            content = "Unable to extract content."
+            
+        outdoc = { "id" : hashlib.sha224(b""+join(root,name)).hexdigest() , "extracted_text" : json.dumps(content)}
         jsondata = json.dumps(outdoc)
         print "Writing to file: "+outputFileName+": doc: "+jsondata
         with open(outputFileName, 'a') as of:
-            of.write(jsondata)
-
+            of.write(jsondata+'\n')

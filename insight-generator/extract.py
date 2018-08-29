@@ -69,8 +69,9 @@ metaExtractor = InformationExtractor(extractors, ContentExtractor, dependencies)
 
 c=0
 for l in open(PATH):
-  cw = json.loads(l.strip("\n"))
+  cw = None
   try:
+    cw = json.loads(l.strip("\n"))
     crawlHash = { k: cw[k] for k in cw if k not in ['raw_content','id', 'extracted_text'] }
     fw = TmpFile()
     fw.write(cw['extracted_text'])
@@ -83,7 +84,8 @@ for l in open(PATH):
     fw.destroy()
   except:
     e = open(ERROR_PATH, "a")
-    e.write("ERROR: " + cw['id'] + "\n")
+    if cw != None and "id" in cw:
+      e.write("ERROR: " + cw['id'] + "\n")
     traceback.print_exc(file=e)
     e.close()
   c+=1

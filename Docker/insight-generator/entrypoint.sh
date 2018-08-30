@@ -21,7 +21,7 @@ mkdir -p /deploy/requirements/logs/
 touch /deploy/requirements/logs/pdi-generator.log
 touch /deploy/requirements/logs/pdi-ingest.log
 
-WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://polar-deep-insights/elasticsearch/_cat/health?h=st) = 200 ]'
+WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://polar-deep-insights:9200/_cat/health?h=st) = 200 ]'
 WAIT_LOOPS=30
 WAIT_SLEEP=2
 

@@ -31,6 +31,7 @@ services:
 
   pdi-generator:
     image: uscdatascience/pdi-generator
+    depends_on: [polar-deep-insights]
     networks:
       - pdi-network
     entrypoint:

@@ -42,7 +42,7 @@ Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, the
 ### Building
 
 1. `git clone https://github.com/USCDataScience/polar-deep-insights.git && cd polar-deep-insights/Docker/insight-generator`
-2.  `docker build -t uscdatascience/pdi-generator -f PolarDeepInsightsDockerfile .`<br/>
+2.  `docker build -t uscdatascience/pdi-generator -f InsightGenDockerfile .`<br/>
 (or optionally, if you don't want to build locally and just [pull from dockerhub](https://hub.docker.com/r/uscdatascience/pdi-generator/))<br/>
 `docker pull uscdatascience/pdi-generator`
 3. `PDI_JSON_PATH=/data/polar docker-compose up -d`

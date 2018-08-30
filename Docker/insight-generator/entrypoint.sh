@@ -21,8 +21,8 @@ mkdir -p /deploy/requirements/logs/
 touch /deploy/requirements/logs/pdi-generator.log
 touch /deploy/requirements/logs/pdi-ingest.log
 
-WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://polar-deep-insights:9200/_cat/health?h=st) = 200 ]'
-WAIT_LOOPS=30
+WAIT_COMMAND='[ $(curl --write-out %{http_code} --silent --output /dev/null http://polar-deep-insights/elasticsearch/_cat/health?h=st) = 200 ]'
+WAIT_LOOPS=50
 WAIT_SLEEP=2
 
 is_ready() {
@@ -41,10 +41,6 @@ while ! is_ready; do
     sleep $WAIT_SLEEP
 done
 
-echo "Starting Grobid Quantities"
-cd /deploy/requirements/grobid/grobid-quantities && \
-    mvn -Dmaven.test.skip=true jetty:run-war >> /deploy/requirements/logs/pdi-generator.log 2>&1&
-
 echo "Starting Tika Server"
 cd /deploy/requirements/tika-server && \
     java -jar tika-server-1.15-SNAPSHOT.jar >> /deploy/requirements/logs/pdi-generator.log 2>&1&
@@ -52,6 +48,17 @@ cd /deploy/requirements/tika-server && \
 echo "Starting Lucene Geo Gazetteer Server"
 cd /deploy/requirements/lucene-geo-gazetteer && \
     lucene-geo-gazetteer -server >> /deploy/requirements/logs/pdi-generator.log 2>&1&
+
+echo "Starting Grobid Quantities"
+cd /deploy/requirements/grobid/grobid-quantities && \
+    mvn -Dmaven.test.skip=true jetty:run-war >> /deploy/requirements/logs/pdi-generator.log 2>&1&
+
+echo "Waiting for services to start"
+while ! grep "Started Jetty Server" /deploy/requirements/logs/pdi-generator.log  > /dev/null;
+do
+    sleep 2
+    echo "Waiting for Grobid to start..."
+done
 
 if [[ ! -z "${PDI_JSON_PATH}" ]]; then
 

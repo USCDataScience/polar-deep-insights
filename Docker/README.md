@@ -31,7 +31,7 @@ Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, the
 
 ```
    /data/polar/
-        /sparkler/  --- You are providing Sparkler crawled data to the insights generator, see 
+        /sparkler/  --- You are providing Sparkler crawled data to the insights generator, see below
            /raw     --- Provide a raw sparkler file named sparkler_rawdata.json, and will use parse.py to convert to sparkler_data.json
            /parsed  --- Provide a parsed sparkler file (with the { and } removed as per parse.py named sparkler_data.json
         /files/     --- Can be any file type, in any folder, all will be parsed using tika-prepare.py to create ingest/ingest_data.json

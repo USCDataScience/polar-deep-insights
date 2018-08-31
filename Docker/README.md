@@ -31,11 +31,13 @@ Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, the
 
 ```
    /data/polar/
-        /sparkler/  --- You are providing Sparkler crawled data to the insights generator, see below
-           /raw     --- Provide a raw sparkler file named sparkler_rawdata.json, and will use parse.py to convert to sparkler_data.json
-           /parsed  --- Provide a parsed sparkler file (with the { and } removed as per parse.py) named sparkler_data.json
-        /files/     --- Can be any file type, in any folder, all will be parsed using tika-prepare.py to create ingest/ingest_data.json
-        /ingest/    --- Is where the ingest_data.json file is created by the PDI generator using extract.py
+   polar-data-mappings.json --- The downloaded schema from http://polar.usc.edu/elasticsearch/
+   polar-data.json          --- The downloaded data contents from http://polar.usc.edu/elasticsearch/
+        /sparkler/          --- You are providing Sparkler crawled data to the insights generator, see below
+           /raw             --- Provide a raw sparkler file named sparkler_rawdata.json, and will use parse.py to convert to sparkler_data.json
+           /parsed          --- Provide a parsed sparkler file (with the { and } removed as per parse.py) named sparkler_data.json
+        /files/             --- Can be any file type, in any folder, all will be parsed using tika-prepare.py to create ingest/ingest_data.json
+        /ingest/            --- Is where the ingest_data.json file is created by the PDI generator using extract.py
 
 ```
 

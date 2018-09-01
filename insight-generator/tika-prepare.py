@@ -44,7 +44,7 @@ for root, dirs, files in os.walk(DIR):
             
         outdoc = { "id" : hashlib.sha224(b""+join(root,name)).hexdigest() , "extracted_text" : content}
         jsondata = json.dumps(outdoc)
-        print "Writing to file: "+outputFileName+": doc: "+jsondata
+        print "Writing to file: "+outputFileName
         with open(outputFileName, 'a') as of:
             of.write(jsondata+'\n')
 

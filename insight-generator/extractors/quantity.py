@@ -20,9 +20,15 @@ ENDPOINT = os.environ["GROBID_QUANTITY_ENDPOINT"] + "/processQuantityText"
 
 class QuantityExtractor(Extractor):
   def extract(self, content):
+    
+    content = content.encode('ascii',errors='ignore')
 
     try:
       request = self.modules["requests"].post(ENDPOINT, timeout=30, data=dict(text=content))
+    except Exception as e:
+      measurements = [ ]
+
+    try:
       measurements = self.modules["json"].loads(request.content)['measurements']
     except Exception as e:
       measurements = [ ]

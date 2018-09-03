@@ -15,7 +15,6 @@
 
 
 import os
-import re
 from base import Extractor
 ENDPOINT = os.environ["GROBID_QUANTITY_ENDPOINT"] + "/processQuantityText"
 
@@ -23,19 +22,16 @@ class QuantityExtractor(Extractor):
   def extract(self, content):
     
     cleanContent = content.encode('ascii',errors='ignore')
-    cleanContent = re.sub(r'[^(a-zA-Z0-9/ )]', '', cleanContent)
-
     try:
       request = self.modules["requests"].post(ENDPOINT, timeout=30, data=dict(text=cleanContent))
       measurements = self.modules["json"].loads(request.content)['measurements']
       extMeasurements = reduce(self.extractMeasurement, measurements, [ ])
     except Exception as e:
-      print("Exception parsing measurements!")
+      print("Exception parsing measurements! content: ["+cleanContent+"]")
       print(e)
       extMeasurements = [ ]
 
     self.extraction.accumulate("measurements", extMeasurements)
-
     return self.extraction
 
   def extractValue(self, q):

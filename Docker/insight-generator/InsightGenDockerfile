@@ -93,7 +93,8 @@ RUN python -c "import nltk; nltk.download('punkt');"
 
 # Downloading the Requirements 
 WORKDIR /deploy/requirements
-RUN curl -L -O https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip && \
+#RUN curl -L -O https://nlp.stanford.edu/software/stanford-ner-2018-02-27.zip && \
+RUN curl -L -o stanford-ner-2018-02-27.zip "https://www.dropbox.com/s/n5gomcswhb9nxdr/stanford-ner-2018-02-27.zip?dl=1" && \
 unzip stanford-ner-2018-02-27.zip && \
 git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git && \
 git clone https://github.com/kermitt2/grobid.git && \
@@ -135,7 +136,8 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV PATH $PATH:$JAVA_HOME/bin
 RUN mvn install assembly:assembly
 ENV PATH $PATH:/deploy/requirements/lucene-geo-gazetteer/src/main/bin
-RUN curl -O http://download.geonames.org/export/dump/allCountries.zip
+#RUN curl -O http://download.geonames.org/export/dump/allCountries.zip
+RUN curl -L -o allCountries.zip "https://www.dropbox.com/s/boegavpl8ojaaa5/allCountries.zip?dl=1"
 RUN unzip allCountries.zip
 RUN lucene-geo-gazetteer -i geoIndex -b allCountries.txt
 

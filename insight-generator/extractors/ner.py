@@ -14,6 +14,7 @@
 # limitations under the License.
 
 from base import Extractor
+import re
 
 class NERExtractor(Extractor):
   def __init__(self, extraction, modules):
@@ -32,8 +33,10 @@ class NERExtractor(Extractor):
       self.extraction.data['DATE'] = filter(lambda d: d!=0, self.extraction.data['DATE'])
 
   def extract(self, content):
-
-    tags = self.modules["tagger"].tag(self.wordTokenize(content))
+    cleanContent = content.encode('ascii',errors='ignore')
+    cleanContent = re.sub(r'[^(a-zA-Z0-9/ )]', '', cleanContent)
+            
+    tags = self.modules["tagger"].tag(self.wordTokenize(cleanContent))
     iterator = 0
 
     while iterator < len(tags):

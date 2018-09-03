@@ -62,7 +62,7 @@ done
 
 # run the pipeline for ingest
 pushd $PDI_HOME/insight-generator;
-./ingest_pipeline.sh "$PDI_JSON_PATH";
+./ingest-pipeline.sh "$PDI_JSON_PATH";
 popd
 
 # watch log

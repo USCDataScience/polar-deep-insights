@@ -26,6 +26,8 @@ class QuantityExtractor(Extractor):
       request = self.modules["requests"].post(ENDPOINT, timeout=30, data=dict(text=cleanContent))
       measurements = self.modules["json"].loads(request.content)['measurements']
       extMeasurements = reduce(self.extractMeasurement, measurements, [ ])
+      unitNames = ["rawUnit", "normalizedUnit"]
+      self.measurementBackCompat(unitNames=unitNames, measurements=extMeasurements)
     except Exception as e:
       print("Exception parsing measurements! content: ["+cleanContent+"]")
       print(e)
@@ -56,3 +58,28 @@ class QuantityExtractor(Extractor):
       return acc + self.extractRange(m)
     else:
       return acc
+
+  def measurementBackCompat(self, unitNames, measurements):
+    if len(unitNames) > 0:
+      print "Unit names greater than 0, "+str(len(unitNames))
+      for uni in unitNames:
+        print "Unit name "+uni
+        print "Measurements "+str(measurements)
+
+        for measurement in measurements:
+          print "Measurement is "+str(measurement)
+          if uni in measurement:
+            print "Unit name in measurement"
+            uniName = "-".join([uni, "name"])
+            uniOffsetStart = "-".join([uni, "offsetStart"])
+            uniOffsetEnd = "-".join([uni, "offsetEnd"])
+
+            if uniName not in measurement and "name" in measurement[uni]:
+              measurement[uniName] = measurement[uni]["name"]
+
+            if uniOffsetStart not in measurement and "offsetStart" in measurement[uni]:
+              measurement[uniOffsetStart] = measurement[uni]["offsetStart"]
+
+            if uniOffsetEnd not in measurement and "offsetEnd" in measurement[uni]:
+              measurement[uniOffsetEnd] = measurement[uni]["offsetEnd"]
+

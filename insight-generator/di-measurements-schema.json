@@ -1,0 +1,22 @@
+{
+      "raw-measurements": {
+        "properties": {
+          "measurements": {
+            "properties": {
+              "$$hashKey": {
+                "type": "string"
+              },
+              "count": {
+                "type": "long"
+              },
+              "group": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+}

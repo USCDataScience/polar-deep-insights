@@ -44,6 +44,8 @@ if [[ ! -z "${PDI_JSON_PATH}" ]]; then
 	echo "Using ES URL $ES_URL for ingestion."
 	pushd $PDI_HOME/insight-generator/;
 	./elastic_index.sh $PDI_JSON_PATH/ingest/ingest_data.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1&
+	./measurement-index.py ./out/ ./measurement-index.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1&
+	./measurement-ingest.sh ./measurement-index.json >> /deploy/requirements/logs/pdi-ingest.log 2>&1&
 	popd
     fi
 

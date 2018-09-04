@@ -15,12 +15,15 @@
 
 MFILE="$1"
 
+# Delete old index if exists
+curl -XDELETE "$ES_URL/insight-generator-measurements"
+
 echo "Creating Insight Generator Measurements Index"
-curl -XPOST "http://localhost/elasticsearch/insight-generator-measurements"
+curl -XPOST "$ES_URL/insight-generator-measurements"
 
 echo "Adding Measurements Mapping for Insight Generator Measurements Index"
-curl -XPOST "http://localhost/elasticsearch/insight-generator-measurements/raw-measurements/_mapping" -d @'di-measurements-schema.json'
+curl -XPOST "$ES_URL/insight-generator-measurements/raw-measurements/_mapping" -d @'di-measurements-schema.json'
 
 echo "Ingesting curated measurements for Insight Generator"
-curl -XPOST http://localhost/elasticsearch/insight-generator-measurements/raw-measurements -d@"$MFILE"
+curl -XPOST "$ES_URL/insight-generator-measurements/raw-measurements" -d@"$MFILE"
 

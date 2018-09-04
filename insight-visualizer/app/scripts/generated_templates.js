@@ -415,7 +415,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "    <div class=\"col-md-4\">\n" +
     "      <div class=\"list-group measurements-container source\" ui-sortable=\"sortableOptions\" data-ng-model=\"measurements\" style=\"height: 650px; overflow-y: scroll;\">\n" +
     "        <a class=\"list-group-item measurements\"\n" +
-    "           data-ng-repeat=\"m in measurements\"\n" +
+    "           data-ng-repeat=\"m in measurements track by $index\"\"\n" +
     "           style=\"padding:5px;\">\n" +
     "            <span data-ng-bind=\"m.name\" data-ng-click=\"showDistribution(m.name)\" class=\"link\"></span>\n" +
     "            <span class=\"pull-right\">\n" +
@@ -467,7 +467,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "         ui-sortable=\"sortableOptions\" ng-model=\"allMeasurements[groups[selectedGroup]]\"\n" +
     "         style=\"height: 650px; overflow-y: scroll;\">\n" +
     "      <a class=\"list-group-item measurements\"\n" +
-    "         data-ng-repeat=\"m in allMeasurements[groups[selectedGroup]]\"\n" +
+    "         data-ng-repeat=\"m in allMeasurements[groups[selectedGroup]] track by $index\"\"\n" +
     "         style=\"padding:5px;\">\n" +
     "        <span data-ng-bind=\"m.name\" data-ng-click=\"showDistribution(m.name)\" class=\"link\"></span>\n" +
     "      </a>\n" +

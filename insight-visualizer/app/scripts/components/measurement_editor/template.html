@@ -15,7 +15,7 @@
     <div class="col-md-4">
       <div class="list-group measurements-container source" ui-sortable="sortableOptions" data-ng-model="measurements" style="height: 650px; overflow-y: scroll;">
         <a class="list-group-item measurements"
-           data-ng-repeat="m in measurements"
+           data-ng-repeat="m in measurements track by $index""
            style="padding:5px;">
             <span data-ng-bind="m.name" data-ng-click="showDistribution(m.name)" class="link"></span>
             <span class="pull-right">
@@ -67,7 +67,7 @@
          ui-sortable="sortableOptions" ng-model="allMeasurements[groups[selectedGroup]]"
          style="height: 650px; overflow-y: scroll;">
       <a class="list-group-item measurements"
-         data-ng-repeat="m in allMeasurements[groups[selectedGroup]]"
+         data-ng-repeat="m in allMeasurements[groups[selectedGroup]] track by $index""
          style="padding:5px;">
         <span data-ng-bind="m.name" data-ng-click="showDistribution(m.name)" class="link"></span>
       </a>

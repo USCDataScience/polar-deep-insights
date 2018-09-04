@@ -61,15 +61,9 @@ class QuantityExtractor(Extractor):
 
   def measurementBackCompat(self, unitNames, measurements):
     if len(unitNames) > 0:
-      print "Unit names greater than 0, "+str(len(unitNames))
       for uni in unitNames:
-        print "Unit name "+uni
-        print "Measurements "+str(measurements)
-
         for measurement in measurements:
-          print "Measurement is "+str(measurement)
           if uni in measurement:
-            print "Unit name in measurement"
             uniName = "-".join([uni, "name"])
             uniOffsetStart = "-".join([uni, "offsetStart"])
             uniOffsetEnd = "-".join([uni, "offsetEnd"])

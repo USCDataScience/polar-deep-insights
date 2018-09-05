@@ -69,7 +69,6 @@ for m in groupCounts.keys():
         measurementsDoc.append({ "name" : m, "count" : groupCounts[m], "$$hashKey" : "object:"+str(keyIdx)})
         keyIdx = keyIdx + 1
 
-keyIdx = 0
 for m in unGroupedCounts:
     measurementsDoc.append({ "name" : m, "count" : unGroupedCounts[m], "$$hashKey" : "object:"+str(keyIdx)})
     keyIdx = keyIdx + 1

@@ -7,7 +7,7 @@
 
     var typeMapping = {
       "s": "time",
-      "m": "length",
+      "m": "distance",
       "kg": "mass",
       "Hz": "frequency",
       "K": "temperature",
@@ -20,6 +20,11 @@
       "A": "electric current",
       "F": "electric capacitance",
       "kg/m²": "surface density",
+      "H": "electrical inductance",
+      "C": "electric charge",
+      "N": "force",
+      "S": "electric conductance",
+      "Ω": "resistance",     
     }
 
     function init(){

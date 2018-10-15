@@ -1,9 +1,15 @@
-# Pre-Reqs
+## Notes:
+1. You can use the polar.usc.edu elastic data, or your local elastic data to begin with the process. Replace the polar URL with your local elastic index URL to do so.
+2. Add your files (pdfs) to the `data/polar/files` folder to extract insights.
 
-1. Install [elasticsearch-tools](https://www.npmjs.com/package/elasticsearch-tools) from [NPM](http://npmjs.org/).
-2. You will need to export the mappings and data from `polar.usc.edu/elasticsearch`<br/>
+## Pre-Reqs
+
+1. Install elasticsearch-tools (https://www.npmjs.com/package/elasticsearch-tools)
+    `npm install -g elasticsearch-tools`
+2. Export the mappings and data from `polar.usc.edu/elasticsearch` (Or any other elastic search index)<br/>
   a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
-  b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` (will take a while)
+  b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` 
+  Note: Steb 2b will take a while
   
 ## Insight-Generator Installation
 

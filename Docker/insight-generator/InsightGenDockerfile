@@ -99,7 +99,10 @@ unzip stanford-ner-2018-02-27.zip && \
 git clone https://github.com/chrismattmann/lucene-geo-gazetteer.git && \
 git clone https://github.com/kermitt2/grobid.git && \
 cd grobid && \
-git clone https://github.com/kermitt2/grobid-quantities.git
+git clone https://github.com/kermitt2/grobid-quantities.git && \
+cd grobid-quantities && \
+git checkout 94d6f26
+
 
 # Installing Gradle
 RUN curl https://services.gradle.org/distributions/gradle-4.9-bin.zip -O -J -L && \
@@ -111,9 +114,6 @@ RUN gradle -v
 WORKDIR /deploy/requirements/grobid/
 RUN ./gradlew clean install
 
-# Installing Grobid-Quantities
-WORKDIR /deploy/requirements/grobid/grobid-quantities
-RUN mvn -Dmaven.test.skip=true clean install war:war
 
 # Build models
 RUN mkdir -p /deploy/requirements/grobid/grobid-home/models/units
@@ -121,6 +121,10 @@ RUN mkdir -p /deploy/requirements/grobid/grobid-home/models/quantities
 WORKDIR /deploy/requirements/grobid/grobid-home/models
 RUN curl -L -o quantities/model.wapiti "https://www.dropbox.com/s/ggkm7u480ixubbm/model.wapiti?dl=1"
 RUN curl -L -o units/model.wapiti "https://www.dropbox.com/s/kux0xjjbswkvv0l/model.wapiti?dl=1"
+
+# Installing Grobid-Quantities
+WORKDIR /deploy/requirements/grobid/grobid-quantities
+RUN mvn -Dmaven.test.skip=true clean install war:war
 
 # Running Tika-Server
 # Need to download JAR file from repo, install and run java -jar tika-server-1.1X-SNAPSHOT.jar

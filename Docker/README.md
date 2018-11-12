@@ -1,19 +1,25 @@
-## Notes:
-1. You can use the polar.usc.edu elastic data, or your local elastic data to begin with the process. Replace the polar URL with your local elastic index URL to do so.
-2. Add your files (pdfs) to the `data/polar/files` folder to extract insights.
+This is the Dockerized version of Polar-deep-insights project. Two parts of the project, insight-generator which is a python library used to extract information and insight-visualizer which is a javascript application used for data visualization can be installed and run on Docker containers using PDI Docker.  
 
 ## Pre-Reqs
-
+1. Install Node and NPM from [here](https://nodejs.org/en/) if you don't have it already installed. 
 1. Install elasticsearch-tools (https://www.npmjs.com/package/elasticsearch-tools)
-    `npm install -g elasticsearch-tools`
+    `sudo npm install -g elasticsearch-tools`
 2. Export the mappings and data from `polar.usc.edu/elasticsearch` (Or any other elastic search index)<br/>
   a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
   b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` 
   Note: Steb 2b will take a while
-  
+
 ## Insight-Generator Installation
 
-Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, then, you can have `/data/polar` formatted in 3 ways to enable the insight generation pipeline. Some pre-req files:
+Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, then, you can have `/data/polar`. 
+
+### Providing input to insight-generator
+
+1. You can use the polar.usc.edu elastic data by downloading it and placing it inside `data/polar/` (mappings file need to be placed inside this folder for any input) folder or provide your own input by doing one of the following below and replacing http://polar.usc.edu/elasticsearch URL with your local elastic index URL.
+2. a. Place the input inside `data/polar/files` folder if you need to give pdf input (or)
+   b. Place the Sparkler input from Solr index inside `data/polar/sparkler/raw` folder. Name the file sparkler_data.json (or)
+   c. Place the Sparkler input after running parse.py on it inside `data/polar/sparkler/parsed` folder. Name the file sparkler_rawdata.json
+3. Create an empty file called ingest_data.json inside `data/polar/ingest` folder. This is where the data extracted from step 2 will be stored.
 
 ### Important Files
 
@@ -39,11 +45,11 @@ Assuming you used `/data/polar` for pre-reqs mapping and JSON data location, the
    /data/polar/
    polar-data-mappings.json --- The downloaded schema from http://polar.usc.edu/elasticsearch/
    polar-data.json          --- The downloaded data contents from http://polar.usc.edu/elasticsearch/
-        /sparkler/          --- You are providing Sparkler crawled data to the insights generator, see below
-           /raw             --- Provide a raw sparkler file named sparkler_rawdata.json, and will use parse.py to convert to sparkler_data.json
-           /parsed          --- Provide a parsed sparkler file (with the { and } removed as per parse.py) named sparkler_data.json
-        /files/             --- Can be any file type, in any folder, all will be parsed using tika-prepare.py to create ingest/ingest_data.json
-        /ingest/            --- Is where the ingest_data.json file is created by the PDI generator using extract.py
+              /sparkler/          --- You are providing Sparkler crawled data to the insights generator, see below
+                      /raw             --- Provide a raw sparkler file named sparkler_rawdata.json, and will use parse.py to convert to sparkler_data.json
+                      /parsed          --- Provide a parsed sparkler file (with the { and } removed as per parse.py) named sparkler_data.json
+              /files/             --- Can be any file type, in any folder, all will be parsed using tika-prepare.py to create ingest/ingest_data.json
+              /ingest/            --- Is where the ingest_data.json file is created by the PDI generator using extract.py
 
 ```
 

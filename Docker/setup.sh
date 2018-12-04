@@ -17,6 +17,8 @@
 
 mkdir data
 cd data
+mkdir polar
+cd polar
 
 # Place the mappings and data file in polar folder
 # Place the input inside files folder if you need to give pdf input
@@ -24,7 +26,7 @@ cd data
 # Place the Sparkler input after running parse.py on it inside sparkler/parsed folder. Name the file sparkler_rawdata.json
 # Create an empty file called ingest_data.json inside ingest folder
 
-mkdir files ingest polar sparkler
+mkdir files ingest sparkler
 cd sparkler 
 mkdir raw parsed
 cd raw

@@ -7,7 +7,7 @@ This is the Dockerized version of Polar-deep-insights project. Two parts of the 
 2. Export the mappings and data from `polar.usc.edu/elasticsearch` (Or any other elastic search index)<br/>
   a. `es-export-mappings --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data-mappings.json`<br/>
   b. `es-export-bulk --url http://polar.usc.edu/elasticsearch --file /data/polar/polar-data.json` 
-  Note: Steb 2b will take a while
+  Note: Step 3b will take a while *and is optional*
 
 ## Insight-Generator Installation
 

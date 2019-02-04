@@ -1,6 +1,7 @@
 This is the Dockerized version of Polar-deep-insights project. Two parts of the project, insight-generator which is a python library used to extract information and insight-visualizer which is a javascript application used for data visualization can be installed and run on Docker containers using PDI Docker.  
 
 ## Pre-Reqs
+If you do not want to install Node or NPM, then you can simply download the [Polar ElasticSearch Mappings](http://polar.usc.edu/elasticsearch/_mappings) and save it as the file `/data/polar/polar-data.json` and proceed past these steps below.<br/>
 1. Install Node and NPM from [here](https://nodejs.org/en/) if you don't have it already installed. 
 1. Install elasticsearch-tools (https://www.npmjs.com/package/elasticsearch-tools)
     `sudo npm install -g elasticsearch-tools`

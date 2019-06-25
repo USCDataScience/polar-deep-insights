@@ -17,3 +17,5 @@ insight-generator/nsidc/*
 
 .DS_Store
 *.error
+
+Docker/data

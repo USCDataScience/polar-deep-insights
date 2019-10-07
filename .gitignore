@@ -1,5 +1,4 @@
-insight-visualizer/node_modules
-insight-visualizer/bower_components
+
 insight-visualizer/dist
 insight-visualizer/.tmp
 insight-visualizer/.sass-cache
@@ -19,3 +18,10 @@ insight-generator/nsidc/*
 *.error
 
 Docker/data
+
+# don't include installed dependencies
+node_modules
+bower_components
+
+# don't include js build outputs
+build

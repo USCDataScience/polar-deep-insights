@@ -20,11 +20,15 @@ export default function ItemCard(props) {
     <Card style={{ margin: "20px 0" }}>
       <h3>
         <Link to={{ pathname: "/result", state: { result: props.result } }}>
-          {resultMetadata
-            ? resultMetadata.title
-              ? resultMetadata.title
-              : <i>Document Title Missing</i>
-            : "no metadata"}
+          {resultMetadata ? (
+            resultMetadata.title ? (
+              resultMetadata.title
+            ) : (
+              <i>Document Title Missing</i>
+            )
+          ) : (
+            "no metadata"
+          )}
         </Link>
       </h3>
       <Button onClick={toggleMetadataFields}>

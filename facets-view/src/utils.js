@@ -11,7 +11,7 @@ export function handleVal(val) {
       if (Object.entries(val).length === 0) {
         return "";
       }
-      return <CollapsibleTable val={val}/>
+      return <CollapsibleTable val={val} />;
     }
   } else {
     return val;

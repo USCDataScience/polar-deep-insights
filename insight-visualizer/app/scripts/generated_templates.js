@@ -500,6 +500,7 @@ angular.module('polar').run(['$templateCache', function($templateCache) {
     "        <li data-ng-class=\"$location.path() == '/concept_editor' ? 'active' : '' \"><a href=\"/#!/concept_editor\">Concept Editor</a></li>\n" +
     "        <li data-ng-class=\"$location.path() == '/query' ? 'active' : '' \"><a href=\"/#!/query\">Query Interface</a></li>\n" +
     "        <li data-ng-class=\"$location.path() == '/config' ? 'active' : '' \"><a href=\"/#!/config\">Configure</a></li>\n" +
+    "        <li><a href=\"/pdi/facetview\">Facet View</a></li>\n" +
     "      </ul>\n" +
     "    </div>\n" +
     "\n" +

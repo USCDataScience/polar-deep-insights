@@ -27,11 +27,13 @@ services:
       - "9000:9000"
       - "35729:32729"
     volumes:
-      - ${PDI_JSON_PATH}:/data/polar
+      - ./${PDI_JSON_PATH}:/data/polar
+      - ../facets-view/build:/var/www/html/pdi/facetview
 
   pdi-generator:
     image: uscdatascience/pdi-generator
-    depends_on: [polar-deep-insights]
+    depends_on:
+      - polar-deep-insights
     networks:
       - pdi-network
     entrypoint:
@@ -40,8 +42,6 @@ services:
       - "9999:9998"
       - "8765:8765"
       - "8060:8060"
-    volumes:
-      - ${PDI_JSON_PATH}:/data/polar
 
 networks:
   pdi-network:
